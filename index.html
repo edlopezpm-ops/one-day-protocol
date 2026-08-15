@@ -1,0 +1,1417 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark" data-palette="aurora">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The One-Day Protocol</title>
+<meta name="description" content="An interactive model of the ideas in Dan Koe's &quot;How to fix your entire life in 1 day&quot;. Works offline in any browser.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%A7%AD%3C/text%3E%3C/svg%3E">
+<style>
+/* ---------- tokens ---------- */
+:root{
+  --bg:#0b0b0f; --bg-2:#131319; --bg-3:#1b1b23;
+  --fg:#e9e9f0; --fg-dim:#a8a8b8; --fg-faint:#9292a6;   /* faint still clears 4.5:1 */
+  --line:#2a2a35; --line-2:#3a3a48;
+  --accent:#6f8cff; --accent-fg:#0b0b0f;
+  --ok:#4fbf8f; --warn:#e0a13f;
+  --sat:62%; --lum:66%;
+  --shadow:0 8px 30px rgba(0,0,0,.45);
+  --radius:10px;
+  --font:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,"Liberation Mono",monospace;
+}
+:root[data-theme="light"]{
+  --bg:#fbfbfd; --bg-2:#f2f2f6; --bg-3:#e9e9ef;
+  --fg:#16161c; --fg-dim:#4c4c57; --fg-faint:#63636f;
+  --line:#dedee6; --line-2:#c7c7d2;
+  --accent:#3b5bdb; --accent-fg:#ffffff;
+  --sat:64%; --lum:26%;   /* branch colours double as text on a light ground */
+  --shadow:0 6px 24px rgba(20,20,40,.10);
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0; background:var(--bg); color:var(--fg);
+  font-family:var(--font); font-size:15px; line-height:1.5;
+  -webkit-text-size-adjust:100%;
+}
+button,input,textarea,select{font:inherit;color:inherit}
+a{color:var(--accent)}
+:focus-visible{outline:2px solid var(--accent); outline-offset:2px; border-radius:4px}
+
+/* ---------- chrome ---------- */
+.app{display:flex;flex-direction:column;height:100%}
+header.bar{
+  display:flex;align-items:center;gap:12px;flex-wrap:wrap;
+  padding:10px 14px;border-bottom:1px solid var(--line);
+  background:var(--bg-2);position:relative;z-index:5;
+}
+.brand{display:flex;align-items:baseline;gap:9px;margin-right:auto;min-width:0}
+.brand b{font-size:15px;letter-spacing:-.01em;white-space:nowrap}
+.brand span{color:var(--fg-faint);font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.brand a{color:var(--fg-dim);text-decoration:none;border-bottom:1px dotted var(--line-2)}
+.brand a:hover{color:var(--accent);border-color:var(--accent)}
+.credit{margin-top:40px;padding-top:14px;border-top:1px solid var(--line);color:var(--fg-faint);font-size:12.5px}
+.credit a{color:var(--fg-dim)}
+.tabs{display:flex;gap:2px;background:var(--bg-3);padding:3px;border-radius:999px}
+.tabs button{
+  border:0;background:transparent;color:var(--fg-dim);
+  padding:6px 14px;border-radius:999px;cursor:pointer;font-size:13px;font-weight:500;
+}
+.tabs button[aria-selected="true"]{background:var(--accent);color:var(--accent-fg)}
+.tools{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.btn{
+  border:1px solid var(--line-2);background:var(--bg-3);color:var(--fg-dim);
+  padding:6px 11px;border-radius:8px;cursor:pointer;font-size:13px;white-space:nowrap;
+}
+.btn:hover{color:var(--fg);border-color:var(--accent)}
+.btn.primary{background:var(--accent);color:var(--accent-fg);border-color:var(--accent);font-weight:600}
+.btn.danger:hover{border-color:#e05f6f;color:#e05f6f}
+.btn[aria-pressed="true"]{border-color:var(--accent);color:var(--fg)}
+main{flex:1;min-height:0;position:relative}
+.view{position:absolute;inset:0;overflow:auto;display:none}
+.view.active{display:block}
+
+/* ---------- notice ---------- */
+.notice{
+  margin:0;padding:8px 14px;background:#5a2020;color:#ffd9d9;
+  font-size:13px;border-bottom:1px solid #7a2c2c;
+}
+:root[data-theme="light"] .notice{background:#ffe9e9;color:#7a1f1f}
+
+/* ---------- map ---------- */
+#mapView{overflow:hidden}
+/* the scroller: the wheel scrolls it, like every other page on the internet */
+#canvas{position:absolute;inset:0;overflow:auto;cursor:grab;overscroll-behavior:contain}
+#canvas.dragging{cursor:grabbing}
+#sizer{position:relative}
+#stage{position:absolute;top:0;left:0;transform-origin:0 0}
+#links{position:absolute;top:0;left:0;overflow:visible;pointer-events:none}
+#nodes{position:absolute;top:0;left:0}
+.node{
+  position:absolute;padding:2px 6px 5px 6px;
+  /* max-content keeps the measured width independent of the (unsized) parent */
+  width:max-content;
+  border-bottom:2px solid var(--nc,var(--line-2));
+  color:var(--fg);font-size:12.5px;line-height:1.35;
+}
+.node .lab{font-weight:500;display:block}
+/* the body of a node, revealed by clicking it */
+.node .detail{display:block;margin-top:8px;padding-top:8px;border-top:1px dashed var(--line-2)}
+.node .gloss{display:block;color:var(--fg-dim);font-size:11.5px;font-style:italic;margin-bottom:6px;font-weight:400}
+.node .sum{display:block;color:var(--fg-dim);font-size:11.5px;line-height:1.55;font-weight:400}
+.node .time{
+  display:inline-block;font-family:var(--mono);font-size:10.5px;
+  color:var(--nc,var(--accent));border:1px solid currentColor;border-radius:4px;
+  padding:0 4px;margin-right:6px;vertical-align:1px;
+}
+/* the root reads as a button: it is the one thing you are meant to click first */
+.node.k-root{
+  padding:16px 20px;border:1px solid var(--line-2);border-radius:16px;
+  background:var(--bg-2);box-shadow:var(--shadow);cursor:pointer;
+}
+.node.k-root:hover{border-color:var(--accent);background:var(--bg-3)}
+.node.k-root .lab{font-size:18px;font-weight:700;letter-spacing:-.015em}
+.node.k-root.collapsed::after{
+  content:"Click to open";display:block;margin-top:10px;
+  font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);
+}
+.node.k-root.collapsed .lab::after{display:none}
+.node.k-branch .lab{font-weight:700;font-size:13.5px}
+.node.k-sub .lab{font-weight:600;font-size:13px}
+.node.k-group .lab{font-weight:600;color:var(--nc)}
+.node.k-field .lab{font-weight:600}
+.node.k-prompt .lab{font-weight:400}
+.node.opens{cursor:pointer}
+.node.opens:hover{background:var(--bg-2);border-radius:6px 6px 0 0}
+/* branches show how many children are hidden; end points show a quiet plus */
+.node.collapsed .lab[data-count]::after{
+  content:attr(data-count);margin-left:7px;font-size:10px;font-weight:700;
+  color:var(--nc);border:1px solid currentColor;border-radius:999px;padding:0 5px;vertical-align:1px;
+}
+.node.opens.collapsed .lab:not([data-count])::after{
+  content:"+";margin-left:7px;font-size:11px;font-weight:700;color:var(--nc);opacity:.55;
+}
+.node.opens:hover .lab:not([data-count])::after{opacity:1}
+.dot{
+  position:absolute;width:9px;height:9px;margin:-4.5px 0 0 -4.5px;
+  border-radius:50%;background:var(--bg);border:2px solid var(--nc,var(--line-2));
+  cursor:pointer;padding:0;
+}
+/* the visible dot stays small; the tap target does not (WCAG 2.5.8) */
+.dot::before{content:"";position:absolute;inset:-8px;border-radius:50%}
+.dot:hover{background:var(--nc)}
+.dot.filled{background:var(--nc)}
+.maptools{
+  position:absolute;left:12px;bottom:12px;z-index:3;display:flex;gap:6px;flex-wrap:wrap;
+  background:var(--bg-2);border:1px solid var(--line);border-radius:10px;padding:6px;box-shadow:var(--shadow);
+}
+.hint{color:var(--fg-faint);font-size:11.5px;align-self:center;padding:0 6px}
+/* sits above the scrolling documents, so it needs its own ground to stay legible */
+.built{
+  position:fixed;right:24px;bottom:12px;z-index:6;
+  display:flex;align-items:center;gap:11px;
+  font-size:11px;letter-spacing:.09em;text-transform:uppercase;
+  background:var(--bg-2);border:1px solid var(--line);
+  border-radius:999px;padding:6px 14px;box-shadow:var(--shadow);
+}
+.built a{color:var(--fg-faint);text-decoration:none;display:flex;align-items:center;min-height:24px}
+.built a:last-child{min-width:24px;justify-content:center}
+.built a:hover{color:var(--accent)}
+.built b{color:var(--fg-dim);font-weight:700;letter-spacing:.13em}
+.built a:hover b{color:var(--accent)}
+@media (max-width:640px){
+  /* the toolbar goes full-width down here, so the pill moves above it
+     rather than sitting on top of the Fit button */
+  .built{right:10px;bottom:62px;gap:9px;padding:5px 11px}
+  .built .lbl{display:none}
+}
+
+/* ---------- documents ---------- */
+.doc{max-width:820px;margin:0 auto;padding:28px 20px 130px}
+.doc h1{font-size:26px;letter-spacing:-.02em;margin:0 0 6px}
+.doc h2{
+  font-size:17px;margin:34px 0 6px;padding-bottom:6px;border-bottom:1px solid var(--line);
+  display:flex;align-items:center;gap:9px;
+}
+.doc h2 .badge{font-size:11px;font-weight:600;color:var(--accent-fg);background:var(--accent);border-radius:999px;padding:2px 8px}
+.doc h3{font-size:14px;margin:22px 0 4px;color:var(--fg-dim);text-transform:uppercase;letter-spacing:.07em}
+.doc p.lead{color:var(--fg-dim);margin:0 0 18px}
+.doc p.sub{color:var(--fg-faint);font-size:13px;margin:2px 0 10px}
+.field{margin:14px 0 18px}
+.field label{display:block;font-size:14px;font-weight:500;margin-bottom:5px}
+.field .meta{color:var(--fg-faint);font-size:12.5px;font-weight:400;margin-bottom:5px;display:block}
+.field textarea{
+  width:100%;min-height:76px;resize:vertical;background:var(--bg-2);color:var(--fg);
+  border:1px solid var(--line);border-radius:var(--radius);padding:10px 12px;line-height:1.55;
+}
+.field textarea:focus{border-color:var(--accent);background:var(--bg)}
+.field textarea.filled{border-left:3px solid var(--ok)}
+.clock{
+  font-family:var(--mono);font-size:12px;color:var(--accent);
+  border:1px solid var(--accent);border-radius:5px;padding:0 6px;margin-right:8px;
+}
+.callout{
+  background:var(--bg-2);border:1px solid var(--line);border-left:3px solid var(--accent);
+  border-radius:var(--radius);padding:12px 14px;margin:16px 0;font-size:13.5px;color:var(--fg-dim);
+}
+.callout b{color:var(--fg)}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:14px 0}
+.progress{height:6px;background:var(--bg-3);border-radius:999px;overflow:hidden;flex:1;min-width:140px}
+.progress i{display:block;height:100%;background:var(--ok);width:0;transition:width .25s}
+.pct{font-family:var(--mono);font-size:12px;color:var(--fg-dim);min-width:74px}
+input[type="date"]{
+  background:var(--bg-2);border:1px solid var(--line);border-radius:8px;padding:6px 10px;color:var(--fg);
+}
+
+/* ---------- game board ---------- */
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px;margin-top:14px}
+.card{
+  background:var(--bg-2);border:1px solid var(--line);border-radius:var(--radius);
+  padding:14px;border-top:3px solid var(--nc,var(--accent));
+}
+.card h4{margin:0 0 2px;font-size:14px}
+.card .mech{color:var(--nc,var(--accent));font-size:11.5px;font-weight:600;text-transform:uppercase;letter-spacing:.05em}
+.card .desc{color:var(--fg-faint);font-size:12.5px;margin:6px 0 8px}
+.card .val{font-size:13.5px;white-space:pre-wrap;word-break:break-word}
+.card .val.empty{color:var(--fg-faint);font-style:italic}
+
+/* board: stakes, run, mechanics */
+.stakes{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:18px 0 8px}
+.stake{border:1px solid var(--line);border-left:3px solid var(--nc);border-radius:var(--radius);padding:14px 16px;background:var(--bg-2)}
+.stake .k{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--nc);margin-bottom:7px}
+.stake .v{font-size:15px;line-height:1.45;white-space:pre-wrap}
+.stake .v.empty{color:var(--fg-faint);font-style:italic;font-size:13px}
+.run{display:grid;gap:10px;margin-top:12px}
+.runrow{
+  display:grid;grid-template-columns:132px 1fr;gap:14px;align-items:start;
+  border:1px solid var(--line);border-radius:var(--radius);padding:12px 14px;background:var(--bg-2);
+}
+.runrow .t{font-size:11.5px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--nc)}
+.runrow .t small{display:block;font-size:10.5px;font-weight:500;letter-spacing:.03em;color:var(--fg-faint);text-transform:none;margin-top:3px}
+.runrow .v{font-size:13.5px;white-space:pre-wrap;word-break:break-word}
+.runrow .v.empty{color:var(--fg-faint);font-style:italic}
+/* a wide table scrolls inside its own box, never widening the page */
+#mechanics{overflow-x:auto}
+.doc table{width:100%;border-collapse:collapse;margin-top:12px;font-size:13.5px}
+.doc th,.doc td{text-align:left;padding:9px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+.doc th{font-size:10.5px;text-transform:uppercase;letter-spacing:.07em;color:var(--fg-faint);font-weight:600}
+.doc td.c1{white-space:nowrap;font-weight:700;color:var(--nc,var(--fg))}
+.doc td.c2{color:var(--fg-dim)}
+@media (max-width:640px){
+  .stakes{grid-template-columns:1fr}
+  .runrow{grid-template-columns:1fr;gap:6px}
+  .doc td.c3{display:none}
+}
+
+/* ---------- print ---------- */
+#printout{display:none}
+@media print{
+  header.bar,.maptools,.hint,.notice,.row,.built,#mapView,#boardView,#workBody{display:none!important}
+  body,.view{position:static;overflow:visible;height:auto;background:#fff;color:#000}
+  .view{display:block!important}
+  .doc{max-width:none;padding:0}
+  /* a textarea cannot grow to fit its value, so print a rendered copy instead */
+  #printout{display:block!important}
+  #printout h2{font-size:15pt;margin:18pt 0 4pt;border-bottom:1px solid #000;page-break-after:avoid}
+  #printout h3{font-size:11pt;margin:12pt 0 2pt;text-transform:uppercase;letter-spacing:.06em;page-break-after:avoid}
+  #printout .q{font-size:10.5pt;font-weight:700;margin:10pt 0 2pt;page-break-after:avoid}
+  #printout .a{font-size:10.5pt;white-space:pre-wrap;margin:0 0 8pt;padding-left:10pt;border-left:2px solid #999}
+  #printout .a.blank{color:#888;font-style:italic;border-left-style:dotted}
+}
+@media (max-width:640px){
+  /* the header must never be the thing that makes the page scroll sideways */
+  header.bar{gap:8px;padding:8px 10px}
+  .brand{flex:1 1 auto;min-width:0}
+  .brand b{font-size:13.5px;display:block;overflow:hidden;text-overflow:ellipsis}
+  .brand span{display:none}
+  .tabs{flex:none;padding:2px}
+  .tabs button{padding:6px 10px;font-size:12px}
+  .tools .btn{padding:5px 9px;font-size:12px}
+  .doc{padding:20px 14px 110px}
+  .maptools{left:8px;right:8px;bottom:8px;gap:5px}
+  .maptools .btn{flex:1 1 auto;padding:7px 8px;font-size:12px}
+  .hint{display:none}
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="bar">
+    <div class="brand">
+      <b>The One-Day Protocol</b>
+      <span>after <a href="https://thedankoe.com/" target="_blank" rel="noopener noreferrer">Dan Koe</a>
+        &middot; mapped by <a href="https://x.com/MindBranches/status/2078988089393901842" target="_blank" rel="noopener noreferrer">@MindBranches</a></span>
+    </div>
+    <div class="tabs" role="tablist" aria-label="Views">
+      <button role="tab" id="tab-map" aria-selected="true" aria-controls="mapView">Map</button>
+      <button role="tab" id="tab-work" aria-selected="false" aria-controls="workView">Workbook</button>
+      <button role="tab" id="tab-board" aria-selected="false" aria-controls="boardView">Game board</button>
+    </div>
+    <div class="tools">
+      <button class="btn" id="paletteBtn" title="Switch colour palette">Palette</button>
+      <button class="btn" id="themeBtn" title="Switch light / dark">Theme</button>
+    </div>
+  </header>
+
+  <p class="notice" id="notice" role="status" aria-live="polite" hidden></p>
+
+  <main>
+    <!-- MAP -->
+    <section class="view active" id="mapView" role="tabpanel" aria-labelledby="tab-map">
+      <div id="canvas">
+        <div id="sizer">
+          <div id="stage">
+            <svg id="links" aria-hidden="true"></svg>
+            <div id="nodes"></div>
+          </div>
+        </div>
+      </div>
+      <div class="maptools">
+        <button class="btn primary" data-map="expand">Expand all</button>
+        <button class="btn" data-map="collapse">Contract all</button>
+        <button class="btn" data-map="fit">Fit to screen</button>
+        <span class="hint">Click any node to open it</span>
+      </div>
+    </section>
+
+    <!-- WORKBOOK -->
+    <section class="view" id="workView" role="tabpanel" aria-labelledby="tab-work">
+      <div class="doc">
+        <h1>Workbook</h1>
+        <p class="lead">Answer in your own words. Everything you type is saved automatically in this browser, on this computer only &mdash; nothing is uploaded anywhere.</p>
+        <div class="row">
+          <div class="progress"><i id="bar"></i></div>
+          <span class="pct" id="pct">0 / 0</span>
+          <button class="btn primary" id="exportBtn">Export Markdown</button>
+          <button class="btn" id="copyBtn">Copy all</button>
+          <button class="btn" id="printBtn">Print / PDF</button>
+          <button class="btn danger" id="clearBtn">Erase my answers</button>
+        </div>
+        <div id="workBody"></div>
+        <div id="printout" aria-hidden="true"></div>
+      </div>
+    </section>
+
+    <!-- BOARD -->
+    <section class="view" id="boardView" role="tabpanel" aria-labelledby="tab-board">
+      <div class="doc">
+        <h1>Game board</h1>
+        <p class="lead">Everything the day produced, on one screen. Fill the Workbook and this fills itself.</p>
+        <div class="stakes" id="stakes"></div>
+        <h2>The six components</h2>
+        <div class="cards" id="cards"></div>
+        <h2>Your current run</h2>
+        <p class="sub">The three horizons from Part 3. Each one only has to keep the next one possible.</p>
+        <div class="run" id="run"></div>
+        <h2>How the game works</h2>
+        <p class="sub">Why this holds attention when a to-do list does not.</p>
+        <div id="mechanics"></div>
+        <div class="callout" id="boardNote"></div>
+      </div>
+    </section>
+  </main>
+</div>
+<div class="built">
+  <a href="https://aekr.io" target="_blank" rel="noopener noreferrer"><span class="lbl">Built with&nbsp;</span><b>AEKR</b></a>
+  <a href="https://www.instagram.com/__aerk/" target="_blank" rel="noopener noreferrer" aria-label="AEKR on Instagram" title="AEKR on Instagram">
+    <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+      <rect x="2" y="2" width="20" height="20" rx="5.5"/>
+      <circle cx="12" cy="12" r="4.2"/>
+      <circle cx="17.6" cy="6.4" r="1.3" fill="currentColor" stroke="none"/>
+    </svg>
+  </a>
+</div>
+
+<script type="application/json" id="model">{"meta":{"version":"2.0.0","title":"The One-Day Protocol","subtitle":"An interactive model of \"How to fix your entire life in 1 day\"","sourceAuthor":"Dan Koe","sourceWork":"How to fix your entire life in 1 day","mapAuthor":"@MindBranches","mapUrl":"https://x.com/MindBranches/status/2078988089393901842","builtWith":"AEKR","disclaimer":"Educational and self-reflection material. Not therapy, medical, or mental-health advice."},"root":{"id":"root","label":"How to fix your entire life in 1 day","kind":"root","note":"Five branches. Click any node to open it.","children":[{"id":"core-problem","label":"Core Problem","kind":"branch","note":"Why the usual approach to changing your life fails.","children":[{"id":"cp-action-layer","label":"Change fails at the action layer","kind":"point","note":"People swap behaviours while leaving their identity untouched.","summary":"Resolutions, habit trackers, 5am alarms — they all operate on what you do. None of them touch who you think you are. The self that produced the old behaviour is still sitting there when motivation runs out, and it quietly restores its defaults."},{"id":"cp-person-not-plan","label":"You need the person, not the plan","kind":"point","note":"Become someone for whom the desired actions are the obvious ones.","summary":"A plan is a list of things a different person would do. If every item takes force, you are running someone else's operating system on your hardware. Change the operator and the list stops needing enforcement."},{"id":"cp-not-an-accident","label":"Your current life is not an accident","kind":"point","note":"Today's behaviour is already succeeding at goals you never consciously chose.","summary":"Whatever you are doing now is producing something you value — comfort, safety, an identity, a usable excuse. Until you can name what the current pattern is paying you, you will keep buying it back."}]},{"id":"principles","label":"Key Psychological Principles","kind":"branch","note":"The mechanics underneath. Read this before running the day.","children":[{"id":"identity-first","label":"Identity First, Actions Second","kind":"sub","children":[{"id":"if-effort-symptom","label":"Effort is a symptom, not a strategy","kind":"point","note":"People who look like they are grinding are usually just living a life that fits them.","summary":"If a behaviour takes constant willpower, it has not been absorbed yet. Sustainable output looks boring from the inside: the person doing it is not overcoming anything, they are just living."},{"id":"if-lifestyle-before","label":"Adopt the lifestyle before the outcome","kind":"point","note":"Live as the person who already has the result.","summary":"Waiting for the result to justify the identity gets the order backwards. The habits, standards, hours and company of the person you want to be are the input, not the reward for arriving."},{"id":"if-misfit-repels","label":"Misfit habits should start to repel you","kind":"point","note":"Old habits stop feeling tempting and start feeling wrong.","summary":"This is the reliable signal that identity actually moved. You are not white-knuckling past the old habit — it stopped reading as a reward. If it still tempts you, the shift has not happened yet."}]},{"id":"your-mind","label":"Understanding Your Mind","kind":"sub","children":[{"id":"ym-teleological","label":"Behaviour is goal-directed","kind":"point","note":"Nothing you do is random. Every pattern is aimed at something.","summary":"Procrastination, conflict, self-sabotage — each is efficiently achieving something: risk avoided, self-image preserved, a story kept intact. Ask what a behaviour is for, not why it is wrong."},{"id":"ym-goals-against-you","label":"Some of those goals work against you","kind":"point","note":"You can pursue a goal for years without ever having chosen it.","summary":"Goals get installed by family, school, peers and pain, then run silently. \"Never look stupid\" is a goal. So is \"never need anyone.\" Either one will organise an entire life around itself."},{"id":"ym-change-the-goal","label":"Change the goal, not just the schedule","kind":"point","note":"New perspective produces new goals, which produce new behaviour.","summary":"Optimising your schedule around an unexamined goal only makes you more efficient at the wrong thing. Perspective sets the goal, the goal sets attention, attention sets behaviour. Intervene at the top."},{"id":"ym-identity-defends","label":"Identity defends itself","kind":"point","note":"Your sense of self reacts to contradiction the way your body reacts to infection.","summary":"Evidence that contradicts who you think you are registers as a threat, not as information. That is why good advice bounces off: the immune response fires before the argument is even heard."}]},{"id":"anatomy","label":"The Anatomy of Identity","kind":"sub","children":[{"id":"an-loop","label":"The identity loop","kind":"point","note":"Goal → perception → attention → action → feedback → automatic → \"who you are\" → defended → generates new goals.","summary":"The loop is self-sealing: goals decide what you notice, what you notice confirms the goal, and confirmation hardens into identity, which then generates more goals of the same kind. Breaking it means changing the goal at the top, not the behaviour at the bottom."},{"id":"an-childhood","label":"It started before you were consulted","kind":"point","note":"Most of the loop was installed in childhood by environment and conditioning.","summary":"You adopted a strategy that made one specific childhood environment survivable. It worked — that is precisely why it stayed. The only live question is whether that is still the environment you are in."},{"id":"an-ideology","label":"After survival comes ideology","kind":"point","note":"Once the body is safe, you defend beliefs as if they were food and shelter.","summary":"Being wrong starts to feel like dying. That is why people will burn a friendship rather than update a position, and why identity-level change feels genuinely dangerous rather than merely difficult."}]},{"id":"stages","label":"Stages of Mind Development","kind":"sub","children":[{"id":"st-where-most-are","label":"Most people sit between self-aware and construct-aware","kind":"point","note":"Roughly stages 4 to 8 in adult-development models.","summary":"Translated: aware that you have conditioning, not yet fluent at rewriting it. You can see the box. You are still furnishing it."},{"id":"st-sequential","label":"Development is sequential","kind":"point","note":"You cannot skip a stage. You can only move through the next one.","summary":"You can borrow the conclusions of a later stage, but they collapse the first time they are tested, because you did not do the work that made them yours."},{"id":"st-upper","label":"The upper stages question inherited beliefs","kind":"point","note":"You stop borrowing principles and start writing your own.","summary":"The shift is from \"what should I believe?\" to \"which of my beliefs did I actually choose?\" Principles you wrote yourself hold under pressure. Inherited ones do not."}]},{"id":"intelligence","label":"Intelligence Framework","kind":"sub","children":[{"id":"in-definition","label":"Intelligence = getting what you actually want","kind":"point","note":"A working definition, not an IQ score.","summary":"Can you look at your situation, see it accurately, and move it toward what you want? People with unremarkable credentials do this constantly. People with impressive ones often cannot."},{"id":"in-ingredients","label":"Three ingredients: agency, opportunity, intelligence","kind":"point","note":"Remove any one and results stall.","summary":"Agency without opportunity is frustration. Opportunity without agency is waste. Both, without the ability to steer, becomes a well-rehearsed story about bad luck."},{"id":"in-cybernetic","label":"The cybernetic loop","kind":"point","note":"Set a goal, act, sense where you are, compare to the goal, adjust.","summary":"The comparison step is the one everyone skips. Acting without measuring the gap between where you are and where you meant to be is motion, not progress."},{"id":"in-iteration","label":"High intelligence = iteration speed","kind":"point","note":"Persisting and learning from mistakes beats being right early.","summary":"The advantage compounds: more attempts means more feedback, and more feedback means better aim. Being right on attempt one is luck. Being right by attempt twelve is skill."}]}]},{"id":"protocol","label":"The One-Day Protocol","kind":"branch","note":"The day itself: morning, throughout, evening.","children":[{"id":"part1","label":"Part 1 — Morning: Psychological Excavation","kind":"sub","note":"15–30 minutes of honest writing, before the day gets loud.","summary":"Do this before your phone, your email, or anyone else's opinion reaches you. Write in full sentences — bullets let you skip the hard part. No editing while writing, and no audience.","children":[{"id":"anti-vision-q","label":"Anti-Vision Questions","kind":"group","summary":"Eight questions about the life you are currently on track for. This half is uncomfortable on purpose: the anti-vision is what you will re-read on the days motivation is absent.","children":[{"id":"av1","label":"What dissatisfaction have you quietly learned to tolerate?","kind":"prompt","summary":"Tolerance is the trap. Anything unbearable gets fixed — it is the merely annoying that lasts a decade. List what you have stopped noticing."},{"id":"av2","label":"What do you complain about repeatedly and never change?","kind":"prompt","summary":"A complaint you repeat is a decision you have already made. Naming it removes the option of pretending it is still an open question."},{"id":"av3","label":"What true thing about your life would be unbearable to say out loud?","kind":"prompt","summary":"Write the sentence you would never say at dinner. If nothing comes, you are editing — the resistance itself is the location."},{"id":"av4","label":"Five years out, nothing changes. Describe an ordinary Tuesday.","kind":"prompt","summary":"Not a summary — an hour-by-hour Tuesday. Where you wake up, what is in front of you, who is there, what you feel at 3pm. Vagueness is how you protect yourself here."},{"id":"av5","label":"Ten years out, same trajectory. Which doors have closed for good?","kind":"prompt","summary":"Some doors close by age, some by accumulated commitments, some by skills you did not build in time. Name which ones, specifically."},{"id":"av6","label":"At the end of your life, what did you never once attempt?","kind":"prompt","summary":"Strip out the social scoring. What did you actually want that you never made a single real attempt at?"},{"id":"av7","label":"Which identity would you have to stop defending in order to change?","kind":"prompt","summary":"Every change costs an identity — the realist, the one who had it hard, the one everyone relies on. Naming the price is what makes it payable."},{"id":"av8","label":"What is the embarrassing, real reason you have not changed yet?","kind":"prompt","summary":"Not the respectable reason. The one that sounds petty out loud: fear of looking stupid, of losing an excuse, of succeeding and still feeling like this."}]},{"id":"vision-q","label":"Vision Questions","kind":"group","summary":"Three questions about the life you are aiming at. Keep the same level of detail you used for the anti-vision — an ordinary Tuesday, not a highlight reel.","children":[{"id":"vq1","label":"Three years out, best realistic case. Describe an ordinary Tuesday in detail.","kind":"prompt","summary":"Best realistic case, not fantasy. Detail is what makes it usable: the hour you wake, the work in front of you, who you eat with, what you are no longer worried about."},{"id":"vq2","label":"What would you have to believe about yourself for that life to feel normal?","kind":"prompt","summary":"Beliefs are load-bearing. That life stays out of reach for as long as you hold beliefs that make it absurd for you, specifically, to have it."},{"id":"vq3","label":"If you were already that person, what would you do this week?","kind":"prompt","summary":"This converts the vision into something testable within seven days. Small enough to actually do, and unmistakably that person's move."}]}]},{"id":"part2","label":"Part 2 — Throughout the Day: Pattern Interruption","kind":"sub","note":"Six alarms that catch you mid-behaviour, plus three questions to carry around.","summary":"The point is not the answers. It is catching yourself mid-behaviour, while you can still see what you are doing. Answering these from memory at bedtime does not work — you will have edited yourself by then.","children":[{"id":"reminders","label":"Phone reminders","kind":"group","summary":"Set these as alarms with the question as the label. When one fires: stop, read it, answer in one line, go back to what you were doing. Sixty seconds each.","children":[{"id":"r1100","label":"What am I avoiding right now?","kind":"prompt","time":"11:00","summary":"Whatever came to mind first is the answer. Avoidance attaches itself to the thing that matters most, not the thing that is hardest."},{"id":"r1330","label":"Judging only by my behaviour today, what would a stranger say I want?","kind":"prompt","time":"13:30","summary":"Your stated goals are not evidence. Your calendar and your last four hours are."},{"id":"r1515","label":"Is this moving me toward the life I want or the one I dread?","kind":"prompt","time":"15:15","summary":"Binary question, no third option. Neutral is drift, and drift defaults to the life you dread."},{"id":"r1700","label":"What important thing am I pretending is not important?","kind":"prompt","time":"17:00","summary":"Usually a health issue, a relationship, or a conversation. Downgrading it in your head is cheaper than acting on it."},{"id":"r1930","label":"Today, what did I do to protect my image rather than to get what I want?","kind":"prompt","time":"19:30","summary":"Image protection is invisible from the inside. Look for the moment you softened something, stayed quiet, or performed."},{"id":"r2100","label":"When did I feel most alive today? Most dead?","kind":"prompt","time":"21:00","summary":"Track this across several days. Aliveness is data about direction, not a mood to chase."}]},{"id":"contemplation","label":"Carry-around questions","kind":"group","summary":"No schedule. Keep these in your pocket and return to them whenever the day goes quiet.","children":[{"id":"cq1","label":"What changes if I stop needing people to see me as ______?","kind":"prompt","summary":"Fill the blank with the label you work hardest to maintain. Most of what that identity costs you stays invisible until you price it."},{"id":"cq2","label":"Where am I trading aliveness for safety?","kind":"prompt","summary":"Safety is not the enemy; unexamined safety is. Find the specific trade you keep making without deciding to."},{"id":"cq3","label":"What is the smallest version of my future self I could be tomorrow?","kind":"prompt","summary":"Not a transformation — the smallest recognisable version. One hour, one decision, one different answer."}]}]},{"id":"part3","label":"Part 3 — Evening: Synthesis","kind":"sub","note":"Turn the day's raw material into two sentences and three goals.","summary":"Read back everything you wrote today before starting. This is the part that produces the deliverable — budget 45 to 60 minutes and do not rush the two one-sentence answers.","children":[{"id":"integration","label":"Integration questions","kind":"group","summary":"Four questions that compress the day into something you can act on. Two of them ask for exactly one sentence — hold yourself to it.","children":[{"id":"iq1","label":"Why, specifically, have you been stuck?","kind":"prompt","summary":"Answer with a mechanism, not a mood. \"I lacked discipline\" is not an answer. \"I never risked being bad at it in front of people\" is."},{"id":"iq2","label":"Name the internal enemy: which pattern or belief is actually running this?","kind":"prompt","summary":"It is a pattern or a belief — never a person or a circumstance. If your answer is external, you have nothing to act on."},{"id":"iq3","label":"One sentence: what you refuse to let your life become.","kind":"prompt","summary":"One sentence. If it takes a paragraph you have not found it yet. This is the line you will re-read on the bad days."},{"id":"iq4","label":"One sentence: what you are building toward.","kind":"prompt","summary":"One sentence, stated positively, in your own words. Not a goal — a direction."}]},{"id":"goals","label":"Goal setting — lenses, not finish lines","kind":"group","summary":"These exist to change what you notice tomorrow, not to be crossed off. A goal you never reach can still have done its job if it aimed your attention correctly for a year.","children":[{"id":"g1","label":"1 year: what would have to be true for you to know the pattern is broken?","kind":"prompt","summary":"Pick evidence, not a feeling. Something an outside observer could confirm twelve months from now."},{"id":"g2","label":"1 month: what must be true this month to keep the 1-year goal possible?","kind":"prompt","summary":"This is the constraint that keeps the year honest — what has to be true in 30 days for the 1-year answer to still be on the table."},{"id":"g3","label":"Daily: which 2–3 actions would your future self simply do, without debate?","kind":"prompt","summary":"Two or three, not ten. They have to be doable on a bad day, or they are not levers."}]}]}]},{"id":"implementation","label":"Implementation: Turn Life Into a Game","kind":"branch","note":"What you walk away with, and how to keep playing it.","children":[{"id":"six-components","label":"Six Components to Document","kind":"sub","summary":"This is the deliverable of the whole day. Every slot gets something, even a rough draft. Keep it where you will physically see it.","children":[{"id":"c-anti-vision","label":"Anti-vision","kind":"field","note":"The life you refuse to end up in.","mechanic":"What is at stake if you lose.","summary":"Write it as a scene, not a fear. You will re-read this on the days you do not feel like doing the work — that is its only job."},{"id":"c-vision","label":"Vision","kind":"field","note":"The life you are building toward.","mechanic":"The win condition.","summary":"A direction, not a destination. Concrete enough that you would recognise it if you arrived."},{"id":"c-year-goal","label":"1-year goal","kind":"field","note":"What is true twelve months from now.","mechanic":"The main mission.","summary":"One sentence, verifiable. If you could argue about whether you hit it, it is still too vague."},{"id":"c-month-project","label":"1-month project","kind":"field","note":"The skill to acquire or the thing to build.","mechanic":"The boss fight, where the XP comes from.","summary":"Something that ships or is learned inside 30 days. It should scare you slightly and produce evidence either way."},{"id":"c-daily-levers","label":"Daily levers","kind":"field","note":"The 2–3 tasks that actually move it.","mechanic":"Daily quests.","summary":"Two or three tasks, done before anything else. These are the only things that must happen for a day to count."},{"id":"c-constraints","label":"Constraints","kind":"field","note":"What you will not sacrifice to get it.","mechanic":"The rules that force creativity.","summary":"Health, relationships, ethics, sleep — whatever you will not trade. Constraints are not obstacles; they force the creative path."}]},{"id":"game-mechanics","label":"Game Mechanics","kind":"sub","summary":"The six components map onto the parts of any decent game. This is not decoration — it is why the structure holds attention when a to-do list does not.","children":[{"id":"gm-vision","label":"Vision = the win condition","kind":"point","summary":"Know what winning looks like, or every choice becomes a coin flip."},{"id":"gm-anti","label":"Anti-vision = what is at stake if you lose","kind":"point","summary":"Stakes are what make a game real. No downside, no urgency."},{"id":"gm-year","label":"1-year goal = the main mission","kind":"point","summary":"The mission is what gives this month its meaning. Without it, the month is busywork."},{"id":"gm-month","label":"1-month project = the boss fight","kind":"point","summary":"Where skill actually increases. Boss fights, not grinding."},{"id":"gm-levers","label":"Daily levers = daily quests","kind":"point","summary":"Small, repeatable, done every day. This is where the hours actually go."},{"id":"gm-constraints","label":"Constraints = the rules that force creativity","kind":"point","summary":"Limits force invention. A game with no rules is not a game."}]}]},{"id":"insights","label":"Critical Insights","kind":"branch","note":"Things worth knowing before you expect a result.","children":[{"id":"ci-tension","label":"Change is sudden, but only after tension builds","kind":"point","note":"Dissonance leads to uncertainty, uncertainty leads to discovery.","summary":"Nothing changes, nothing changes, then everything does. The plateau is the tension accumulating, and it is exactly where most people quit."},{"id":"ci-clarity","label":"Clarity compresses time, hours do not","kind":"point","note":"You cannot make six years of progress in six months without knowing what you are aiming at.","summary":"Effort spent in the wrong direction is still effort. Clarity is what makes the same number of hours count for more."},{"id":"ci-full-day","label":"This takes one full day of focused work","kind":"point","note":"Half-doing it produces half-answers.","summary":"Two hours gives you back the answers you already had. The useful material only shows up once you have exhausted the rehearsed ones."},{"id":"ci-chapter","label":"It lands differently depending on your chapter","kind":"point","note":"Timing is part of the result.","summary":"If the questions do not land, the timing may be wrong rather than you. Put it down and come back in a few months."},{"id":"ci-questioning","label":"Questioning is thinking","kind":"point","note":"Most of what passes for thinking is rehearsing things you already believe.","summary":"Rehearsing a position feels like thinking and produces nothing new. A real question is one you do not already have the answer to."},{"id":"ci-goals-shape-reality","label":"Your goals build your reality","kind":"point","note":"They decide what you notice and what you treat as valuable.","summary":"Change the goal and the same room contains different information. This is why a genuine shift in perspective feels like the world changed rather than you."}]}]}}</script>
+<script>
+"use strict";
+window.addEventListener("error", function(e){
+  document.documentElement.setAttribute("data-boot-error", (e.message || "error") + " @ " + (e.lineno || "?"));
+});
+(function(){
+/* =========================================================================
+   0. boot + safety
+   ========================================================================= */
+var MODEL;
+try{
+  MODEL = JSON.parse(document.getElementById("model").textContent);
+}catch(err){
+  document.body.innerHTML = '<p style="padding:24px;font-family:sans-serif">'+
+    'This file could not read its own data. Re-download <b>index.html</b> and make sure it is saved whole.</p>';
+  return;
+}
+var META = MODEL.meta, ROOT = MODEL.root;
+
+function notify(msg){
+  var n = document.getElementById("notice");
+  n.textContent = msg; n.hidden = false;
+}
+
+/* localStorage may be blocked (private mode, strict settings). Degrade, never crash. */
+var STORE_KEY = "one-day-protocol/v1";
+var storeOK = (function(){
+  try{ localStorage.setItem("__odp","1"); localStorage.removeItem("__odp"); return true; }
+  catch(e){ return false; }
+})();
+if(!storeOK) notify("Heads up: this browser is blocking local storage, so your answers will NOT be remembered after you close the tab. Use \u201cExport Markdown\u201d before leaving.");
+
+var answers = {};
+if(storeOK){
+  try{ answers = JSON.parse(localStorage.getItem(STORE_KEY) || "{}") || {}; }
+  catch(e){ answers = {}; }
+}
+var saveTimer = null;
+function save(){
+  if(!storeOK) return;
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(function(){
+    try{ localStorage.setItem(STORE_KEY, JSON.stringify(answers)); }
+    catch(e){ notify("Could not save locally (storage full or blocked). Export your answers to be safe."); }
+  }, 250);
+}
+
+/* =========================================================================
+   1. tree helpers
+   ========================================================================= */
+function walk(node, fn, depth, parent){
+  depth = depth || 0;
+  fn(node, depth, parent);
+  (node.children || []).forEach(function(c){ walk(c, fn, depth + 1, node); });
+}
+var byId = {};
+walk(ROOT, function(n, d, p){
+  n._depth = d; n._parent = p || null;
+  n._expanded = false;          // everything starts shut: the root is the only thing on screen
+  byId[n.id] = n;
+});
+/* a node opens if it has children to reveal, a body to show, or both */
+function openable(n){ return !!((n.children && n.children.length) || n.note || n.summary); }
+function hasKids(n){ return !!(n.children && n.children.length); }
+/* branch index = which top-level child this node descends from (drives colour) */
+(ROOT.children || []).forEach(function(b, i){
+  walk(b, function(n){ n._branch = i; });
+});
+ROOT._branch = -1;
+
+function collect(node, pred, out){
+  out = out || [];
+  walk(node, function(n){ if(pred(n)) out.push(n); });
+  return out;
+}
+var PROMPTS = collect(ROOT, function(n){ return n.kind === "prompt"; });
+var FIELDS  = collect(ROOT, function(n){ return n.kind === "field"; });
+var INPUTS  = PROMPTS.concat(FIELDS);
+
+/* =========================================================================
+   2. colour
+   ========================================================================= */
+var PALETTES = {
+  aurora: [215, 268, 305, 190, 158, 240],
+  ember:  [32, 48, 150, 196, 8, 96]
+};
+function hueFor(node){
+  var pal = PALETTES[document.documentElement.dataset.palette] || PALETTES.aurora;
+  if(node._branch < 0) return null;
+  var base = pal[node._branch % pal.length];
+  /* small deterministic drift so siblings differ, like the source maps */
+  var drift = 0, n = node, guard = 0;
+  while(n && n._parent && guard++ < 10){
+    drift += (n._parent.children || []).indexOf(n);
+    n = n._parent;
+  }
+  return base + ((drift * 7) % 34) - 17;
+}
+function hsl(h){
+  var cs = getComputedStyle(document.documentElement);
+  var s = cs.getPropertyValue("--sat").trim() || "62%";
+  var l = cs.getPropertyValue("--lum").trim() || "66%";
+  return "hsl(" + h + " " + s + " " + l + ")";
+}
+function colorFor(node){
+  var h = hueFor(node);
+  if(h === null){
+    return (getComputedStyle(document.documentElement).getPropertyValue("--fg").trim() || "#e9e9f0");
+  }
+  return hsl(h);
+}
+function paletteColor(i){
+  var pal = PALETTES[document.documentElement.dataset.palette] || PALETTES.aurora;
+  return hsl(pal[i % pal.length]);
+}
+
+/* =========================================================================
+   3. map: render, layout, interaction
+   ========================================================================= */
+var stage  = document.getElementById("stage");
+var sizer  = document.getElementById("sizer");
+var svg    = document.getElementById("links");
+var nodesEl= document.getElementById("nodes");
+var mapView= document.getElementById("mapView");
+var scroller = document.getElementById("canvas");
+var SVGNS  = "http://www.w3.org/2000/svg";
+
+var MAXW = [320, 235, 250, 300, 330];
+var COL_GAP = 60, ROW_GAP = 13, PAD = 40;
+var scale = 1;                 /* only "Fit to screen" changes this */
+
+function maxWidth(d){ return MAXW[Math.min(d, MAXW.length - 1)]; }
+/* an open node needs room for its paragraph */
+function nodeMaxW(n){
+  var w = maxWidth(n._depth);
+  return (n._expanded && n.summary) ? Math.max(w, 360) : w;
+}
+
+function nodeHTML(n){
+  var h = "";
+  if(n.time) h += '<span class="time">' + esc(n.time) + "</span>";
+  h += '<span class="lab">' + esc(n.label) + "</span>";
+  if(n._expanded && (n.note || n.summary)){
+    h += '<span class="detail">';
+    if(n.note)    h += '<span class="gloss">' + esc(n.note) + "</span>";
+    if(n.summary) h += '<span class="sum">' + esc(n.summary) + "</span>";
+    h += "</span>";
+  }
+  return h;
+}
+function esc(s){
+  return String(s).replace(/[&<>"]/g, function(c){
+    return { "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;" }[c];
+  });
+}
+
+function buildNodes(){
+  nodesEl.textContent = "";
+  var frag = document.createDocumentFragment();
+  walk(ROOT, function(n){
+    var kids = hasKids(n);
+    var el = document.createElement("div");
+    el.className = "node k-" + (n.kind || "point") + (openable(n) ? " opens" : "");
+    el.dataset.id = n.id;
+    el.style.maxWidth = nodeMaxW(n) + "px";
+    el.style.setProperty("--nc", colorFor(n));
+    el.innerHTML = nodeHTML(n);
+    if(openable(n)){
+      el.tabIndex = 0;
+      el.setAttribute("role", "button");
+      el.setAttribute("aria-expanded", String(!!n._expanded));
+    }
+    n._el = el;
+    frag.appendChild(el);
+    if(kids){
+      var dot = document.createElement("button");
+      dot.className = "dot";
+      dot.type = "button";
+      dot.dataset.id = n.id;
+      /* the node itself is the keyboard control; the dot is a mouse shortcut,
+         so it stays out of the tab order rather than doubling every stop */
+      dot.tabIndex = -1;
+      dot.style.setProperty("--nc", colorFor(n));
+      dot.setAttribute("aria-label", "Fold or unfold: " + n.label);
+      n._dot = dot;
+      frag.appendChild(dot);
+    } else { n._dot = null; }
+  });
+  nodesEl.appendChild(frag);
+}
+
+function visible(n){                       /* is n drawn right now? */
+  var p = n._parent;
+  while(p){ if(!p._expanded) return false; p = p._parent; }
+  return true;
+}
+
+function layout(){
+  /* --- measure --- */
+  walk(ROOT, function(n){
+    n.y = undefined;
+    if(!visible(n)){ n._el.style.display = "none"; if(n._dot) n._dot.style.display = "none"; return; }
+    n._el.style.display = "";
+    if(n._dot) n._dot.style.display = "";
+    var r = n._el.getBoundingClientRect();
+    n.w = Math.ceil(r.width / scale);
+    n.h = Math.ceil(r.height / scale);
+  });
+
+  /* --- columns --- */
+  var colW = [];
+  walk(ROOT, function(n){
+    if(!visible(n)) return;
+    colW[n._depth] = Math.max(colW[n._depth] || 0, n.w);
+  });
+  var colX = [0];
+  for(var d = 1; d < colW.length; d++) colX[d] = colX[d-1] + (colW[d-1] || 0) + COL_GAP;
+
+  /* --- vertical placement (tidy tree) --- */
+  var cursor = 0;
+  function shift(n, dy){
+    (n.children || []).forEach(function(k){
+      if(k.y === undefined) return;
+      k.y += dy; shift(k, dy);
+    });
+  }
+  function place(n){
+    n.x = colX[n._depth] || 0;
+    var kids = (n._expanded && n.children && n.children.length) ? n.children : null;
+    if(!kids){
+      n.y = cursor + n.h / 2;
+      cursor += n.h + ROW_GAP;
+      return;
+    }
+    var start = cursor;
+    kids.forEach(place);
+    var mid = (kids[0].y + kids[kids.length - 1].y) / 2;
+    if(mid - n.h / 2 < start){                 /* parent taller than its children: push down */
+      var dy = start - (mid - n.h / 2);
+      shift(n, dy);
+      mid += dy;
+      cursor += dy;
+    }
+    n.y = mid;
+    cursor = Math.max(cursor, n.y + n.h / 2 + ROW_GAP);
+  }
+  place(ROOT);
+
+  /* --- paint --- */
+  var W = (colX[colW.length - 1] || 0) + (colW[colW.length - 1] || 0) + PAD * 2;
+  var H = cursor + PAD * 2;
+  svg.setAttribute("width", W);
+  svg.setAttribute("height", H);
+  svg.setAttribute("viewBox", "0 0 " + W + " " + H);
+  svg.textContent = "";
+
+  /* links leave a normal node from the right end of its underline, but the root is a
+     card, so they leave it from the middle of its right edge instead */
+  function outY(n){ return n._parent ? (n.y + PAD + n.h / 2 - 1) : (n.y + PAD); }
+
+  walk(ROOT, function(n){
+    if(!visible(n)) return;
+    var x = n.x + PAD, y = n.y + PAD;
+    n._el.style.transform = "translate(" + x + "px," + (y - n.h / 2) + "px)";
+    var base = y + n.h / 2 - 1;
+
+    if(openable(n)){
+      n._el.setAttribute("aria-expanded", String(!!n._expanded));
+      n._el.classList.toggle("collapsed", !n._expanded);
+      if(hasKids(n)) n._el.querySelector(".lab").setAttribute("data-count", n.children.length);
+    }
+    if(n._dot){
+      n._dot.style.transform = "translate(" + (x + n.w) + "px," + outY(n) + "px)";
+      n._dot.classList.toggle("filled", !n._expanded);
+      n._dot.setAttribute("aria-expanded", String(!!n._expanded));
+    }
+    var p = n._parent;
+    if(!p) return;
+    var px = p.x + PAD + p.w, py = outY(p);
+    var dx = Math.max(18, (x - px) * 0.55);
+    var path = document.createElementNS(SVGNS, "path");
+    path.setAttribute("d",
+      "M" + px + "," + py +
+      "C" + (px + dx) + "," + py + " " + (x - dx) + "," + base + " " + x + "," + base +
+      "H" + (x + n.w));
+    path.setAttribute("fill", "none");
+    path.setAttribute("stroke", colorFor(n));
+    path.setAttribute("stroke-width", n._depth <= 1 ? 1.8 : 1.2);
+    path.setAttribute("stroke-linecap", "round");
+    path.setAttribute("opacity", ".85");
+    svg.appendChild(path);
+  });
+
+  stage._w = W; stage._h = H;
+  stage.style.width = W + "px";
+  stage.style.height = H + "px";
+  applyView();
+}
+
+/* Size the scroll area to the scaled map and centre it while it still fits.
+   The map is scrolled, never zoomed by the wheel. */
+function applyView(){
+  var r = scroller.getBoundingClientRect();
+  var w = (stage._w || 0) * scale, h = (stage._h || 0) * scale;
+  stage.style.transform = scale === 1 ? "" : "scale(" + scale + ")";
+  sizer.style.width  = Math.ceil(Math.max(r.width,  w)) + "px";
+  sizer.style.height = Math.ceil(Math.max(r.height, h)) + "px";
+  stage.style.left = Math.max(0, (r.width  - w) / 2) + "px";
+  stage.style.top  = Math.max(0, (r.height - h) / 2) + "px";
+}
+/* where a node currently sits on screen, so we can hold it still across a relayout */
+function nodePos(n){
+  return {
+    x: (parseFloat(stage.style.left) || 0) + (n.x + PAD) * scale - scroller.scrollLeft,
+    y: (parseFloat(stage.style.top)  || 0) + (n.y + PAD) * scale - scroller.scrollTop
+  };
+}
+/* Fits the WIDTH, not the whole map. The fully expanded map is ~8000px tall, so
+   fitting both axes would force a scale near 0.1 and render 3px text. Fitting the
+   width shows the full breadth at a readable size and lets you scroll down. */
+function fit(){
+  var r = scroller.getBoundingClientRect();
+  var k = r.width / (stage._w || 1);
+  scale = Math.max(0.5, Math.min(1, k));
+  applyView();
+  scroller.scrollTo(0, 0);
+}
+function resetView(){
+  scale = 1;
+  applyView();
+  scroller.scrollTo(0, 0);
+}
+
+function toggle(id){
+  var n = byId[id];
+  if(!n || !openable(n)) return;
+  var before = nodePos(n);
+  n._expanded = !n._expanded;
+  n._el.innerHTML = nodeHTML(n);
+  n._el.style.maxWidth = nodeMaxW(n) + "px";
+  layout();
+  /* hold the clicked node still, so the map grows around it instead of jumping */
+  var after = nodePos(n);
+  scroller.scrollLeft += after.x - before.x;
+  scroller.scrollTop  += after.y - before.y;
+  return n._expanded;
+}
+function setAll(open){
+  walk(ROOT, function(n){ n._expanded = open && openable(n); });
+  buildNodes();
+  layout();
+  if(open) fit(); else resetView();
+}
+
+/* Clicking is handled by real click events, so keyboard and touch work for free.
+   Panning only takes over once the pointer has actually moved — and only then is
+   the pointer captured, because capturing retargets every later event to the
+   container and would swallow the click we are trying to deliver. */
+var drag = null, dragged = false;
+
+scroller.addEventListener("pointerdown", function(e){
+  if(e.pointerType === "mouse" && e.button !== 0) return;
+  /* clear the latch first: a touch tap after a mouse drag must not inherit it */
+  dragged = false;
+  if(e.pointerType !== "mouse") return;               /* touch scrolls natively */
+  drag = {
+    id: e.pointerId, x: e.clientX, y: e.clientY,
+    sl: scroller.scrollLeft, st: scroller.scrollTop, active: false
+  };
+});
+scroller.addEventListener("pointermove", function(e){
+  if(!drag || e.pointerId !== drag.id) return;
+  var dx = e.clientX - drag.x, dy = e.clientY - drag.y;
+  if(!drag.active){
+    if(Math.abs(dx) + Math.abs(dy) < 5) return;       /* still a click, not a drag */
+    drag.active = true;
+    dragged = true;
+    try{ scroller.setPointerCapture(drag.id); }catch(err){}
+    scroller.classList.add("dragging");
+  }
+  scroller.scrollLeft = drag.sl - dx;
+  scroller.scrollTop  = drag.st - dy;
+});
+function endDrag(){
+  if(drag && drag.active){
+    try{ scroller.releasePointerCapture(drag.id); }catch(err){}
+  }
+  drag = null;
+  scroller.classList.remove("dragging");
+}
+scroller.addEventListener("pointerup", endDrag);
+scroller.addEventListener("pointercancel", endDrag);
+
+nodesEl.addEventListener("click", function(e){
+  if(dragged) return;                                 /* that click came from a pan */
+  var hit = e.target.closest(".dot,.node.opens");
+  if(hit && hit.dataset.id) toggle(hit.dataset.id);
+});
+nodesEl.addEventListener("keydown", function(e){
+  if(e.key !== "Enter" && e.key !== " ") return;
+  var t = e.target.closest(".node.opens");
+  if(!t) return;
+  e.preventDefault();
+  toggle(t.dataset.id);
+});
+
+document.querySelector(".maptools").addEventListener("click", function(e){
+  var b = e.target.closest("[data-map]");
+  if(!b) return;
+  var a = b.dataset.map;
+  if(a === "expand")   setAll(true);
+  if(a === "collapse") setAll(false);
+  if(a === "fit")      fit();
+});
+
+/* =========================================================================
+   4. workbook
+   ========================================================================= */
+var workBody = document.getElementById("workBody");
+
+function sectionFor(part){
+  var wrap = document.createElement("section");
+  var h2 = document.createElement("h2");
+  h2.textContent = part.label;
+  wrap.appendChild(h2);
+  if(part.note){
+    var p = document.createElement("p");
+    p.className = "sub"; p.textContent = part.note;
+    wrap.appendChild(p);
+  }
+  (part.children || []).forEach(function(group){
+    var h3 = document.createElement("h3");
+    h3.textContent = group.label;
+    wrap.appendChild(h3);
+    if(group.id === "reminders") wrap.appendChild(remindersRow());
+    (group.children || []).forEach(function(q){ wrap.appendChild(fieldFor(q)); });
+  });
+  return wrap;
+}
+
+function fieldFor(n){
+  var d = document.createElement("div");
+  d.className = "field";
+  var lab = document.createElement("label");
+  lab.setAttribute("for", "f_" + n.id);
+  if(n.time){
+    var c = document.createElement("span");
+    c.className = "clock"; c.textContent = n.time;
+    lab.appendChild(c);
+  }
+  lab.appendChild(document.createTextNode(n.label));
+  d.appendChild(lab);
+  var describedBy = [];
+  [["note", n.note], ["hint", n.summary]].forEach(function(pair){
+    if(!pair[1]) return;
+    var m = document.createElement("span");
+    m.className = "meta";
+    m.id = pair[0] + "_" + n.id;
+    m.textContent = pair[1];
+    describedBy.push(m.id);
+    d.appendChild(m);
+  });
+  var ta = document.createElement("textarea");
+  ta.id = "f_" + n.id;
+  ta.dataset.id = n.id;
+  if(describedBy.length) ta.setAttribute("aria-describedby", describedBy.join(" "));
+  ta.value = answers[n.id] || "";
+  ta.classList.toggle("filled", !!ta.value.trim());
+  ta.addEventListener("input", function(){
+    answers[n.id] = ta.value;
+    ta.classList.toggle("filled", !!ta.value.trim());
+    save(); refreshProgress(); refreshBoard();
+  });
+  d.appendChild(ta);
+  return d;
+}
+
+function remindersRow(){
+  var row = document.createElement("div");
+  row.className = "row";
+  var lbl = document.createElement("label");
+  lbl.setAttribute("for","icsDate");
+  lbl.style.fontSize = "13px"; lbl.style.color = "var(--fg-dim)";
+  lbl.textContent = "Put these six alarms in my calendar for:";
+  var date = document.createElement("input");
+  date.type = "date"; date.id = "icsDate";
+  date.value = new Date(Date.now() - new Date().getTimezoneOffset()*60000).toISOString().slice(0,10);
+  var b = document.createElement("button");
+  b.className = "btn primary"; b.type = "button";
+  b.textContent = "Download reminders (.ics)";
+  b.addEventListener("click", function(){ downloadICS(date.value); });
+  row.appendChild(lbl); row.appendChild(date); row.appendChild(b);
+  return row;
+}
+
+function buildWorkbook(){
+  workBody.textContent = "";
+  var protocol = byId["protocol"];
+  (protocol.children || []).forEach(function(part){ workBody.appendChild(sectionFor(part)); });
+
+  var six = byId["six-components"];
+  var sec = document.createElement("section");
+  var h2 = document.createElement("h2");
+  h2.textContent = "Six components to document";
+  var badge = document.createElement("span");
+  badge.className = "badge"; badge.textContent = "the deliverable";
+  h2.appendChild(badge);
+  sec.appendChild(h2);
+  var p = document.createElement("p");
+  p.className = "sub";
+  p.textContent = "This is what you walk away with. Keep it somewhere you will actually see it.";
+  sec.appendChild(p);
+  (six.children || []).forEach(function(f){ sec.appendChild(fieldFor(f)); });
+  workBody.appendChild(sec);
+
+  var end = document.createElement("div");
+  end.className = "callout";
+  end.innerHTML = "<b>Before you close this.</b> Press <b>Export Markdown</b>. " +
+    "That file is yours, it opens in Obsidian, Notepad, Word, or anything else, " +
+    "and it is the only copy that survives clearing your browser data.";
+  workBody.appendChild(end);
+
+  var d = document.createElement("div");
+  d.className = "credit";
+  d.textContent = META.disclaimer;
+  workBody.appendChild(d);
+}
+
+function refreshProgress(){
+  var done = INPUTS.filter(function(n){ return (answers[n.id] || "").trim(); }).length;
+  var total = INPUTS.length;
+  document.getElementById("bar").style.width = (total ? (done / total * 100) : 0) + "%";
+  document.getElementById("pct").textContent = done + " / " + total;
+}
+
+/* =========================================================================
+   5. game board
+   ========================================================================= */
+function val(id){ return (answers[id] || "").trim(); }
+
+function refreshBoard(){
+  /* --- the two stakes: the player's own win and lose conditions --- */
+  var stakes = document.getElementById("stakes");
+  stakes.textContent = "";
+  [
+    { id:"iq4", k:"What I am building toward", i:4, fall:"Answer the last two integration questions in Part 3 and they appear here." },
+    { id:"iq3", k:"What I refuse to become",   i:0, fall:"This is the line you re-read on the days you do not feel like it." }
+  ].forEach(function(s){
+    var d = document.createElement("div");
+    d.className = "stake";
+    d.style.setProperty("--nc", paletteColor(s.i));
+    var k = document.createElement("div"); k.className = "k"; k.textContent = s.k;
+    var v = document.createElement("div");
+    var t = val(s.id);
+    v.className = "v" + (t ? "" : " empty");
+    v.textContent = t || s.fall;
+    d.appendChild(k); d.appendChild(v);
+    stakes.appendChild(d);
+  });
+
+  /* --- the six components --- */
+  var cards = document.getElementById("cards");
+  cards.textContent = "";
+  FIELDS.forEach(function(f, i){
+    var c = document.createElement("div");
+    c.className = "card";
+    c.style.setProperty("--nc", paletteColor(i));      /* one distinct colour per card */
+    var mech = document.createElement("div");
+    mech.className = "mech";
+    mech.textContent = (f.mechanic || "").replace(/\.$/, "");
+    var h4 = document.createElement("h4"); h4.textContent = f.label;
+    var desc = document.createElement("div"); desc.className = "desc"; desc.textContent = f.note || "";
+    var v = document.createElement("div");
+    var t = val(f.id);
+    v.className = "val" + (t ? "" : " empty");
+    v.textContent = t || "Not filled in yet \u2014 see the Workbook tab.";
+    c.appendChild(mech); c.appendChild(h4); c.appendChild(desc); c.appendChild(v);
+    cards.appendChild(c);
+  });
+
+  /* --- the three horizons from Part 3 --- */
+  var run = document.getElementById("run");
+  run.textContent = "";
+  [
+    { id:"g1", t:"1 year",  s:"The mission", i:1 },
+    { id:"g2", t:"1 month", s:"The boss fight", i:3 },
+    { id:"g3", t:"Daily",   s:"Daily quests", i:5 }
+  ].forEach(function(r){
+    var row = document.createElement("div");
+    row.className = "runrow";
+    row.style.setProperty("--nc", paletteColor(r.i));
+    var t = document.createElement("div");
+    t.className = "t";
+    t.appendChild(document.createTextNode(r.t));
+    var sm = document.createElement("small"); sm.textContent = r.s;
+    t.appendChild(sm);
+    var v = document.createElement("div");
+    var a = val(r.id);
+    v.className = "v" + (a ? "" : " empty");
+    v.textContent = a || "Not set yet \u2014 Part 3 of the Workbook.";
+    row.appendChild(t); row.appendChild(v);
+    run.appendChild(row);
+  });
+
+  /* --- the legend, straight from the model --- */
+  /* rebuilt every time: it resolves --nc at build time, so caching it left the
+     table on stale colours after a theme or palette switch */
+  var mech = document.getElementById("mechanics");
+  mech.textContent = "";
+  {
+    var tbl = document.createElement("table");
+    var thead = document.createElement("tr");
+    ["Component", "In the game", "Why it matters"].forEach(function(h){
+      var th = document.createElement("th"); th.textContent = h; thead.appendChild(th);
+    });
+    tbl.appendChild(thead);
+    (byId["game-mechanics"].children || []).forEach(function(m, i){
+      var parts = m.label.split(/\s*=\s*/);
+      var tr = document.createElement("tr");
+      [parts[0], parts[1] || "", m.summary || ""].forEach(function(txt, c){
+        var td = document.createElement("td");
+        td.className = "c" + (c + 1);
+        td.textContent = txt;
+        if(c === 0) td.style.setProperty("--nc", paletteColor(i));
+        tr.appendChild(td);
+      });
+      tr.style.setProperty("--nc", paletteColor(i));
+      tbl.appendChild(tr);
+    });
+    mech.appendChild(tbl);
+  }
+
+  var done = FIELDS.filter(function(f){ return val(f.id); }).length;
+  document.getElementById("boardNote").innerHTML = done === FIELDS.length
+    ? "<b>All six are set.</b> Daily levers before anything else, every day. Re-read the anti-vision on the days you do not feel like it \u2014 that is the whole reason it exists."
+    : "<b>" + done + " of " + FIELDS.length + " filled.</b> The board only works once every slot has something in it, even a rough draft.";
+}
+
+/* =========================================================================
+   6. export
+   ========================================================================= */
+function toMarkdown(){
+  var out = [];
+  var stamp = new Date().toISOString().slice(0, 10);
+  out.push("# The One-Day Protocol \u2014 my answers", "");
+  out.push("*Completed: " + stamp + "*", "");
+
+  function section(node, level){
+    out.push("", "#".repeat(level) + " " + node.label);
+    if(node.note) out.push("", "*" + node.note + "*");
+    (node.children || []).forEach(function(c){
+      if(c.kind === "prompt" || c.kind === "field"){
+        var v = (answers[c.id] || "").trim();
+        out.push("", "**" + (c.time ? c.time + " \u2014 " : "") + c.label + "**", "");
+        out.push(v ? v.split("\n").map(function(l){ return "> " + l; }).join("\n") : "> _(blank)_");
+      } else {
+        section(c, level + 1);
+      }
+    });
+  }
+  section(byId["protocol"], 2);
+  section(byId["six-components"], 2);
+  return out.join("\n") + "\n";
+}
+
+function download(name, text, mime){
+  try{
+    var blob = new Blob([text], { type: mime || "text/plain;charset=utf-8" });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement("a");
+    a.href = url; a.download = name;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    setTimeout(function(){ URL.revokeObjectURL(url); }, 4000);
+    return true;
+  }catch(e){
+    notify("This browser blocked the download. Use \u201cCopy all\u201d instead and paste it into a text file.");
+    return false;
+  }
+}
+
+function pad2(x){ return (x < 10 ? "0" : "") + x; }
+function buildICS(dateStr){
+  if(!/^\d{4}-\d{2}-\d{2}$/.test(dateStr || "")) return null;
+  var day = dateStr.replace(/-/g, "");
+  var now = new Date();
+  var stamp = now.getUTCFullYear() + pad2(now.getUTCMonth()+1) + pad2(now.getUTCDate()) + "T" +
+              pad2(now.getUTCHours()) + pad2(now.getUTCMinutes()) + pad2(now.getUTCSeconds()) + "Z";
+  var L = ["BEGIN:VCALENDAR","VERSION:2.0","PRODID:-//One-Day Protocol//EN","CALSCALE:GREGORIAN"];
+  byId["reminders"].children.forEach(function(q, i){
+    var t = q.time.replace(":", "") + "00";
+    L.push("BEGIN:VEVENT");
+    L.push("UID:odp-" + day + "-" + i + "@one-day-protocol");
+    L.push("DTSTAMP:" + stamp);
+    L.push("DTSTART:" + day + "T" + t);
+    L.push("DURATION:PT10M");
+    L.push("SUMMARY:" + icsEsc(q.label));
+    L.push("DESCRIPTION:" + icsEsc("Pattern interruption \u2014 stop, answer honestly, 60 seconds."));
+    L.push("BEGIN:VALARM","TRIGGER:PT0M","ACTION:DISPLAY","DESCRIPTION:" + icsEsc(q.label),"END:VALARM");
+    L.push("END:VEVENT");
+  });
+  L.push("END:VCALENDAR");
+  return L.join("\r\n") + "\r\n";
+}
+function downloadICS(dateStr){
+  var ics = buildICS(dateStr);
+  if(!ics){ notify("Pick a valid date first."); return; }
+  download("one-day-protocol-reminders.ics", ics, "text/calendar;charset=utf-8");
+}
+function icsEsc(s){
+  return String(s).replace(/\\/g,"\\\\").replace(/;/g,"\\;").replace(/,/g,"\\,").replace(/\n/g,"\\n");
+}
+
+document.getElementById("exportBtn").addEventListener("click", function(){
+  download("one-day-protocol-answers.md", toMarkdown(), "text/markdown;charset=utf-8");
+});
+document.getElementById("copyBtn").addEventListener("click", function(){
+  var text = toMarkdown(), btn = this;
+  function ok(){ var o = btn.textContent; btn.textContent = "Copied"; setTimeout(function(){ btn.textContent = o; }, 1400); }
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(text).then(ok, legacy);
+  } else legacy();
+  function legacy(){
+    var ta = document.createElement("textarea");
+    ta.value = text; ta.style.position = "fixed"; ta.style.opacity = "0";
+    document.body.appendChild(ta); ta.select();
+    try{ document.execCommand("copy"); ok(); }
+    catch(e){ notify("Copy failed. Use \u201cExport Markdown\u201d instead."); }
+    document.body.removeChild(ta);
+  }
+});
+/* Textareas print only their first visible lines, so build a rendered copy of the
+   answers just before printing. Also wired to beforeprint for Ctrl+P. */
+function buildPrintout(){
+  var out = document.getElementById("printout");
+  out.textContent = "";
+  var h1 = document.createElement("h2");
+  h1.textContent = "The One-Day Protocol — " + new Date().toISOString().slice(0, 10);
+  out.appendChild(h1);
+
+  function section(node, level){
+    var h = document.createElement(level === 2 ? "h2" : "h3");
+    h.textContent = node.label;
+    out.appendChild(h);
+    (node.children || []).forEach(function(c){
+      if(c.kind === "prompt" || c.kind === "field"){
+        var q = document.createElement("div");
+        q.className = "q";
+        q.textContent = (c.time ? c.time + " — " : "") + c.label;
+        var a = document.createElement("div");
+        var v = (answers[c.id] || "").trim();
+        a.className = "a" + (v ? "" : " blank");
+        a.textContent = v || "(blank)";
+        out.appendChild(q); out.appendChild(a);
+      } else section(c, level + 1);
+    });
+  }
+  (byId["protocol"].children || []).forEach(function(p){ section(p, 2); });
+  section(byId["six-components"], 2);
+}
+window.addEventListener("beforeprint", buildPrintout);
+document.getElementById("printBtn").addEventListener("click", function(){
+  buildPrintout();
+  window.print();
+});
+document.getElementById("clearBtn").addEventListener("click", function(){
+  if(!confirm("Erase every answer stored in this browser? This cannot be undone.")) return;
+  answers = {};
+  if(storeOK){ try{ localStorage.removeItem(STORE_KEY); }catch(e){} }
+  document.querySelectorAll("#workBody textarea").forEach(function(ta){
+    ta.value = ""; ta.classList.remove("filled");
+  });
+  refreshProgress(); refreshBoard();
+});
+
+/* =========================================================================
+   7. tabs, theme, palette
+   ========================================================================= */
+var TABS = { "tab-map":"mapView", "tab-work":"workView", "tab-board":"boardView" };
+var HASHES = { "#map":"tab-map", "#workbook":"tab-work", "#board":"tab-board" };
+
+function selectTab(tabId){
+  if(!TABS[tabId]) return;
+  Object.keys(TABS).forEach(function(id){
+    var on = id === tabId;
+    document.getElementById(id).setAttribute("aria-selected", String(on));
+    document.getElementById(TABS[id]).classList.toggle("active", on);
+  });
+  if(tabId === "tab-map") layout();
+  if(tabId === "tab-board") refreshBoard();
+}
+document.querySelector(".tabs").addEventListener("click", function(e){
+  var b = e.target.closest("button[role=tab]");
+  if(!b) return;
+  selectTab(b.id);
+  var h = Object.keys(HASHES).filter(function(k){ return HASHES[k] === b.id; })[0];
+  if(h) history.replaceState(null, "", h);
+});
+window.addEventListener("hashchange", function(){
+  if(HASHES[location.hash]) selectTab(HASHES[location.hash]);
+});
+/* arrow-key navigation, per the ARIA tabs pattern */
+document.querySelector(".tabs").addEventListener("keydown", function(e){
+  var step = e.key === "ArrowRight" ? 1 : e.key === "ArrowLeft" ? -1 : 0;
+  if(!step) return;
+  e.preventDefault();
+  var ids = Object.keys(TABS);
+  var i = ids.indexOf(document.activeElement.id);
+  if(i < 0) return;
+  var next = document.getElementById(ids[(i + step + ids.length) % ids.length]);
+  next.focus();
+  selectTab(next.id);
+});
+
+function repaintColors(){
+  walk(ROOT, function(n){
+    if(!n._el) return;
+    var c = colorFor(n);
+    n._el.style.setProperty("--nc", c);
+    if(n._dot) n._dot.style.setProperty("--nc", c);
+  });
+  /* measuring a display:none panel yields zeros, which would flatten the map */
+  if(mapView.classList.contains("active")) layout();
+  refreshBoard();
+}
+var PREF_KEY = "one-day-protocol/prefs";
+function prefs(obj){
+  if(!storeOK) return {};
+  try{
+    if(obj){ localStorage.setItem(PREF_KEY, JSON.stringify(obj)); return obj; }
+    return JSON.parse(localStorage.getItem(PREF_KEY) || "{}") || {};
+  }catch(e){ return {}; }
+}
+var P = prefs();
+if(P.theme) document.documentElement.dataset.theme = P.theme;
+else if(window.matchMedia && window.matchMedia("(prefers-color-scheme: light)").matches)
+  document.documentElement.dataset.theme = "light";
+if(P.palette) document.documentElement.dataset.palette = P.palette;
+
+document.getElementById("themeBtn").addEventListener("click", function(){
+  var d = document.documentElement;
+  d.dataset.theme = d.dataset.theme === "dark" ? "light" : "dark";
+  P.theme = d.dataset.theme; prefs(P);
+  repaintColors();
+});
+document.getElementById("paletteBtn").addEventListener("click", function(){
+  var d = document.documentElement;
+  d.dataset.palette = d.dataset.palette === "aurora" ? "ember" : "aurora";
+  P.palette = d.dataset.palette; prefs(P);
+  repaintColors();
+});
+
+var resizeTimer = null;
+window.addEventListener("resize", function(){
+  clearTimeout(resizeTimer);
+  resizeTimer = setTimeout(function(){ if(document.getElementById("mapView").classList.contains("active")) layout(); }, 150);
+});
+
+/* =========================================================================
+   8. self-test  (open index.html#selftest to run it)
+   ========================================================================= */
+function selfTest(){
+  var fails = [], n = 0;
+  function ok(cond, name){ n++; if(!cond) fails.push(name); }
+
+  var modelCount = 0;
+  walk(ROOT, function(){ modelCount++; });
+  ok(modelCount === document.querySelectorAll("#nodes .node").length, "every model node rendered");
+  ok(!document.documentElement.hasAttribute("data-boot-error"), "no boot error");
+
+  /* every node must be openable — a dead-end node would be a content gap */
+  walk(ROOT, function(node){ ok(openable(node), "node opens to something: " + node.id); });
+
+  /* --- real events, not direct API calls. The API working proves nothing about
+         whether a human clicking the thing gets any result. --- */
+  function fireClick(el){
+    var r = el.getBoundingClientRect();
+    var o = {
+      bubbles:true, cancelable:true, composed:true,
+      clientX: r.left + Math.min(8, r.width / 2),
+      clientY: r.top + Math.min(8, r.height / 2),
+      button:0, buttons:1, pointerId:1, pointerType:"mouse", isPrimary:true
+    };
+    try{
+      el.dispatchEvent(new PointerEvent("pointerdown", o));
+      el.dispatchEvent(new PointerEvent("pointerup", o));
+    }catch(err){
+      el.dispatchEvent(new MouseEvent("mousedown", o));
+      el.dispatchEvent(new MouseEvent("mouseup", o));
+    }
+    el.dispatchEvent(new MouseEvent("click", o));
+  }
+  function countVisible(){
+    var c = 0;
+    walk(ROOT, function(node){ if(visible(node)) c++; });
+    return c;
+  }
+  function toolbar(action){
+    fireClick(document.querySelector('.maptools [data-map="' + action + '"]'));
+  }
+
+  var before = [];
+  walk(ROOT, function(node){ before.push(node._expanded); });
+
+  /* the map starts as a single button */
+  toolbar("collapse");
+  ok(countVisible() === 1, "CLICK: Contract all leaves exactly one node on screen");
+  ok(svg.querySelectorAll("path").length === 0, "no links when contracted");
+  ok(ROOT._el.classList.contains("collapsed"), "root shows its click affordance");
+
+  /* clicking the root card opens it */
+  fireClick(ROOT._el);
+  ok(ROOT._expanded, "CLICK: the root card opens");
+  ok(countVisible() === 1 + (ROOT.children || []).length, "CLICK: opening the root reveals its branches");
+  ok(svg.querySelectorAll("path").length === (ROOT.children || []).length, "one link per branch");
+
+  /* clicking a branch opens it, and clicking a second one leaves the first open */
+  var b1 = byId["core-problem"], b2 = byId["insights"];
+  fireClick(b1._el);
+  ok(b1._expanded, "CLICK: a branch opens");
+  fireClick(b2._el);
+  ok(b2._expanded && b1._expanded, "CLICK: opening a second branch keeps the first open");
+
+  /* clicking an end point reveals its summary */
+  var leaf = byId["cp-not-an-accident"];
+  fireClick(leaf._el);
+  ok(leaf._expanded, "CLICK: an end point opens");
+  ok(leaf._el.textContent.indexOf(leaf.summary.slice(0, 30)) !== -1, "CLICK: its summary appears");
+  fireClick(leaf._el);
+  ok(!leaf._expanded, "CLICK: clicking it again closes it");
+
+  /* the fold dot on a node's edge works too */
+  ok(!!b1._dot, "branch has a fold dot");
+  fireClick(b1._dot);
+  ok(!b1._expanded, "CLICK: the fold dot closes a branch");
+
+  /* keyboard */
+  var kev = { key:"Enter", bubbles:true, cancelable:true };
+  b1._el.dispatchEvent(new KeyboardEvent("keydown", kev));
+  ok(b1._expanded, "KEYBOARD: Enter opens a node");
+
+  /* toolbar */
+  toolbar("expand");
+  ok(countVisible() === modelCount, "CLICK: Expand all shows everything");
+  var fitScale = scale;
+  toolbar("fit");
+  ok(scale > 0 && scale <= 1, "CLICK: Fit to screen produces a sane scale");
+  ok(isFinite(scale), "scale stays finite");
+  void fitScale;
+  toolbar("collapse");
+  ok(countVisible() === 1 && scale === 1, "CLICK: Contract all resets the view");
+
+  /* the wheel must never zoom */
+  var s0 = scale;
+  scroller.dispatchEvent(new WheelEvent("wheel", { deltaY:-200, bubbles:true, cancelable:true }));
+  ok(scale === s0, "the mouse wheel does not zoom");
+  ok(!document.querySelector('[data-map="zoomin"]'), "no zoom buttons");
+
+  toolbar("expand");
+
+  /* siblings must not overlap vertically — checked at both extremes */
+  function checkOverlaps(tag){
+    walk(ROOT, function(node){
+      if(!node._expanded) return;
+      var ks = (node.children || []);
+      for(var i = 1; i < ks.length; i++){
+        ok(ks[i].y - ks[i].h / 2 >= ks[i-1].y + ks[i-1].h / 2 - 1, tag + " no overlap: " + ks[i].id);
+      }
+    });
+  }
+  checkOverlaps("expanded");
+  walk(ROOT, function(node){
+    ok(visible(node), "everything visible when expanded: " + node.id);
+    ok(isFinite(node.x) && isFinite(node.y) && node.h > 0 && node.w > 0, "expanded geometry: " + node.id);
+    if(node.summary){
+      ok(node._el.textContent.indexOf(node.summary.slice(0, 40)) !== -1, "summary shown when open: " + node.id);
+    }
+  });
+  var paths = svg.querySelectorAll("path");
+  ok(paths.length === modelCount - 1, "one link per non-root node");
+  Array.prototype.forEach.call(paths, function(pth){
+    ok(pth.getAttribute("d").indexOf("NaN") === -1, "no NaN in link path");
+  });
+
+  var i2 = 0;
+  walk(ROOT, function(node){ node._expanded = before[i2++]; });
+  buildNodes(); layout();
+
+  ok(document.querySelectorAll("#workBody textarea").length === INPUTS.length, "one textarea per prompt/field");
+  INPUTS.forEach(function(f){ ok(!!document.getElementById("f_" + f.id), "textarea exists: " + f.id); });
+  ok(document.querySelectorAll("#cards .card").length === FIELDS.length, "six board cards");
+  ok(document.querySelectorAll("#stakes .stake").length === 2, "board shows both stakes");
+  ok(document.querySelectorAll("#run .runrow").length === 3, "board shows three horizons");
+  ok(document.querySelectorAll("#mechanics tr").length === 1 + (byId["game-mechanics"].children || []).length,
+     "board legend has a row per mechanic");
+  ok(document.querySelectorAll(".built").length === 1, "AEKR footer present");
+  ok(!!document.querySelector('.built a[href="https://aekr.io"]'), "AEKR footer links to aekr.io");
+  ok(!!document.querySelector('.built a[href*="instagram.com/__aerk"]'), "AEKR footer links to Instagram");
+
+  var md = toMarkdown();
+  ok(md.length > 500, "markdown export non-trivial");
+  PROMPTS.forEach(function(q){ ok(md.indexOf(q.label) !== -1, "markdown contains: " + q.id); });
+
+  var ics = buildICS("2026-08-16");
+  ok(!!ics && ics.indexOf("BEGIN:VCALENDAR") === 0, "ics starts correctly");
+  ok(ics && (ics.match(/BEGIN:VEVENT/g) || []).length === 6, "ics has six events");
+  ok(ics && ics.indexOf("\r\n") !== -1, "ics uses CRLF");
+  ok(ics && ics.trim().slice(-13) === "END:VCALENDAR", "ics ends correctly");
+  ok(buildICS("nope") === null, "ics rejects bad date");
+
+  ok(typeof colorFor(byId["core-problem"]) === "string", "colour resolves");
+  ok(document.querySelectorAll("[role=tab]").length === 3, "three tabs");
+
+  var report = (fails.length ? "FAIL" : "PASS") + " " + (n - fails.length) + "/" + n +
+    (fails.length ? "\n" + fails.slice(0, 20).join("\n") : "");
+  return { pass: !fails.length, checks: n, failures: fails, report: report };
+}
+
+/* =========================================================================
+   9. go
+   ========================================================================= */
+document.title = META.title;
+buildNodes();
+buildWorkbook();
+refreshProgress();
+refreshBoard();
+layout();
+resetView();
+if(HASHES[location.hash]) selectTab(HASHES[location.hash]);
+document.documentElement.setAttribute("data-ready", "1");
+/* tools/uitest.mjs drives this page from outside with real browser input; it reads
+   the DOM directly and needs no test hooks here beyond the model and the suite. */
+window.__ODP__ = {
+  model: MODEL, selfTest: selfTest, layout: layout, fit: fit,
+  toggle: toggle, setAll: setAll, answers: function(){ return answers; }
+};
+
+if(location.hash === "#selftest"){
+  var r = selfTest();
+  var pre = document.createElement("pre");
+  pre.id = "selftest";
+  pre.style.cssText = "position:fixed;inset:0;z-index:99;background:var(--bg);color:var(--fg);padding:20px;margin:0;overflow:auto;font-size:13px";
+  pre.textContent = r.report;
+  document.body.appendChild(pre);
+  document.title = r.report.split("\n")[0];
+}
+})();
+</script>
+</body>
+</html>

@@ -100,7 +100,11 @@ const assert = (cond, msg) => { if (!cond) { console.error("BUILD FAILED: " + ms
 
   const html = tpl.replace("/*__MODEL_JSON__*/", () => json);
   writeFileSync(p(APP_FILE), html, "utf8");
-  console.log(`${APP_FILE} — ${(html.length / 1024).toFixed(1)} KB`);
+  /* Same app, second filename. Web hosts (GitHub Pages, Cloudflare Pages) can only
+     serve a directory root as index.html, and a redirect stub would add a hop and
+     an ugly URL. The download keeps the human-readable name; the site gets this. */
+  writeFileSync(p("index.html"), html, "utf8");
+  console.log(`${APP_FILE} — ${(html.length / 1024).toFixed(1)} KB  (+ index.html for hosting)`);
 }
 
 /* ------------------------------------------------------- 2. Obsidian notes */

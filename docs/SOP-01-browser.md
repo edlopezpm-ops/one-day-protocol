@@ -8,8 +8,9 @@ Everything the [README](../README.md) skips: what each control does, and what to
 
 - **Click the button in the middle** to open the first level. Keep clicking to go deeper.
 - Every node opens — branches reveal their children, end points reveal a short explanation. The small circle on a node's right edge means it has children; the number in the pill is how many.
-- **Drag** the background to move. **Scroll** to zoom. Clicking a node never moves the map out from under you — the node you clicked stays put.
-- **Expand all** opens everything at once. **Contract all** takes you back to the single button. **Fit** re-centres if you get lost.
+- **Scroll** the map like any other page — the wheel never zooms. You can also drag the background to move around.
+- Clicking a node never moves the map out from under you: the node you clicked stays put and the map grows around it.
+- **Expand all** opens everything at once. **Contract all** takes you back to the single button. **Fit to screen** shrinks the whole map to fit, for when you want the shape of it rather than the words.
 - **Palette** switches between the two colour schemes; **Theme** switches light and dark. Both are remembered.
 
 ## Saving your work
@@ -34,8 +35,8 @@ In the Workbook, under *Part 2*, pick a date and press **Download reminders (.ic
 | --- | --- |
 | Blank page, or the map never appears | You're opening it from inside the zip. Extract the folder first. |
 | Red bar about storage | Private window, or the browser blocks local-file storage. Use a normal window and export often. |
-| Map is a tiny cluster, or you're lost | **Fit**, then **Contract all** to start over. |
+| Lost in the map | **Contract all** to start over from the single button. |
 | Download button does nothing | Use **Copy all**, paste into a text file. |
-| Text too small | `Ctrl` + `+` to zoom the page, or the `+` button on the map. |
+| Text too small | `Ctrl` + `+` (`Cmd` + `+`) zooms the whole page, as on any website. |
 
 **To check the file is intact:** add `#selftest` to the address bar and press Enter. You should see a line starting with `PASS`. `FAIL` means a corrupted download — get it again.

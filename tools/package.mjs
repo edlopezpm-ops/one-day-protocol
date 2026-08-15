@@ -45,8 +45,9 @@ Blank page? Extract the folder out of the .zip first, then try again.
 THE THREE TABS
 --------------
 MAP         Click the button in the middle, then keep clicking. Every
-            node opens into a short explanation. Expand all and
-            Contract all are at the bottom left.
+            node opens into a short explanation. Scroll to move around
+            - the wheel never zooms. Expand all, Contract all and Fit
+            to screen are at the bottom left.
 WORKBOOK    Every question with a box to type in. Saves as you type.
 GAME BOARD  Your answers laid out as a game.
 

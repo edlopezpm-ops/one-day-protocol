@@ -257,8 +257,12 @@ async function run() {
   ok(await evaluate('document.getElementById("cards").textContent.includes("a life I would not need a holiday from")'),
      "an answer typed in the Workbook reaches the Game board");
   ok(await evaluate('document.querySelectorAll("#run .runrow").length === 3'), "the board shows three horizons");
-  ok(await evaluate('!!document.querySelector(\'.built[href="https://aekr.io"]\')'),
-     "the AEKR footer is present and linked");
+  ok(await evaluate('!!document.querySelector(\'.built a[href="https://aekr.io"]\')'),
+     "the AEKR footer links to aekr.io");
+  ok(await evaluate('!!document.querySelector(\'.built a[href*="instagram.com/__aerk"]\')'),
+     "the AEKR footer links to Instagram");
+  ok(await evaluate('(function(){var r=__T__.rect(".built");return r && r.left>0 && r.top>0})()'),
+     "the AEKR footer is on screen");
 
   await clickSel("#tab-map");
   ok((await state()).tab === "tab-map", "the Map tab opens again");
@@ -266,6 +270,25 @@ async function run() {
   /* --- and the in-page suite still passes --- */
   const inner = await evaluate("__ODP__.selfTest().report.split('\\n')[0]");
   ok(String(inner).startsWith("PASS"), `in-page suite: ${inner}`);
+
+  /* --- phone: nothing may push the page sideways --- */
+  await send("Emulation.setDeviceMetricsOverride", {
+    width: 390, height: 844, deviceScaleFactor: 2, mobile: true,
+  });
+  await sleep(400);
+  for (const [tab, name] of [["#tab-board", "Game board"], ["#tab-work", "Workbook"], ["#tab-map", "Map"]]) {
+    await clickSel(tab);
+    await sleep(200);
+    const over = await evaluate(
+      "JSON.stringify({doc:document.documentElement.scrollWidth, win:window.innerWidth})");
+    const { doc, win } = JSON.parse(over);
+    ok(doc <= win + 1, `at 390px the ${name} tab does not scroll sideways (${doc} vs ${win})`);
+  }
+  ok(await evaluate('(function(){var r=__T__.rect(".built");return r && r.left + r.w <= window.innerWidth + 1})()'),
+     "at 390px the AEKR footer stays on screen");
+  await clickSel('.maptools [data-map="expand"]');
+  ok((await state()).visible.length > 1, "at 390px the map toolbar still works");
+  await send("Emulation.clearDeviceMetricsOverride");
 }
 
 let code = 0;

@@ -309,6 +309,7 @@ walk(ROOT, (n) => { if (!isLeafKind(n) && n !== ROOT) NOTE_NODES.push(n); });
   assert(html.includes('id="model"'), `${APP_FILE} lost its embedded model`);
   assert(!html.includes("/*__MODEL_JSON__*/"), `${APP_FILE} still has the unreplaced marker`);
   assert(html.includes('href="https://aekr.io"'), `${APP_FILE} lost the AEKR footer link`);
+  assert(html.includes("instagram.com/__aerk"), `${APP_FILE} lost the AEKR Instagram link`);
 
   console.log(`verified — ${links} wikilinks, ${canvas.nodes.length} canvas nodes, all resolve`);
 }

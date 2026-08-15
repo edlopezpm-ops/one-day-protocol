@@ -2,7 +2,7 @@
 
 An interactive model of **"How to fix your entire life in 1 day"** by [Dan Koe](https://thedankoe.com/), organised after the mind map by [@MindBranches](https://x.com/MindBranches/status/2078988089393901842).
 
-**[⬇ Download](https://github.com/edlopezpm-ops/one-day-protocol/releases/latest)** · **[Run the day](docs/SOP-03-run-the-day.md)** · Built with **[AEKR](https://aekr.io)**
+**[⬇ Download](https://github.com/edlopezpm-ops/one-day-protocol/releases/latest)** · **[Run the day](docs/SOP-03-run-the-day.md)** · Built with **[AEKR](https://aekr.io)** · **[@__aerk](https://www.instagram.com/__aerk/)**
 
 ---
 
@@ -59,3 +59,9 @@ Para Obsidian, baja `Obsidian-Vault.zip` y abre la carpeta `vault` como bóveda.
 Guía del día completo: [docs/SOP-03-run-the-day.md](docs/SOP-03-run-the-day.md)
 
 </details>
+
+---
+
+[![Built with AEKR](docs/img/aekr.png)](https://aekr.io)
+
+**[aekr.io](https://aekr.io)** · **[@__aerk on Instagram](https://www.instagram.com/__aerk/)**

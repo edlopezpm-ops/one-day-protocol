@@ -1,62 +1,41 @@
 # SOP 01 — Open it in your browser
 
-**Time:** 1 minute. **You need:** a computer and any browser from the last few years.
+Everything the [README](../README.md) skips: what each control does, and what to do when something misbehaves.
 
 ---
 
-## Steps
+## Using the map
 
-1. **Download.** Open the [latest release](https://github.com/edlopezpm-ops/one-day-protocol/releases/latest) and click `one-day-protocol.zip`.
-2. **Unzip.**
-   - *Windows:* right-click the file → **Extract All** → **Extract**.
-   - *Mac:* double-click the file.
-   - Do not skip this. Opening `index.html` from *inside* a zip will not work.
-3. **Open.** Go into the unzipped folder and double-click **`index.html`**.
-4. Your browser opens with the map. Done.
-
-## Bookmark it
-
-Press `Ctrl+D` (`Cmd+D`) once it's open. Now it's one click away forever.
-
----
-
-## The three tabs
-
-- **Map** — the whole model.
-  - Click any node with a small circle to fold or unfold it.
-  - Drag the background to move around, scroll to zoom.
-  - **Expand all** shows everything. **Fit** re-centres if you get lost.
-  - **Details** hides the explanatory lines if you want just the skeleton.
-- **Workbook** — the questions, with a box under each one. It saves while you type.
-- **Game board** — your six answers as a game board. It fills in from the Workbook.
-
-**Palette** switches between the two colour schemes. **Theme** switches light and dark.
-
----
+- **Click the button in the middle** to open the first level. Keep clicking to go deeper.
+- Every node opens — branches reveal their children, end points reveal a short explanation. The small circle on a node's right edge means it has children; the number in the pill is how many.
+- **Drag** the background to move. **Scroll** to zoom. Clicking a node never moves the map out from under you — the node you clicked stays put.
+- **Expand all** opens everything at once. **Contract all** takes you back to the single button. **Fit** re-centres if you get lost.
+- **Palette** switches between the two colour schemes; **Theme** switches light and dark. Both are remembered.
 
 ## Saving your work
 
-Your answers live in the browser's storage on this computer. They survive closing the tab and restarting the machine. They do **not** survive:
+Answers live in this browser's storage on this computer. They survive closing the tab and restarting the machine. They do **not** survive clearing browsing data, switching browser or computer, or private windows — which usually block storage outright, in which case a red bar appears at the top.
 
-- clearing browsing data / cookies / site data,
-- using a different browser or a different computer,
-- private / incognito windows (which usually block storage entirely — the page will warn you at the top if so).
+So: press **Export Markdown** when you finish. You get a `.md` file that opens in Obsidian, Notepad, TextEdit, Word, VS Code, anything.
 
-**So: press `Export Markdown` when you finish.** You get a `.md` file. That is your real copy. It opens in Obsidian, Notepad, TextEdit, Word, VS Code — anything.
+- **Copy all** — same text to your clipboard, for when downloads are blocked.
+- **Print / PDF** — paper version. Choose *Save as PDF* as the printer.
+- **Erase my answers** — permanent, with a confirmation.
 
-`Copy all` puts the same text on your clipboard if downloads are blocked.
-`Print / PDF` gives you a paper version — in the print dialog choose *Save as PDF* as the printer.
+## Calendar reminders
+
+In the Workbook, under *Part 2*, pick a date and press **Download reminders (.ics)**. Open the downloaded file and your calendar creates the six alarms. They need to fire on the device that's with you, so do this on your phone, or email yourself the file and open it there.
 
 ---
 
-## If something looks wrong
+## Troubleshooting
 
 | Symptom | Fix |
 | --- | --- |
-| Blank page, or the map never appears | You are opening it from inside the zip. Extract the folder first. |
-| A red bar says storage is blocked | You're in a private window, or the browser blocks local files' storage. Use a normal window, and export often. |
-| The map is a tiny cluster | Click **Fit**, then **Expand all**. |
-| Download button does nothing | Use **Copy all** and paste into a text file. |
-| Text is unreadably small | Zoom the page with `Ctrl` + `+`, or use the `+` button in the map toolbar. |
+| Blank page, or the map never appears | You're opening it from inside the zip. Extract the folder first. |
+| Red bar about storage | Private window, or the browser blocks local-file storage. Use a normal window and export often. |
+| Map is a tiny cluster, or you're lost | **Fit**, then **Contract all** to start over. |
+| Download button does nothing | Use **Copy all**, paste into a text file. |
+| Text too small | `Ctrl` + `+` to zoom the page, or the `+` button on the map. |
 
-**Check it is intact:** open `index.html#selftest` (add `#selftest` to the address bar and press Enter). You should see a line starting with `PASS`. If it says `FAIL`, re-download.
+**To check the file is intact:** add `#selftest` to the address bar and press Enter. You should see a line starting with `PASS`. `FAIL` means a corrupted download — get it again.

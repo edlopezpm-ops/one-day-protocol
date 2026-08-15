@@ -8,12 +8,11 @@ tags:
 
 *Six alarms that catch you mid-behaviour, plus three questions to carry around.*
 
+The point is not the answers. It is catching yourself mid-behaviour, while you can still see what you are doing. Answering these from memory at bedtime does not work — you will have edited yourself by then.
+
 Part of [[The One-Day Protocol]].
 
 ## Sections
 
 - [[Phone reminders]]
 - [[Carry-around questions]]
-
----
-> Ideas from **How to fix your entire life in 1 day** by Dan Koe. Structure after the mind map by @MindBranches — <https://x.com/MindBranches/status/2078988089393901842>.

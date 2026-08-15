@@ -8,7 +8,7 @@
  *   node tools/build.mjs
  *
  * Outputs:
- *   index.html                        interactive map + workbook (self-contained)
+ *   One Day Protocol.html             interactive map + workbook (self-contained)
  *   vault/*.md                        Obsidian notes, wiki-linked
  *   vault/One-Day Protocol.canvas     Obsidian Canvas mind map
  *   vault/Workbook.md                 fillable worksheet
@@ -19,6 +19,9 @@ import { fileURLToPath } from "node:url";
 
 const ROOT_DIR = join(dirname(fileURLToPath(import.meta.url)), "..");
 const p = (...s) => join(ROOT_DIR, ...s);
+
+/** The file a user double-clicks. Named for humans, not for web servers. */
+const APP_FILE = "One Day Protocol.html";
 
 const model = JSON.parse(readFileSync(p("data", "model.json"), "utf8"));
 const META = model.meta;
@@ -96,8 +99,8 @@ const assert = (cond, msg) => { if (!cond) { console.error("BUILD FAILED: " + ms
   assert(!/<\/script/i.test(json), "model would break out of the script tag");
 
   const html = tpl.replace("/*__MODEL_JSON__*/", () => json);
-  writeFileSync(p("index.html"), html, "utf8");
-  console.log(`index.html — ${(html.length / 1024).toFixed(1)} KB`);
+  writeFileSync(p(APP_FILE), html, "utf8");
+  console.log(`${APP_FILE} — ${(html.length / 1024).toFixed(1)} KB`);
 }
 
 /* ------------------------------------------------------- 2. Obsidian notes */
@@ -120,9 +123,11 @@ walk(ROOT, (n) => { if (!isLeafKind(n) && n !== ROOT) NOTE_NODES.push(n); });
     `Structure after the mind map by ${META.mapAuthor} — <${META.mapUrl}>.`;
 
   const bullet = (c) => {
-    if (c.kind === "prompt") return `- [ ] ${c.time ? `**${c.time}** — ` : ""}${c.label}`;
-    if (c.kind === "field")  return `- **${c.label}** — ${c.note || ""}${c.mechanic ? ` *(${c.mechanic})*` : ""}`;
-    return `- **${c.label}**${c.note ? ` — ${c.note}` : ""}`;
+    let head;
+    if (c.kind === "prompt")     head = `- [ ] ${c.time ? `**${c.time}** — ` : ""}${c.label}`;
+    else if (c.kind === "field") head = `- **${c.label}** — ${c.note || ""}${c.mechanic ? ` *(${c.mechanic})*` : ""}`;
+    else                         head = `- **${c.label}**${c.note ? ` — ${c.note}` : ""}`;
+    return c.summary ? `${head}\n\t- ${c.summary}` : head;
   };
 
   for (const n of NOTE_NODES) {
@@ -135,6 +140,7 @@ walk(ROOT, (n) => { if (!isLeafKind(n) && n !== ROOT) NOTE_NODES.push(n); });
     out.push("");
     out.push(`# ${n.label}`);
     if (n.note) out.push("", `*${n.note}*`);
+    if (n.summary) out.push("", n.summary);
     if (n._parent && n._parent !== ROOT) out.push("", `Part of ${link(n._parent)}.`);
     out.push("");
 
@@ -150,8 +156,7 @@ walk(ROOT, (n) => { if (!isLeafKind(n) && n !== ROOT) NOTE_NODES.push(n); });
       out.push(...branches.map((c) => `- ${link(c)}${c.note ? ` — ${c.note}` : ""}`));
       out.push("");
     }
-    out.push("---", credit);
-    writeFileSync(join(dir, `${safeName(n.label)}.md`), out.join("\n") + "\n", "utf8");
+    writeFileSync(join(dir, `${safeName(n.label)}.md`), out.join("\n").trimEnd() + "\n", "utf8");
   }
 
   /* START HERE */
@@ -163,6 +168,7 @@ walk(ROOT, (n) => { if (!isLeafKind(n) && n !== ROOT) NOTE_NODES.push(n); });
     "1. Open **[[Workbook]]** and block out one full day.",
     "2. Open **One-Day Protocol.canvas** (in this same folder) to see the whole model at once.",
     "3. Press `Ctrl/Cmd + G` for graph view — every note below is linked.", "",
+    `Prefer the interactive version? Open **${APP_FILE}** in the folder above this one.`, "",
     "## The five branches", "",
     ...kids(ROOT).map((b) => `- [[${safeName(b.label)}]]`),
     "",
@@ -190,7 +196,7 @@ walk(ROOT, (n) => { if (!isLeafKind(n) && n !== ROOT) NOTE_NODES.push(n); });
       wb.push("#".repeat(level + 1) + " " + g.label, "");
       for (const q of kids(g)) {
         wb.push(`**${q.time ? q.time + " — " : ""}${q.label}**`);
-        if (q.note) wb.push("", `*${q.note}*`);
+        if (q.summary) wb.push("", `*${q.summary}*`);
         wb.push("", "> ", "");
       }
     }
@@ -202,9 +208,9 @@ walk(ROOT, (n) => { if (!isLeafKind(n) && n !== ROOT) NOTE_NODES.push(n); });
   wb.push("## Six components to document", "",
     "This is the deliverable. Keep it where you will actually see it.", "");
   for (const f of kids(byId["six-components"])) {
-    wb.push(`### ${f.label}`, "", `*${f.note}* — ${f.mechanic}`, "", "> ", "");
+    wb.push(`### ${f.label}`, "", `*${f.note}* — ${f.mechanic}`, "", f.summary || "", "", "> ", "");
   }
-  wb.push("---", credit);
+  wb.push("---", `> ${META.disclaimer}`);
   writeFileSync(join(dir, "Workbook.md"), wb.join("\n") + "\n", "utf8");
 
   console.log(`vault — ${NOTE_NODES.length + 2} notes`);
@@ -253,9 +259,10 @@ walk(ROOT, (n) => { if (!isLeafKind(n) && n !== ROOT) NOTE_NODES.push(n); });
     if (n === ROOT) {
       text = `# ${META.title}\n\n${META.subtitle}\n\nIdeas: ${META.sourceAuthor} · Map: ${META.mapAuthor}`;
     } else if (isLeafKind(n)) {
-      text = `${n.time ? "`" + n.time + "` " : ""}${n.label}${n.note ? `\n\n${n.note}` : ""}`;
+      text = `${n.time ? "`" + n.time + "` " : ""}**${n.label}**` +
+             `${n.note ? `\n\n*${n.note}*` : ""}${n.summary ? `\n\n${n.summary}` : ""}`;
     } else {
-      text = `**${n.label}**${n.note ? `\n\n${n.note}` : ""}`;
+      text = `**${n.label}**${n.note ? `\n\n*${n.note}*` : ""}${n.summary ? `\n\n${n.summary}` : ""}`;
     }
     const node = { id: n.id, type: "text", text, x: Math.round(n._x), y: Math.round(n._y), width: n._w, height: n._h };
     if (color) node.color = color;
@@ -298,9 +305,10 @@ walk(ROOT, (n) => { if (!isLeafKind(n) && n !== ROOT) NOTE_NODES.push(n); });
     assert(ids.has(e.fromNode) && ids.has(e.toNode), `canvas edge ${e.id} points at a missing node`);
   }
 
-  const html = readFileSync(p("index.html"), "utf8");
-  assert(html.includes('id="model"'), "index.html lost its embedded model");
-  assert(!html.includes("/*__MODEL_JSON__*/"), "index.html still has the unreplaced marker");
+  const html = readFileSync(p(APP_FILE), "utf8");
+  assert(html.includes('id="model"'), `${APP_FILE} lost its embedded model`);
+  assert(!html.includes("/*__MODEL_JSON__*/"), `${APP_FILE} still has the unreplaced marker`);
+  assert(html.includes('href="https://aekr.io"'), `${APP_FILE} lost the AEKR footer link`);
 
   console.log(`verified — ${links} wikilinks, ${canvas.nodes.length} canvas nodes, all resolve`);
 }

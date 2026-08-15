@@ -93,25 +93,43 @@ main{flex:1;min-height:0;position:relative}
   color:var(--fg);font-size:12.5px;line-height:1.35;
 }
 .node .lab{font-weight:500;display:block}
-.node .note{display:block;color:var(--fg-dim);font-size:11.5px;margin-top:2px;font-weight:400}
+/* the body of a node, revealed by clicking it */
+.node .detail{display:block;margin-top:8px;padding-top:8px;border-top:1px dashed var(--line-2)}
+.node .gloss{display:block;color:var(--fg-dim);font-size:11.5px;font-style:italic;margin-bottom:6px;font-weight:400}
+.node .sum{display:block;color:var(--fg-dim);font-size:11.5px;line-height:1.55;font-weight:400}
 .node .time{
   display:inline-block;font-family:var(--mono);font-size:10.5px;
   color:var(--nc,var(--accent));border:1px solid currentColor;border-radius:4px;
   padding:0 4px;margin-right:6px;vertical-align:1px;
 }
-.node.k-root{padding:6px 12px 8px 0;border-bottom-width:2px}
-.node.k-root .lab{font-size:17px;font-weight:700;letter-spacing:-.01em}
+/* the root reads as a button: it is the one thing you are meant to click first */
+.node.k-root{
+  padding:16px 20px;border:1px solid var(--line-2);border-radius:16px;
+  background:var(--bg-2);box-shadow:var(--shadow);cursor:pointer;
+}
+.node.k-root:hover{border-color:var(--accent);background:var(--bg-3)}
+.node.k-root .lab{font-size:18px;font-weight:700;letter-spacing:-.015em}
+.node.k-root.collapsed::after{
+  content:"Click to open";display:block;margin-top:10px;
+  font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);
+}
+.node.k-root.collapsed .lab::after{display:none}
 .node.k-branch .lab{font-weight:700;font-size:13.5px}
 .node.k-sub .lab{font-weight:600;font-size:13px}
 .node.k-group .lab{font-weight:600;color:var(--nc)}
 .node.k-field .lab{font-weight:600}
 .node.k-prompt .lab{font-weight:400}
-.node.has-kids{cursor:pointer}
-.node.has-kids:hover{background:var(--bg-2);border-radius:6px 6px 0 0}
-.node.collapsed .lab::after{
+.node.opens{cursor:pointer}
+.node.opens:hover{background:var(--bg-2);border-radius:6px 6px 0 0}
+/* branches show how many children are hidden; end points show a quiet plus */
+.node.collapsed .lab[data-count]::after{
   content:attr(data-count);margin-left:7px;font-size:10px;font-weight:700;
   color:var(--nc);border:1px solid currentColor;border-radius:999px;padding:0 5px;vertical-align:1px;
 }
+.node.opens.collapsed .lab:not([data-count])::after{
+  content:"+";margin-left:7px;font-size:11px;font-weight:700;color:var(--nc);opacity:.55;
+}
+.node.opens:hover .lab:not([data-count])::after{opacity:1}
 .dot{
   position:absolute;width:9px;height:9px;margin:-4.5px 0 0 -4.5px;
   border-radius:50%;background:var(--bg);border:2px solid var(--nc,var(--line-2));
@@ -123,10 +141,14 @@ main{flex:1;min-height:0;position:relative}
   position:absolute;left:12px;bottom:12px;z-index:3;display:flex;gap:6px;flex-wrap:wrap;
   background:var(--bg-2);border:1px solid var(--line);border-radius:10px;padding:6px;box-shadow:var(--shadow);
 }
-.hint{
-  position:absolute;right:12px;bottom:12px;z-index:3;color:var(--fg-faint);font-size:11.5px;
-  background:var(--bg-2);border:1px solid var(--line);border-radius:8px;padding:5px 9px;
+.hint{color:var(--fg-faint);font-size:11.5px;align-self:center;padding:0 6px}
+.built{
+  position:fixed;right:14px;bottom:9px;z-index:6;text-decoration:none;
+  color:var(--fg-faint);font-size:11px;letter-spacing:.09em;text-transform:uppercase;
 }
+.built:hover{color:var(--accent)}
+.built b{color:var(--fg-dim);font-weight:700;letter-spacing:.13em}
+.built:hover b{color:var(--accent)}
 
 /* ---------- documents ---------- */
 .doc{max-width:820px;margin:0 auto;padding:28px 20px 100px}
@@ -177,9 +199,35 @@ input[type="date"]{
 .card .val{font-size:13.5px;white-space:pre-wrap;word-break:break-word}
 .card .val.empty{color:var(--fg-faint);font-style:italic}
 
+/* board: stakes, run, mechanics */
+.stakes{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:18px 0 8px}
+.stake{border:1px solid var(--line);border-left:3px solid var(--nc);border-radius:var(--radius);padding:14px 16px;background:var(--bg-2)}
+.stake .k{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--nc);margin-bottom:7px}
+.stake .v{font-size:15px;line-height:1.45;white-space:pre-wrap}
+.stake .v.empty{color:var(--fg-faint);font-style:italic;font-size:13px}
+.run{display:grid;gap:10px;margin-top:12px}
+.runrow{
+  display:grid;grid-template-columns:132px 1fr;gap:14px;align-items:start;
+  border:1px solid var(--line);border-radius:var(--radius);padding:12px 14px;background:var(--bg-2);
+}
+.runrow .t{font-size:11.5px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--nc)}
+.runrow .t small{display:block;font-size:10.5px;font-weight:500;letter-spacing:.03em;color:var(--fg-faint);text-transform:none;margin-top:3px}
+.runrow .v{font-size:13.5px;white-space:pre-wrap;word-break:break-word}
+.runrow .v.empty{color:var(--fg-faint);font-style:italic}
+.doc table{width:100%;border-collapse:collapse;margin-top:12px;font-size:13.5px}
+.doc th,.doc td{text-align:left;padding:9px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+.doc th{font-size:10.5px;text-transform:uppercase;letter-spacing:.07em;color:var(--fg-faint);font-weight:600}
+.doc td.c1{white-space:nowrap;font-weight:700;color:var(--nc,var(--fg))}
+.doc td.c2{color:var(--fg-dim)}
+@media (max-width:640px){
+  .stakes{grid-template-columns:1fr}
+  .runrow{grid-template-columns:1fr;gap:6px}
+  .doc td.c3{display:none}
+}
+
 /* ---------- print ---------- */
 @media print{
-  header.bar,.maptools,.hint,.notice,.row,#mapView,#boardView{display:none!important}
+  header.bar,.maptools,.hint,.notice,.row,.built,#mapView,#boardView{display:none!important}
   body,.view{position:static;overflow:visible;height:auto;background:#fff;color:#000}
   .view{display:block!important}
   .doc{max-width:none;padding:0}
@@ -220,14 +268,13 @@ input[type="date"]{
         <div id="nodes"></div>
       </div>
       <div class="maptools">
-        <button class="btn" data-map="expand">Expand all</button>
-        <button class="btn" data-map="collapse">Collapse</button>
+        <button class="btn primary" data-map="expand">Expand all</button>
+        <button class="btn" data-map="collapse">Contract all</button>
         <button class="btn" data-map="fit">Fit</button>
         <button class="btn" data-map="zoomout" aria-label="Zoom out">&minus;</button>
         <button class="btn" data-map="zoomin" aria-label="Zoom in">+</button>
-        <button class="btn" id="notesBtn" aria-pressed="true">Details</button>
+        <span class="hint">Click any node to open it &middot; drag to pan &middot; scroll to zoom</span>
       </div>
-      <div class="hint">Drag to pan &middot; scroll to zoom &middot; click a node to fold it</div>
     </section>
 
     <!-- WORKBOOK -->
@@ -251,13 +298,22 @@ input[type="date"]{
     <section class="view" id="boardView" role="tabpanel" aria-labelledby="tab-board">
       <div class="doc">
         <h1>Game board</h1>
-        <p class="lead">The six components from the Workbook, laid out as a game. Fill the Workbook and this fills itself.</p>
+        <p class="lead">Everything the day produced, on one screen. Fill the Workbook and this fills itself.</p>
+        <div class="stakes" id="stakes"></div>
+        <h2>The six components</h2>
         <div class="cards" id="cards"></div>
+        <h2>Your current run</h2>
+        <p class="sub">The three horizons from Part 3. Each one only has to keep the next one possible.</p>
+        <div class="run" id="run"></div>
+        <h2>How the game works</h2>
+        <p class="sub">Why this holds attention when a to-do list does not.</p>
+        <div id="mechanics"></div>
         <div class="callout" id="boardNote"></div>
       </div>
     </section>
   </main>
 </div>
+<a class="built" href="https://aekr.io" target="_blank" rel="noopener noreferrer">Built with <b>AEKR</b></a>
 
 <script type="application/json" id="model">/*__MODEL_JSON__*/</script>
 <script>
@@ -318,10 +374,12 @@ function walk(node, fn, depth, parent){
 var byId = {};
 walk(ROOT, function(n, d, p){
   n._depth = d; n._parent = p || null;
-  n._expanded = d < 2;                       // start with the two top levels open
-  if(!n.children || !n.children.length) n._expanded = false;
+  n._expanded = false;          // everything starts shut: the root is the only thing on screen
   byId[n.id] = n;
 });
+/* a node opens if it has children to reveal, a body to show, or both */
+function openable(n){ return !!((n.children && n.children.length) || n.note || n.summary); }
+function hasKids(n){ return !!(n.children && n.children.length); }
 /* branch index = which top-level child this node descends from (drives colour) */
 (ROOT.children || []).forEach(function(b, i){
   walk(b, function(n){ n._branch = i; });
@@ -383,18 +441,27 @@ var nodesEl= document.getElementById("nodes");
 var mapView= document.getElementById("mapView");
 var SVGNS  = "http://www.w3.org/2000/svg";
 
-var MAXW = [300, 235, 250, 300, 330];
+var MAXW = [320, 235, 250, 300, 330];
 var COL_GAP = 60, ROW_GAP = 13, PAD = 40;
-var showNotes = true;
 var view = { x: PAD, y: PAD, k: 1 };
 
 function maxWidth(d){ return MAXW[Math.min(d, MAXW.length - 1)]; }
+/* an open node needs room for its paragraph */
+function nodeMaxW(n){
+  var w = maxWidth(n._depth);
+  return (n._expanded && n.summary) ? Math.max(w, 360) : w;
+}
 
 function nodeHTML(n){
   var h = "";
   if(n.time) h += '<span class="time">' + esc(n.time) + "</span>";
   h += '<span class="lab">' + esc(n.label) + "</span>";
-  if(showNotes && n.note) h += '<span class="note">' + esc(n.note) + "</span>";
+  if(n._expanded && (n.note || n.summary)){
+    h += '<span class="detail">';
+    if(n.note)    h += '<span class="gloss">' + esc(n.note) + "</span>";
+    if(n.summary) h += '<span class="sum">' + esc(n.summary) + "</span>";
+    h += "</span>";
+  }
   return h;
 }
 function esc(s){
@@ -407,14 +474,14 @@ function buildNodes(){
   nodesEl.textContent = "";
   var frag = document.createDocumentFragment();
   walk(ROOT, function(n){
-    var kids = (n.children || []).length;
+    var kids = hasKids(n);
     var el = document.createElement("div");
-    el.className = "node k-" + (n.kind || "point") + (kids ? " has-kids" : "");
+    el.className = "node k-" + (n.kind || "point") + (openable(n) ? " opens" : "");
     el.dataset.id = n.id;
-    el.style.maxWidth = maxWidth(n._depth) + "px";
+    el.style.maxWidth = nodeMaxW(n) + "px";
     el.style.setProperty("--nc", colorFor(n));
     el.innerHTML = nodeHTML(n);
-    if(kids){
+    if(openable(n)){
       el.tabIndex = 0;
       el.setAttribute("role", "button");
       el.setAttribute("aria-expanded", String(!!n._expanded));
@@ -500,22 +567,28 @@ function layout(){
   svg.setAttribute("viewBox", "0 0 " + W + " " + H);
   svg.textContent = "";
 
+  /* links leave a normal node from the right end of its underline, but the root is a
+     card, so they leave it from the middle of its right edge instead */
+  function outY(n){ return n._parent ? (n.y + PAD + n.h / 2 - 1) : (n.y + PAD); }
+
   walk(ROOT, function(n){
     if(!visible(n)) return;
     var x = n.x + PAD, y = n.y + PAD;
     n._el.style.transform = "translate(" + x + "px," + (y - n.h / 2) + "px)";
     var base = y + n.h / 2 - 1;
 
-    if(n._dot){
-      n._dot.style.transform = "translate(" + (x + n.w) + "px," + base + "px)";
-      n._dot.classList.toggle("filled", !n._expanded);
+    if(openable(n)){
       n._el.setAttribute("aria-expanded", String(!!n._expanded));
       n._el.classList.toggle("collapsed", !n._expanded);
-      n._el.querySelector(".lab").setAttribute("data-count", (n.children || []).length);
+      if(hasKids(n)) n._el.querySelector(".lab").setAttribute("data-count", n.children.length);
+    }
+    if(n._dot){
+      n._dot.style.transform = "translate(" + (x + n.w) + "px," + outY(n) + "px)";
+      n._dot.classList.toggle("filled", !n._expanded);
     }
     var p = n._parent;
     if(!p) return;
-    var px = p.x + PAD + p.w, py = p.y + PAD + p.h / 2 - 1;
+    var px = p.x + PAD + p.w, py = outY(p);
     var dx = Math.max(18, (x - px) * 0.55);
     var path = document.createElementNS(SVGNS, "path");
     path.setAttribute("d",
@@ -560,9 +633,25 @@ function zoomAt(cx, cy, factor){
 
 function toggle(id){
   var n = byId[id];
-  if(!n || !(n.children || []).length) return;
+  if(!n || !openable(n)) return;
+  var bx = n.x, by = n.y;                    /* where it sat before */
   n._expanded = !n._expanded;
+  n._el.innerHTML = nodeHTML(n);
+  n._el.style.maxWidth = nodeMaxW(n) + "px";
   layout();
+  /* hold the clicked node still, so the map grows around it instead of jumping */
+  view.x += (bx - n.x) * view.k;
+  view.y += (by - n.y) * view.k;
+  var r = mapView.getBoundingClientRect();
+  if(stage._w * view.k <= r.width && stage._h * view.k <= r.height){
+    view.x = (r.width  - stage._w * view.k) / 2;   /* still small enough to centre */
+    view.y = (r.height - stage._h * view.k) / 2;
+  }
+  applyView();
+}
+function setAll(open){
+  walk(ROOT, function(n){ n._expanded = open && openable(n); });
+  buildNodes(); layout(); fit();
 }
 
 /* pointer: pan + click-to-fold (a small movement still counts as a click) */
@@ -586,7 +675,7 @@ function endDrag(e){
   drag = null;
   mapView.classList.remove("dragging");
   if(moved || !e) return;
-  var hit = e.target.closest ? e.target.closest(".dot,.node.has-kids") : null;
+  var hit = e.target.closest ? e.target.closest(".dot,.node.opens") : null;
   if(hit && hit.dataset.id) toggle(hit.dataset.id);
 }
 mapView.addEventListener("pointerup", endDrag);
@@ -600,7 +689,7 @@ mapView.addEventListener("wheel", function(e){
 
 nodesEl.addEventListener("keydown", function(e){
   if(e.key !== "Enter" && e.key !== " ") return;
-  var t = e.target.closest(".node.has-kids");
+  var t = e.target.closest(".node.opens");
   if(!t) return;
   e.preventDefault();
   toggle(t.dataset.id);
@@ -610,16 +699,11 @@ document.querySelector(".maptools").addEventListener("click", function(e){
   var b = e.target.closest("[data-map]");
   if(!b) return;
   var a = b.dataset.map, r = mapView.getBoundingClientRect();
-  if(a === "expand")   { walk(ROOT, function(n){ if((n.children||[]).length) n._expanded = true; }); layout(); fit(); }
-  if(a === "collapse") { walk(ROOT, function(n){ n._expanded = (n === ROOT); }); layout(); fit(); }
+  if(a === "expand")   { setAll(true); }
+  if(a === "collapse") { setAll(false); }
   if(a === "fit")      { fit(); }
   if(a === "zoomin")   { zoomAt(r.width/2, r.height/2, 1.2); }
   if(a === "zoomout")  { zoomAt(r.width/2, r.height/2, 1/1.2); }
-});
-document.getElementById("notesBtn").addEventListener("click", function(){
-  showNotes = !showNotes;
-  this.setAttribute("aria-pressed", String(showNotes));
-  buildNodes(); layout(); fit();
 });
 
 /* =========================================================================
@@ -722,24 +806,11 @@ function buildWorkbook(){
     "That file is yours, it opens in Obsidian, Notepad, Word, or anything else, " +
     "and it is the only copy that survives clearing your browser data.";
   workBody.appendChild(end);
-  workBody.appendChild(creditBlock());
-}
 
-function creditBlock(){
   var d = document.createElement("div");
   d.className = "credit";
-  var a1 = document.createElement("a");
-  a1.href = "https://thedankoe.com/"; a1.target = "_blank"; a1.rel = "noopener noreferrer";
-  a1.textContent = META.sourceAuthor;
-  var a2 = document.createElement("a");
-  a2.href = META.mapUrl; a2.target = "_blank"; a2.rel = "noopener noreferrer";
-  a2.textContent = META.mapAuthor;
-  d.appendChild(document.createTextNode("Ideas from “" + META.sourceWork + "” by "));
-  d.appendChild(a1);
-  d.appendChild(document.createTextNode(". Structure after the mind map by "));
-  d.appendChild(a2);
-  d.appendChild(document.createTextNode(". This is an unaffiliated study aid. " + META.disclaimer));
-  return d;
+  d.textContent = META.disclaimer;
+  workBody.appendChild(d);
 }
 
 function refreshProgress(){
@@ -752,7 +823,29 @@ function refreshProgress(){
 /* =========================================================================
    5. game board
    ========================================================================= */
+function val(id){ return (answers[id] || "").trim(); }
+
 function refreshBoard(){
+  /* --- the two stakes: the player's own win and lose conditions --- */
+  var stakes = document.getElementById("stakes");
+  stakes.textContent = "";
+  [
+    { id:"iq4", k:"What I am building toward", i:4, fall:"Answer the last two integration questions in Part 3 and they appear here." },
+    { id:"iq3", k:"What I refuse to become",   i:0, fall:"This is the line you re-read on the days you do not feel like it." }
+  ].forEach(function(s){
+    var d = document.createElement("div");
+    d.className = "stake";
+    d.style.setProperty("--nc", paletteColor(s.i));
+    var k = document.createElement("div"); k.className = "k"; k.textContent = s.k;
+    var v = document.createElement("div");
+    var t = val(s.id);
+    v.className = "v" + (t ? "" : " empty");
+    v.textContent = t || s.fall;
+    d.appendChild(k); d.appendChild(v);
+    stakes.appendChild(d);
+  });
+
+  /* --- the six components --- */
   var cards = document.getElementById("cards");
   cards.textContent = "";
   FIELDS.forEach(function(f, i){
@@ -764,18 +857,66 @@ function refreshBoard(){
     mech.textContent = (f.mechanic || "").replace(/\.$/, "");
     var h4 = document.createElement("h4"); h4.textContent = f.label;
     var desc = document.createElement("div"); desc.className = "desc"; desc.textContent = f.note || "";
-    var val = document.createElement("div");
-    var v = (answers[f.id] || "").trim();
-    val.className = "val" + (v ? "" : " empty");
-    val.textContent = v || "Not filled in yet \u2014 see the Workbook tab.";
-    c.appendChild(mech); c.appendChild(h4); c.appendChild(desc); c.appendChild(val);
+    var v = document.createElement("div");
+    var t = val(f.id);
+    v.className = "val" + (t ? "" : " empty");
+    v.textContent = t || "Not filled in yet \u2014 see the Workbook tab.";
+    c.appendChild(mech); c.appendChild(h4); c.appendChild(desc); c.appendChild(v);
     cards.appendChild(c);
   });
-  var done = FIELDS.filter(function(f){ return (answers[f.id] || "").trim(); }).length;
-  var bd = document.querySelector("#boardView .doc");
-  if(!bd.querySelector(".credit")) bd.appendChild(creditBlock());
+
+  /* --- the three horizons from Part 3 --- */
+  var run = document.getElementById("run");
+  run.textContent = "";
+  [
+    { id:"g1", t:"1 year",  s:"The mission", i:1 },
+    { id:"g2", t:"1 month", s:"The boss fight", i:3 },
+    { id:"g3", t:"Daily",   s:"Daily quests", i:5 }
+  ].forEach(function(r){
+    var row = document.createElement("div");
+    row.className = "runrow";
+    row.style.setProperty("--nc", paletteColor(r.i));
+    var t = document.createElement("div");
+    t.className = "t";
+    t.appendChild(document.createTextNode(r.t));
+    var sm = document.createElement("small"); sm.textContent = r.s;
+    t.appendChild(sm);
+    var v = document.createElement("div");
+    var a = val(r.id);
+    v.className = "v" + (a ? "" : " empty");
+    v.textContent = a || "Not set yet \u2014 Part 3 of the Workbook.";
+    row.appendChild(t); row.appendChild(v);
+    run.appendChild(row);
+  });
+
+  /* --- the legend, straight from the model --- */
+  var mech = document.getElementById("mechanics");
+  if(!mech.firstChild){
+    var tbl = document.createElement("table");
+    var thead = document.createElement("tr");
+    ["Component", "In the game", "Why it matters"].forEach(function(h){
+      var th = document.createElement("th"); th.textContent = h; thead.appendChild(th);
+    });
+    tbl.appendChild(thead);
+    (byId["game-mechanics"].children || []).forEach(function(m, i){
+      var parts = m.label.split(/\s*=\s*/);
+      var tr = document.createElement("tr");
+      [parts[0], parts[1] || "", m.summary || ""].forEach(function(txt, c){
+        var td = document.createElement("td");
+        td.className = "c" + (c + 1);
+        td.textContent = txt;
+        if(c === 0) td.style.setProperty("--nc", paletteColor(i));
+        tr.appendChild(td);
+      });
+      tr.style.setProperty("--nc", paletteColor(i));
+      tbl.appendChild(tr);
+    });
+    mech.appendChild(tbl);
+  }
+
+  var done = FIELDS.filter(function(f){ return val(f.id); }).length;
   document.getElementById("boardNote").innerHTML = done === FIELDS.length
-    ? "<b>All six are set.</b> Re-read the anti-vision on the days you do not feel like it. That is what it is for."
+    ? "<b>All six are set.</b> Daily levers before anything else, every day. Re-read the anti-vision on the days you do not feel like it \u2014 that is the whole reason it exists."
     : "<b>" + done + " of " + FIELDS.length + " filled.</b> The board only works once every slot has something in it, even a rough draft.";
 }
 
@@ -787,8 +928,6 @@ function toMarkdown(){
   var stamp = new Date().toISOString().slice(0, 10);
   out.push("# The One-Day Protocol \u2014 my answers", "");
   out.push("*Completed: " + stamp + "*", "");
-  out.push("> Model of ideas from \u201c" + META.sourceWork + "\u201d by " + META.sourceAuthor +
-           ", after the mind map by " + META.mapAuthor + ".", "");
 
   function section(node, level){
     out.push("", "#".repeat(level) + " " + node.label);
@@ -968,17 +1107,27 @@ function selfTest(){
   ok(modelCount === document.querySelectorAll("#nodes .node").length, "every model node rendered");
   ok(!document.documentElement.hasAttribute("data-boot-error"), "no boot error");
 
-  walk(ROOT, function(node){
-    if(!visible(node)) return;
-    ok(isFinite(node.x) && isFinite(node.y) && node.h > 0 && node.w > 0, "finite geometry: " + node.id);
-  });
-  var paths = svg.querySelectorAll("path");
-  ok(paths.length > 0, "links drawn");
-  Array.prototype.forEach.call(paths, function(pth){
-    ok(pth.getAttribute("d").indexOf("NaN") === -1, "no NaN in link path");
-  });
+  /* every node must be openable — a dead-end node would be a content gap */
+  walk(ROOT, function(node){ ok(openable(node), "node opens to something: " + node.id); });
 
-  /* siblings must not overlap vertically — checked collapsed AND fully expanded */
+  /* the map starts as a single button */
+  var before = [];
+  walk(ROOT, function(node){ before.push(node._expanded); });
+  setAll(false);
+  var shown = 0;
+  walk(ROOT, function(node){ if(visible(node)) shown++; });
+  ok(shown === 1, "contract all leaves exactly one node on screen");
+  ok(svg.querySelectorAll("path").length === 0, "no links when contracted");
+  ok(ROOT._el.classList.contains("collapsed"), "root shows its click affordance");
+
+  /* opening the root reveals exactly the five branches */
+  toggle(ROOT.id);
+  shown = 0;
+  walk(ROOT, function(node){ if(visible(node)) shown++; });
+  ok(shown === 1 + (ROOT.children || []).length, "opening the root reveals its branches");
+  ok(svg.querySelectorAll("path").length === (ROOT.children || []).length, "one link per branch");
+
+  /* siblings must not overlap vertically — checked at both extremes */
   function checkOverlaps(tag){
     walk(ROOT, function(node){
       if(!node._expanded) return;
@@ -988,24 +1137,36 @@ function selfTest(){
       }
     });
   }
-  checkOverlaps("default");
-  var before = [];
-  walk(ROOT, function(node){ before.push(node._expanded); });
-  walk(ROOT, function(node){ if((node.children || []).length) node._expanded = true; });
-  layout();
+  checkOverlaps("root-open");
+
+  setAll(true);
   checkOverlaps("expanded");
   walk(ROOT, function(node){
-    if(!visible(node)) return;
-    ok(isFinite(node.x) && isFinite(node.y), "expanded geometry: " + node.id);
+    ok(visible(node), "everything visible when expanded: " + node.id);
+    ok(isFinite(node.x) && isFinite(node.y) && node.h > 0 && node.w > 0, "expanded geometry: " + node.id);
+    if(node.summary){
+      ok(node._el.textContent.indexOf(node.summary.slice(0, 40)) !== -1, "summary shown when open: " + node.id);
+    }
   });
-  ok(document.querySelectorAll("#nodes .node").length === modelCount, "all nodes present when expanded");
+  var paths = svg.querySelectorAll("path");
+  ok(paths.length === modelCount - 1, "one link per non-root node");
+  Array.prototype.forEach.call(paths, function(pth){
+    ok(pth.getAttribute("d").indexOf("NaN") === -1, "no NaN in link path");
+  });
+
   var i2 = 0;
   walk(ROOT, function(node){ node._expanded = before[i2++]; });
-  layout();
+  buildNodes(); layout();
 
   ok(document.querySelectorAll("#workBody textarea").length === INPUTS.length, "one textarea per prompt/field");
   INPUTS.forEach(function(f){ ok(!!document.getElementById("f_" + f.id), "textarea exists: " + f.id); });
   ok(document.querySelectorAll("#cards .card").length === FIELDS.length, "six board cards");
+  ok(document.querySelectorAll("#stakes .stake").length === 2, "board shows both stakes");
+  ok(document.querySelectorAll("#run .runrow").length === 3, "board shows three horizons");
+  ok(document.querySelectorAll("#mechanics tr").length === 1 + (byId["game-mechanics"].children || []).length,
+     "board legend has a row per mechanic");
+  ok(document.querySelectorAll(".built").length === 1, "AEKR footer present");
+  ok(document.querySelector(".built").getAttribute("href") === "https://aekr.io", "AEKR footer links to aekr.io");
 
   var md = toMarkdown();
   ok(md.length > 500, "markdown export non-trivial");
@@ -1038,7 +1199,10 @@ layout();
 fit();
 if(HASHES[location.hash]) selectTab(HASHES[location.hash]);
 document.documentElement.setAttribute("data-ready", "1");
-window.__ODP__ = { model: MODEL, selfTest: selfTest, layout: layout, answers: function(){ return answers; } };
+window.__ODP__ = {
+  model: MODEL, selfTest: selfTest, layout: layout, fit: fit,
+  toggle: toggle, setAll: setAll, answers: function(){ return answers; }
+};
 
 if(location.hash === "#selftest"){
   var r = selfTest();

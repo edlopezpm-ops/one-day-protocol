@@ -6,6 +6,8 @@ tags:
 
 # Key Psychological Principles
 
+*The mechanics underneath. Read this before running the day.*
+
 ## Sections
 
 - [[Identity First, Actions Second]]
@@ -13,6 +15,3 @@ tags:
 - [[The Anatomy of Identity]]
 - [[Stages of Mind Development]]
 - [[Intelligence Framework]]
-
----
-> Ideas from **How to fix your entire life in 1 day** by Dan Koe. Structure after the mind map by @MindBranches — <https://x.com/MindBranches/status/2078988089393901842>.

@@ -1,10 +1,8 @@
-# The One-Day Protocol
+![The One-Day Protocol](docs/img/banner.png)
 
 An interactive model of **"How to fix your entire life in 1 day"** by [Dan Koe](https://thedankoe.com/), organised after the mind map by [@MindBranches](https://x.com/MindBranches/status/2078988089393901842).
 
 **[⬇ Download](https://github.com/edlopezpm-ops/one-day-protocol/releases/latest)** · **[Run the day](docs/SOP-03-run-the-day.md)** · Built with **[AEKR](https://aekr.io)**
-
-![The map](docs/img/map.png)
 
 ---
 
@@ -21,6 +19,8 @@ That's the whole install — one file, no account, no internet.
 | **Map** | Click the centre button, then keep clicking. Every node opens into a short explanation. Expand all / Contract all at the bottom left. |
 | **Workbook** | Every question with a box to type in. Saves as you type, exports to Markdown. |
 | **Game board** | Your answers as a game: stakes, six components, three horizons. |
+
+![The map, part way open](docs/img/map.png)
 
 Stuck on any of it → **[docs/SOP-01-browser.md](docs/SOP-01-browser.md)**
 

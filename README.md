@@ -10,7 +10,7 @@ It is a **single HTML file** you open by double-clicking it. No install, no acco
 
 ## Get started in 30 seconds
 
-1. Go to the [**latest release**](../../releases/latest) and download `one-day-protocol.zip`.
+1. Go to the [**latest release**](https://github.com/edlopezpm-ops/one-day-protocol/releases/latest) and download `one-day-protocol.zip`.
 2. Unzip it. (Right-click → *Extract All* on Windows, double-click on Mac.)
 3. Double-click **`index.html`**. It opens in your browser. That's it.
 
@@ -76,7 +76,7 @@ Self-reflection material for educational use. It is not therapy, medical, or men
 <details>
 <summary><b>Español — inicio rápido</b></summary>
 
-1. Descarga `one-day-protocol.zip` desde [**releases**](../../releases/latest) y descomprímelo.
+1. Descarga `one-day-protocol.zip` desde [**releases**](https://github.com/edlopezpm-ops/one-day-protocol/releases/latest) y descomprímelo.
 2. Doble clic en **`index.html`**. Se abre en tu navegador. Listo.
 3. Para Obsidian: *Abrir carpeta como bóveda* → elige la carpeta `vault` → abre `00 START HERE.md`.
 

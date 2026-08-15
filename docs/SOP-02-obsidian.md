@@ -6,7 +6,7 @@
 
 ## Steps
 
-1. **Get the files.** Download and unzip `one-day-protocol.zip` from the [latest release](../../../releases/latest).
+1. **Get the files.** Download and unzip `one-day-protocol.zip` from the [latest release](https://github.com/edlopezpm-ops/one-day-protocol/releases/latest).
 2. **Open Obsidian.**
 3. Click **Open folder as vault**.
    - First launch: it's on the welcome screen.

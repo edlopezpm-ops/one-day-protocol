@@ -271,4 +271,38 @@ walk(ROOT, (n) => { if (!isLeafKind(n) && n !== ROOT) NOTE_NODES.push(n); });
   console.log(`canvas — ${nodes.length} nodes, ${edges.length} edges`);
 }
 
+/* ---------------------------------------------------- 4. verify the output */
+{
+  const dir = p("vault");
+  const files = readdirSync(dir);
+  const notes = new Set(files.filter((f) => f.endsWith(".md")).map((f) => f.replace(/\.md$/, "")));
+
+  let links = 0;
+  for (const f of files.filter((f) => f.endsWith(".md"))) {
+    const body = readFileSync(join(dir, f), "utf8");
+    for (const m of body.matchAll(/\[\[([^\]|#]+)/g)) {
+      links++;
+      assert(notes.has(m[1].trim()), `broken wikilink [[${m[1].trim()}]] in ${f}`);
+    }
+  }
+
+  const canvas = JSON.parse(readFileSync(join(dir, "One-Day Protocol.canvas"), "utf8"));
+  const ids = new Set(canvas.nodes.map((n) => n.id));
+  assert(ids.size === canvas.nodes.length, "canvas has duplicate node ids");
+  for (const n of canvas.nodes) {
+    assert(["x", "y", "width", "height"].every((k) => Number.isFinite(n[k])), `canvas node ${n.id} has bad geometry`);
+    assert(n.width > 0 && n.height > 0, `canvas node ${n.id} has no size`);
+    assert(n.type === "text" && typeof n.text === "string" && n.text.length, `canvas node ${n.id} has no text`);
+  }
+  for (const e of canvas.edges) {
+    assert(ids.has(e.fromNode) && ids.has(e.toNode), `canvas edge ${e.id} points at a missing node`);
+  }
+
+  const html = readFileSync(p("index.html"), "utf8");
+  assert(html.includes('id="model"'), "index.html lost its embedded model");
+  assert(!html.includes("/*__MODEL_JSON__*/"), "index.html still has the unreplaced marker");
+
+  console.log(`verified — ${links} wikilinks, ${canvas.nodes.length} canvas nodes, all resolve`);
+}
+
 console.log("build complete");

@@ -2,8 +2,9 @@
 /**
  * uitest.mjs — drives the real UI with real browser input.
  *
- *   node tools/uitest.mjs                       # tests the built app
- *   node tools/uitest.mjs "path/to/other.html"  # tests any copy
+ *   node tools/uitest.mjs                        # tests the built app
+ *   node tools/uitest.mjs "path/to/other.html"   # tests any local copy
+ *   node tools/uitest.mjs https://example.com/   # tests a deployed site
  *
  * The #selftest suite inside the page calls functions directly, so it proves the
  * logic works. It cannot prove that a human clicking the thing gets a result:
@@ -20,8 +21,10 @@ import { dirname, join, resolve } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 
 const ROOT_DIR = join(dirname(fileURLToPath(import.meta.url)), "..");
-const target = resolve(process.argv[2] || join(ROOT_DIR, "One Day Protocol.html"));
-if (!existsSync(target)) { console.error(`no such file: ${target}`); process.exit(1); }
+const arg = process.argv[2];
+const isUrl = !!arg && /^https?:\/\//i.test(arg);
+const target = isUrl ? arg : resolve(arg || join(ROOT_DIR, "One Day Protocol.html"));
+if (!isUrl && !existsSync(target)) { console.error(`no such file: ${target}`); process.exit(1); }
 
 const BROWSERS = [
   "C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe",
@@ -40,7 +43,7 @@ const proc = spawn(browser, [
   "--headless=new", "--disable-gpu", "--no-sandbox", "--no-first-run",
   "--disable-extensions", "--disable-background-networking",
   `--user-data-dir=${profile}`, `--remote-debugging-port=${PORT}`,
-  "--window-size=1440,900", pathToFileURL(target).href,
+  "--window-size=1440,900", isUrl ? target : pathToFileURL(target).href,
 ], { stdio: "ignore" });
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));

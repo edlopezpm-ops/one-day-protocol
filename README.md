@@ -2,17 +2,21 @@
 
 An interactive model of **"How to fix your entire life in 1 day"** by [Dan Koe](https://thedankoe.com/), organised after the mind map by [@MindBranches](https://x.com/MindBranches/status/2078988089393901842).
 
-**[⬇ Download](https://github.com/edlopezpm-ops/one-day-protocol/releases/latest)** · **[Run the day](docs/SOP-03-run-the-day.md)** · Built with **[AEKR](https://aekr.io)** · **[@__aerk](https://www.instagram.com/__aerk/)**
+**[▶ Open it now](https://edlopezpm-ops.github.io/one-day-protocol/)** · **[⬇ Download](https://github.com/edlopezpm-ops/one-day-protocol/releases/latest)** · **[Run the day](docs/SOP-03-run-the-day.md)** · Built with **[AEKR](https://aekr.io)** · **[@__aerk](https://www.instagram.com/__aerk/)**
 
 ---
 
 ## Start
 
+**Just use it:** [edlopezpm-ops.github.io/one-day-protocol](https://edlopezpm-ops.github.io/one-day-protocol/) — nothing to install.
+
+**Or keep a copy** that works with the Wi-Fi off, forever:
+
 1. Download `One-Day-Protocol.zip` from the [latest release](https://github.com/edlopezpm-ops/one-day-protocol/releases/latest).
 2. Unzip it. *(Windows: right-click → Extract All. Mac: double-click.)*
 3. Double-click **`One Day Protocol.html`**.
 
-That's the whole install — one file, no account, no internet.
+Either way it's one file, no account, no sign-up. Your answers stay on your own machine in both.
 
 | Tab | What it does |
 | --- | --- |

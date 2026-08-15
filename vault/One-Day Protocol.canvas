@@ -5,58 +5,58 @@
    "type": "text",
    "text": "# The One-Day Protocol\n\nAn interactive model of \"How to fix your entire life in 1 day\"\n\nIdeas: Dan Koe · Map: @MindBranches",
    "x": 0,
-   "y": 3350,
+   "y": 3266,
    "width": 300,
-   "height": 135
+   "height": 93
   },
   {
    "id": "core-problem",
    "type": "text",
-   "text": "**Core Problem**",
+   "text": "**Core Problem**\n\n*Why the usual approach to changing your life fails.*",
    "x": 410,
-   "y": 190,
+   "y": 130,
    "width": 250,
-   "height": 56,
+   "height": 93,
    "color": "6"
   },
   {
    "id": "cp-action-layer",
    "type": "text",
-   "text": "Change fails at the action layer\n\nPeople swap behaviours while leaving their identity untouched, so the old self quietly reinstalls the old behaviour.",
+   "text": "**Change fails at the action layer**\n\n*People swap behaviours while leaving their identity untouched.*\n\nResolutions, habit trackers, 5am alarms — they all operate on what you do. None of them touch who you think you are. The self that produced the old behaviour is still sitting there when motivation runs out, and it quietly restores its defaults.",
    "x": 770,
    "y": 0,
    "width": 270,
-   "height": 135,
+   "height": 93,
    "color": "6"
   },
   {
    "id": "cp-person-not-plan",
    "type": "text",
-   "text": "You need the person, not the plan\n\nThe durable move is becoming someone for whom the desired actions are simply the obvious ones.",
+   "text": "**You need the person, not the plan**\n\n*Become someone for whom the desired actions are the obvious ones.*\n\nA plan is a list of things a different person would do. If every item takes force, you are running someone else's operating system on your hardware. Change the operator and the list stops needing enforcement.",
    "x": 770,
-   "y": 161,
+   "y": 119,
    "width": 270,
-   "height": 114,
+   "height": 93,
    "color": "6"
   },
   {
    "id": "cp-not-an-accident",
    "type": "text",
-   "text": "Your current life is not an accident\n\nToday's behaviour is already succeeding at goals you never consciously chose. That is exactly why it survives.",
+   "text": "**Your current life is not an accident**\n\n*Today's behaviour is already succeeding at goals you never consciously chose.*\n\nWhatever you are doing now is producing something you value — comfort, safety, an identity, a usable excuse. Until you can name what the current pattern is paying you, you will keep buying it back.",
    "x": 770,
-   "y": 301,
+   "y": 238,
    "width": 270,
-   "height": 135,
+   "height": 114,
    "color": "6"
   },
   {
    "id": "principles",
    "type": "text",
-   "text": "**Key Psychological Principles**",
+   "text": "**Key Psychological Principles**\n\n*The mechanics underneath. Read this before running the day.*",
    "x": 410,
-   "y": 1450,
+   "y": 1311,
    "width": 250,
-   "height": 56,
+   "height": 93,
    "color": "5"
   },
   {
@@ -64,7 +64,7 @@
    "type": "text",
    "text": "**Identity First, Actions Second**",
    "x": 770,
-   "y": 610,
+   "y": 516,
    "width": 270,
    "height": 56,
    "color": "5"
@@ -72,9 +72,9 @@
   {
    "id": "if-effort-symptom",
    "type": "text",
-   "text": "Effort is a symptom, not a strategy\n\nPeople who look like they are grinding are usually just living a life that fits them.",
+   "text": "**Effort is a symptom, not a strategy**\n\n*People who look like they are grinding are usually just living a life that fits them.*\n\nIf a behaviour takes constant willpower, it has not been absorbed yet. Sustainable output looks boring from the inside: the person doing it is not overcoming anything, they are just living.",
    "x": 1150,
-   "y": 462,
+   "y": 378,
    "width": 320,
    "height": 93,
    "color": "5"
@@ -82,9 +82,9 @@
   {
    "id": "if-lifestyle-before",
    "type": "text",
-   "text": "Adopt the lifestyle before the outcome\n\nLive as the person who already has the result. The result is what that life produces.",
+   "text": "**Adopt the lifestyle before the outcome**\n\n*Live as the person who already has the result.*\n\nWaiting for the result to justify the identity gets the order backwards. The habits, standards, hours and company of the person you want to be are the input, not the reward for arriving.",
    "x": 1150,
-   "y": 581,
+   "y": 497,
    "width": 320,
    "height": 93,
    "color": "5"
@@ -92,11 +92,11 @@
   {
    "id": "if-misfit-repels",
    "type": "text",
-   "text": "Misfit habits should start to repel you\n\nOnce identity actually shifts, old habits stop feeling tempting and start feeling wrong.",
+   "text": "**Misfit habits should start to repel you**\n\n*Old habits stop feeling tempting and start feeling wrong.*\n\nThis is the reliable signal that identity actually moved. You are not white-knuckling past the old habit — it stopped reading as a reward. If it still tempts you, the shift has not happened yet.",
    "x": 1150,
-   "y": 700,
+   "y": 616,
    "width": 320,
-   "height": 114,
+   "height": 93,
    "color": "5"
   },
   {
@@ -104,7 +104,7 @@
    "type": "text",
    "text": "**Understanding Your Mind**",
    "x": 770,
-   "y": 1037,
+   "y": 932,
    "width": 270,
    "height": 56,
    "color": "5"
@@ -112,9 +112,9 @@
   {
    "id": "ym-teleological",
    "type": "text",
-   "text": "Behaviour is goal-directed\n\nNothing you do is random. Every pattern is aimed at something (teleology).",
+   "text": "**Behaviour is goal-directed**\n\n*Nothing you do is random. Every pattern is aimed at something.*\n\nProcrastination, conflict, self-sabotage — each is efficiently achieving something: risk avoided, self-image preserved, a story kept intact. Ask what a behaviour is for, not why it is wrong.",
    "x": 1150,
-   "y": 840,
+   "y": 735,
    "width": 320,
    "height": 93,
    "color": "5"
@@ -122,9 +122,9 @@
   {
    "id": "ym-goals-against-you",
    "type": "text",
-   "text": "Some of those goals work against you\n\nYou can pursue a goal for years without ever having chosen it.",
+   "text": "**Some of those goals work against you**\n\n*You can pursue a goal for years without ever having chosen it.*\n\nGoals get installed by family, school, peers and pain, then run silently. \"Never look stupid\" is a goal. So is \"never need anyone.\" Either one will organise an entire life around itself.",
    "x": 1150,
-   "y": 959,
+   "y": 854,
    "width": 320,
    "height": 93,
    "color": "5"
@@ -132,9 +132,9 @@
   {
    "id": "ym-change-the-goal",
    "type": "text",
-   "text": "Change the goal, not just the schedule\n\nNew perspective produces new goals, which produce new behaviour. In that order.",
+   "text": "**Change the goal, not just the schedule**\n\n*New perspective produces new goals, which produce new behaviour.*\n\nOptimising your schedule around an unexamined goal only makes you more efficient at the wrong thing. Perspective sets the goal, the goal sets attention, attention sets behaviour. Intervene at the top.",
    "x": 1150,
-   "y": 1078,
+   "y": 973,
    "width": 320,
    "height": 93,
    "color": "5"
@@ -142,9 +142,9 @@
   {
    "id": "ym-identity-defends",
    "type": "text",
-   "text": "Identity defends itself\n\nYour sense of self reacts to contradiction the way your body reacts to infection.",
+   "text": "**Identity defends itself**\n\n*Your sense of self reacts to contradiction the way your body reacts to infection.*\n\nEvidence that contradicts who you think you are registers as a threat, not as information. That is why good advice bounces off: the immune response fires before the argument is even heard.",
    "x": 1150,
-   "y": 1197,
+   "y": 1092,
    "width": 320,
    "height": 93,
    "color": "5"
@@ -154,7 +154,7 @@
    "type": "text",
    "text": "**The Anatomy of Identity**",
    "x": 770,
-   "y": 1485,
+   "y": 1359,
    "width": 270,
    "height": 56,
    "color": "5"
@@ -162,19 +162,19 @@
   {
    "id": "an-loop",
    "type": "text",
-   "text": "The identity loop\n\nSet a goal, perceive reality through it, notice what is relevant, act and get feedback, repeat until automatic, it becomes \"who you are\", you defend it, and it starts generating your next goals.",
+   "text": "**The identity loop**\n\n*Goal → perception → attention → action → feedback → automatic → \"who you are\" → defended → generates new goals.*\n\nThe loop is self-sealing: goals decide what you notice, what you notice confirms the goal, and confirmation hardens into identity, which then generates more goals of the same kind. Breaking it means changing the goal at the top, not the behaviour at the bottom.",
    "x": 1150,
-   "y": 1316,
+   "y": 1211,
    "width": 320,
-   "height": 156,
+   "height": 114,
    "color": "5"
   },
   {
    "id": "an-childhood",
    "type": "text",
-   "text": "It started before you were consulted\n\nMost of the loop was installed in childhood by environment and conditioning.",
+   "text": "**It started before you were consulted**\n\n*Most of the loop was installed in childhood by environment and conditioning.*\n\nYou adopted a strategy that made one specific childhood environment survivable. It worked — that is precisely why it stayed. The only live question is whether that is still the environment you are in.",
    "x": 1150,
-   "y": 1498,
+   "y": 1351,
    "width": 320,
    "height": 93,
    "color": "5"
@@ -182,9 +182,9 @@
   {
    "id": "an-ideology",
    "type": "text",
-   "text": "After survival comes ideology\n\nOnce the body is safe, you begin defending beliefs as if they were food and shelter.",
+   "text": "**After survival comes ideology**\n\n*Once the body is safe, you defend beliefs as if they were food and shelter.*\n\nBeing wrong starts to feel like dying. That is why people will burn a friendship rather than update a position, and why identity-level change feels genuinely dangerous rather than merely difficult.",
    "x": 1150,
-   "y": 1617,
+   "y": 1470,
    "width": 320,
    "height": 93,
    "color": "5"
@@ -194,7 +194,7 @@
    "type": "text",
    "text": "**Stages of Mind Development**",
    "x": 770,
-   "y": 1874,
+   "y": 1727,
    "width": 270,
    "height": 56,
    "color": "5"
@@ -202,9 +202,9 @@
   {
    "id": "st-where-most-are",
    "type": "text",
-   "text": "Most people sit between self-aware and construct-aware\n\nRoughly stages 4 to 8 in adult-development models.",
+   "text": "**Most people sit between self-aware and construct-aware**\n\n*Roughly stages 4 to 8 in adult-development models.*\n\nTranslated: aware that you have conditioning, not yet fluent at rewriting it. You can see the box. You are still furnishing it.",
    "x": 1150,
-   "y": 1736,
+   "y": 1589,
    "width": 320,
    "height": 93,
    "color": "5"
@@ -212,9 +212,9 @@
   {
    "id": "st-sequential",
    "type": "text",
-   "text": "Development is sequential\n\nYou cannot skip a stage. You can only move through the next one.",
+   "text": "**Development is sequential**\n\n*You cannot skip a stage. You can only move through the next one.*\n\nYou can borrow the conclusions of a later stage, but they collapse the first time they are tested, because you did not do the work that made them yours.",
    "x": 1150,
-   "y": 1855,
+   "y": 1708,
    "width": 320,
    "height": 93,
    "color": "5"
@@ -222,9 +222,9 @@
   {
    "id": "st-upper",
    "type": "text",
-   "text": "The upper stages question inherited beliefs\n\nThat is where you stop borrowing principles and start writing your own.",
+   "text": "**The upper stages question inherited beliefs**\n\n*You stop borrowing principles and start writing your own.*\n\nThe shift is from \"what should I believe?\" to \"which of my beliefs did I actually choose?\" Principles you wrote yourself hold under pressure. Inherited ones do not.",
    "x": 1150,
-   "y": 1974,
+   "y": 1827,
    "width": 320,
    "height": 93,
    "color": "5"
@@ -234,7 +234,7 @@
    "type": "text",
    "text": "**Intelligence Framework**",
    "x": 770,
-   "y": 2290,
+   "y": 2143,
    "width": 270,
    "height": 56,
    "color": "5"
@@ -242,9 +242,9 @@
   {
    "id": "in-definition",
    "type": "text",
-   "text": "Intelligence = getting what you actually want\n\nA working definition, not an IQ score.",
+   "text": "**Intelligence = getting what you actually want**\n\n*A working definition, not an IQ score.*\n\nCan you look at your situation, see it accurately, and move it toward what you want? People with unremarkable credentials do this constantly. People with impressive ones often cannot.",
    "x": 1150,
-   "y": 2093,
+   "y": 1946,
    "width": 320,
    "height": 93,
    "color": "5"
@@ -252,9 +252,9 @@
   {
    "id": "in-ingredients",
    "type": "text",
-   "text": "Three ingredients: agency, opportunity, intelligence\n\nRemove any one of the three and results stall.",
+   "text": "**Three ingredients: agency, opportunity, intelligence**\n\n*Remove any one and results stall.*\n\nAgency without opportunity is frustration. Opportunity without agency is waste. Both, without the ability to steer, becomes a well-rehearsed story about bad luck.",
    "x": 1150,
-   "y": 2212,
+   "y": 2065,
    "width": 320,
    "height": 93,
    "color": "5"
@@ -262,9 +262,9 @@
   {
    "id": "in-cybernetic",
    "type": "text",
-   "text": "The cybernetic loop\n\nSet a goal, act, sense where you are, compare to the goal, adjust. Then repeat.",
+   "text": "**The cybernetic loop**\n\n*Set a goal, act, sense where you are, compare to the goal, adjust.*\n\nThe comparison step is the one everyone skips. Acting without measuring the gap between where you are and where you meant to be is motion, not progress.",
    "x": 1150,
-   "y": 2331,
+   "y": 2184,
    "width": 320,
    "height": 93,
    "color": "5"
@@ -272,9 +272,9 @@
   {
    "id": "in-iteration",
    "type": "text",
-   "text": "High intelligence = iteration speed\n\nPersisting and learning from mistakes beats being right early.",
+   "text": "**High intelligence = iteration speed**\n\n*Persisting and learning from mistakes beats being right early.*\n\nThe advantage compounds: more attempts means more feedback, and more feedback means better aim. Being right on attempt one is luck. Being right by attempt twelve is skill.",
    "x": 1150,
-   "y": 2450,
+   "y": 2303,
    "width": 320,
    "height": 93,
    "color": "5"
@@ -282,19 +282,19 @@
   {
    "id": "protocol",
    "type": "text",
-   "text": "**The One-Day Protocol**",
+   "text": "**The One-Day Protocol**\n\n*The day itself: morning, throughout, evening.*",
    "x": 410,
-   "y": 3987,
+   "y": 3821,
    "width": 250,
-   "height": 56,
+   "height": 93,
    "color": "4"
   },
   {
    "id": "part1",
    "type": "text",
-   "text": "**Part 1 — Morning: Psychological Excavation**\n\n15–30 minutes of honest writing, before the day gets loud.",
+   "text": "**Part 1 — Morning: Psychological Excavation**\n\n*15–30 minutes of honest writing, before the day gets loud.*\n\nDo this before your phone, your email, or anyone else's opinion reaches you. Write in full sentences — bullets let you skip the hard part. No editing while writing, and no audience.",
    "x": 770,
-   "y": 3171,
+   "y": 3024,
    "width": 270,
    "height": 93,
    "color": "4"
@@ -302,9 +302,9 @@
   {
    "id": "anti-vision-q",
    "type": "text",
-   "text": "**Anti-Vision Questions**",
+   "text": "**Anti-Vision Questions**\n\nEight questions about the life you are currently on track for. This half is uncomfortable on purpose: the anti-vision is what you will re-read on the days motivation is absent.",
    "x": 1150,
-   "y": 2920,
+   "y": 2773,
    "width": 320,
    "height": 56,
    "color": "4"
@@ -312,9 +312,9 @@
   {
    "id": "av1",
    "type": "text",
-   "text": "What dissatisfaction have you quietly learned to tolerate?",
+   "text": "**What dissatisfaction have you quietly learned to tolerate?**\n\nTolerance is the trap. Anything unbearable gets fixed — it is the merely annoying that lasts a decade. List what you have stopped noticing.",
    "x": 1580,
-   "y": 2569,
+   "y": 2422,
    "width": 360,
    "height": 72,
    "color": "4"
@@ -322,9 +322,9 @@
   {
    "id": "av2",
    "type": "text",
-   "text": "What do you complain about repeatedly and never change?",
+   "text": "**What do you complain about repeatedly and never change?**\n\nA complaint you repeat is a decision you have already made. Naming it removes the option of pretending it is still an open question.",
    "x": 1580,
-   "y": 2667,
+   "y": 2520,
    "width": 360,
    "height": 72,
    "color": "4"
@@ -332,9 +332,9 @@
   {
    "id": "av3",
    "type": "text",
-   "text": "What true thing about your life would be unbearable to say out loud?",
+   "text": "**What true thing about your life would be unbearable to say out loud?**\n\nWrite the sentence you would never say at dinner. If nothing comes, you are editing — the resistance itself is the location.",
    "x": 1580,
-   "y": 2765,
+   "y": 2618,
    "width": 360,
    "height": 72,
    "color": "4"
@@ -342,9 +342,9 @@
   {
    "id": "av4",
    "type": "text",
-   "text": "Five years out, nothing changes. Describe an ordinary Tuesday.",
+   "text": "**Five years out, nothing changes. Describe an ordinary Tuesday.**\n\nNot a summary — an hour-by-hour Tuesday. Where you wake up, what is in front of you, who is there, what you feel at 3pm. Vagueness is how you protect yourself here.",
    "x": 1580,
-   "y": 2863,
+   "y": 2716,
    "width": 360,
    "height": 72,
    "color": "4"
@@ -352,9 +352,9 @@
   {
    "id": "av5",
    "type": "text",
-   "text": "Ten years out, same trajectory. Which doors have closed for good?",
+   "text": "**Ten years out, same trajectory. Which doors have closed for good?**\n\nSome doors close by age, some by accumulated commitments, some by skills you did not build in time. Name which ones, specifically.",
    "x": 1580,
-   "y": 2961,
+   "y": 2814,
    "width": 360,
    "height": 72,
    "color": "4"
@@ -362,9 +362,9 @@
   {
    "id": "av6",
    "type": "text",
-   "text": "At the end of your life, what did you never once attempt?",
+   "text": "**At the end of your life, what did you never once attempt?**\n\nStrip out the social scoring. What did you actually want that you never made a single real attempt at?",
    "x": 1580,
-   "y": 3059,
+   "y": 2912,
    "width": 360,
    "height": 72,
    "color": "4"
@@ -372,9 +372,9 @@
   {
    "id": "av7",
    "type": "text",
-   "text": "Which identity would you have to stop defending in order to change?",
+   "text": "**Which identity would you have to stop defending in order to change?**\n\nEvery change costs an identity — the realist, the one who had it hard, the one everyone relies on. Naming the price is what makes it payable.",
    "x": 1580,
-   "y": 3157,
+   "y": 3010,
    "width": 360,
    "height": 72,
    "color": "4"
@@ -382,9 +382,9 @@
   {
    "id": "av8",
    "type": "text",
-   "text": "What is the embarrassing, real reason you have not changed yet?",
+   "text": "**What is the embarrassing, real reason you have not changed yet?**\n\nNot the respectable reason. The one that sounds petty out loud: fear of looking stupid, of losing an excuse, of succeeding and still feeling like this.",
    "x": 1580,
-   "y": 3255,
+   "y": 3108,
    "width": 360,
    "height": 72,
    "color": "4"
@@ -392,9 +392,9 @@
   {
    "id": "vision-q",
    "type": "text",
-   "text": "**Vision Questions**",
+   "text": "**Vision Questions**\n\nThree questions about the life you are aiming at. Keep the same level of detail you used for the anti-vision — an ordinary Tuesday, not a highlight reel.",
    "x": 1150,
-   "y": 3459,
+   "y": 3312,
    "width": 320,
    "height": 56,
    "color": "4"
@@ -402,9 +402,9 @@
   {
    "id": "vq1",
    "type": "text",
-   "text": "Three years out, best realistic case. Describe an ordinary Tuesday in detail.",
+   "text": "**Three years out, best realistic case. Describe an ordinary Tuesday in detail.**\n\nBest realistic case, not fantasy. Detail is what makes it usable: the hour you wake, the work in front of you, who you eat with, what you are no longer worried about.",
    "x": 1580,
-   "y": 3353,
+   "y": 3206,
    "width": 360,
    "height": 72,
    "color": "4"
@@ -412,9 +412,9 @@
   {
    "id": "vq2",
    "type": "text",
-   "text": "What would you have to believe about yourself for that life to feel normal?",
+   "text": "**What would you have to believe about yourself for that life to feel normal?**\n\nBeliefs are load-bearing. That life stays out of reach for as long as you hold beliefs that make it absurd for you, specifically, to have it.",
    "x": 1580,
-   "y": 3451,
+   "y": 3304,
    "width": 360,
    "height": 72,
    "color": "4"
@@ -422,9 +422,9 @@
   {
    "id": "vq3",
    "type": "text",
-   "text": "If you were already that person, what would you do this week?",
+   "text": "**If you were already that person, what would you do this week?**\n\nThis converts the vision into something testable within seven days. Small enough to actually do, and unmistakably that person's move.",
    "x": 1580,
-   "y": 3549,
+   "y": 3402,
    "width": 360,
    "height": 72,
    "color": "4"
@@ -432,9 +432,9 @@
   {
    "id": "part2",
    "type": "text",
-   "text": "**Part 2 — Throughout the Day: Pattern Interruption**\n\nSix alarms that catch you mid-behaviour, plus three questions to carry around.",
+   "text": "**Part 2 — Throughout the Day: Pattern Interruption**\n\n*Six alarms that catch you mid-behaviour, plus three questions to carry around.*\n\nThe point is not the answers. It is catching yourself mid-behaviour, while you can still see what you are doing. Answering these from memory at bedtime does not work — you will have edited yourself by then.",
    "x": 770,
-   "y": 4064,
+   "y": 3917,
    "width": 270,
    "height": 114,
    "color": "4"
@@ -442,9 +442,9 @@
   {
    "id": "reminders",
    "type": "text",
-   "text": "**Phone reminders**",
+   "text": "**Phone reminders**\n\nSet these as alarms with the question as the label. When one fires: stop, read it, answer in one line, go back to what you were doing. Sixty seconds each.",
    "x": 1150,
-   "y": 3884,
+   "y": 3737,
    "width": 320,
    "height": 56,
    "color": "4"
@@ -452,9 +452,9 @@
   {
    "id": "r1100",
    "type": "text",
-   "text": "`11:00` What am I avoiding right now?",
+   "text": "`11:00` **What am I avoiding right now?**\n\nWhatever came to mind first is the answer. Avoidance attaches itself to the thing that matters most, not the thing that is hardest.",
    "x": 1580,
-   "y": 3647,
+   "y": 3500,
    "width": 360,
    "height": 56,
    "color": "4"
@@ -462,9 +462,9 @@
   {
    "id": "r1330",
    "type": "text",
-   "text": "`13:30` Judging only by my behaviour today, what would a stranger say I want?",
+   "text": "`13:30` **Judging only by my behaviour today, what would a stranger say I want?**\n\nYour stated goals are not evidence. Your calendar and your last four hours are.",
    "x": 1580,
-   "y": 3729,
+   "y": 3582,
    "width": 360,
    "height": 72,
    "color": "4"
@@ -472,9 +472,9 @@
   {
    "id": "r1515",
    "type": "text",
-   "text": "`15:15` Is this moving me toward the life I want or the one I dread?",
+   "text": "`15:15` **Is this moving me toward the life I want or the one I dread?**\n\nBinary question, no third option. Neutral is drift, and drift defaults to the life you dread.",
    "x": 1580,
-   "y": 3827,
+   "y": 3680,
    "width": 360,
    "height": 72,
    "color": "4"
@@ -482,9 +482,9 @@
   {
    "id": "r1700",
    "type": "text",
-   "text": "`17:00` What important thing am I pretending is not important?",
+   "text": "`17:00` **What important thing am I pretending is not important?**\n\nUsually a health issue, a relationship, or a conversation. Downgrading it in your head is cheaper than acting on it.",
    "x": 1580,
-   "y": 3925,
+   "y": 3778,
    "width": 360,
    "height": 72,
    "color": "4"
@@ -492,9 +492,9 @@
   {
    "id": "r1930",
    "type": "text",
-   "text": "`19:30` Today, what did I do to protect my image rather than to get what I want?",
+   "text": "`19:30` **Today, what did I do to protect my image rather than to get what I want?**\n\nImage protection is invisible from the inside. Look for the moment you softened something, stayed quiet, or performed.",
    "x": 1580,
-   "y": 4023,
+   "y": 3876,
    "width": 360,
    "height": 72,
    "color": "4"
@@ -502,9 +502,9 @@
   {
    "id": "r2100",
    "type": "text",
-   "text": "`21:00` When did I feel most alive today? Most dead?",
+   "text": "`21:00` **When did I feel most alive today? Most dead?**\n\nTrack this across several days. Aliveness is data about direction, not a mood to chase.",
    "x": 1580,
-   "y": 4121,
+   "y": 3974,
    "width": 360,
    "height": 56,
    "color": "4"
@@ -512,9 +512,9 @@
   {
    "id": "contemplation",
    "type": "text",
-   "text": "**Carry-around questions**",
+   "text": "**Carry-around questions**\n\nNo schedule. Keep these in your pocket and return to them whenever the day goes quiet.",
    "x": 1150,
-   "y": 4301,
+   "y": 4154,
    "width": 320,
    "height": 56,
    "color": "4"
@@ -522,9 +522,9 @@
   {
    "id": "cq1",
    "type": "text",
-   "text": "What changes if I stop needing people to see me as ______?",
+   "text": "**What changes if I stop needing people to see me as ______?**\n\nFill the blank with the label you work hardest to maintain. Most of what that identity costs you stays invisible until you price it.",
    "x": 1580,
-   "y": 4203,
+   "y": 4056,
    "width": 360,
    "height": 72,
    "color": "4"
@@ -532,9 +532,9 @@
   {
    "id": "cq2",
    "type": "text",
-   "text": "Where am I trading aliveness for safety?",
+   "text": "**Where am I trading aliveness for safety?**\n\nSafety is not the enemy; unexamined safety is. Find the specific trade you keep making without deciding to.",
    "x": 1580,
-   "y": 4301,
+   "y": 4154,
    "width": 360,
    "height": 56,
    "color": "4"
@@ -542,9 +542,9 @@
   {
    "id": "cq3",
    "type": "text",
-   "text": "What is the smallest version of my future self I could be tomorrow?",
+   "text": "**What is the smallest version of my future self I could be tomorrow?**\n\nNot a transformation — the smallest recognisable version. One hour, one decision, one different answer.",
    "x": 1580,
-   "y": 4383,
+   "y": 4236,
    "width": 360,
    "height": 72,
    "color": "4"
@@ -552,9 +552,9 @@
   {
    "id": "part3",
    "type": "text",
-   "text": "**Part 3 — Evening: Synthesis**\n\nTurn the day's raw material into two sentences and three goals.",
+   "text": "**Part 3 — Evening: Synthesis**\n\n*Turn the day's raw material into two sentences and three goals.*\n\nRead back everything you wrote today before starting. This is the part that produces the deliverable — budget 45 to 60 minutes and do not rush the two one-sentence answers.",
    "x": 770,
-   "y": 4765,
+   "y": 4618,
    "width": 270,
    "height": 93,
    "color": "4"
@@ -562,9 +562,9 @@
   {
    "id": "integration",
    "type": "text",
-   "text": "**Integration questions**",
+   "text": "**Integration questions**\n\nFour questions that compress the day into something you can act on. Two of them ask for exactly one sentence — hold yourself to it.",
    "x": 1150,
-   "y": 4620,
+   "y": 4473,
    "width": 320,
    "height": 56,
    "color": "4"
@@ -572,9 +572,9 @@
   {
    "id": "iq1",
    "type": "text",
-   "text": "Why, specifically, have you been stuck?",
+   "text": "**Why, specifically, have you been stuck?**\n\nAnswer with a mechanism, not a mood. \"I lacked discipline\" is not an answer. \"I never risked being bad at it in front of people\" is.",
    "x": 1580,
-   "y": 4481,
+   "y": 4334,
    "width": 360,
    "height": 56,
    "color": "4"
@@ -582,9 +582,9 @@
   {
    "id": "iq2",
    "type": "text",
-   "text": "Name the internal enemy: which pattern or belief is actually running this?",
+   "text": "**Name the internal enemy: which pattern or belief is actually running this?**\n\nIt is a pattern or a belief — never a person or a circumstance. If your answer is external, you have nothing to act on.",
    "x": 1580,
-   "y": 4563,
+   "y": 4416,
    "width": 360,
    "height": 72,
    "color": "4"
@@ -592,9 +592,9 @@
   {
    "id": "iq3",
    "type": "text",
-   "text": "One sentence: what you refuse to let your life become.",
+   "text": "**One sentence: what you refuse to let your life become.**\n\nOne sentence. If it takes a paragraph you have not found it yet. This is the line you will re-read on the bad days.",
    "x": 1580,
-   "y": 4661,
+   "y": 4514,
    "width": 360,
    "height": 72,
    "color": "4"
@@ -602,9 +602,9 @@
   {
    "id": "iq4",
    "type": "text",
-   "text": "One sentence: what you are building toward.",
+   "text": "**One sentence: what you are building toward.**\n\nOne sentence, stated positively, in your own words. Not a goal — a direction.",
    "x": 1580,
-   "y": 4759,
+   "y": 4612,
    "width": 360,
    "height": 56,
    "color": "4"
@@ -612,9 +612,9 @@
   {
    "id": "goals",
    "type": "text",
-   "text": "**Goal setting — lenses, not finish lines**",
+   "text": "**Goal setting — lenses, not finish lines**\n\nThese exist to change what you notice tomorrow, not to be crossed off. A goal you never reach can still have done its job if it aimed your attention correctly for a year.",
    "x": 1150,
-   "y": 4947,
+   "y": 4800,
    "width": 320,
    "height": 56,
    "color": "4"
@@ -622,9 +622,9 @@
   {
    "id": "g1",
    "type": "text",
-   "text": "1 year: what would have to be true for you to know the pattern is broken?",
+   "text": "**1 year: what would have to be true for you to know the pattern is broken?**\n\nPick evidence, not a feeling. Something an outside observer could confirm twelve months from now.",
    "x": 1580,
-   "y": 4841,
+   "y": 4694,
    "width": 360,
    "height": 72,
    "color": "4"
@@ -632,9 +632,9 @@
   {
    "id": "g2",
    "type": "text",
-   "text": "1 month: what must be true this month to keep the 1-year goal possible?",
+   "text": "**1 month: what must be true this month to keep the 1-year goal possible?**\n\nThis is the constraint that keeps the year honest — what has to be true in 30 days for the 1-year answer to still be on the table.",
    "x": 1580,
-   "y": 4939,
+   "y": 4792,
    "width": 360,
    "height": 72,
    "color": "4"
@@ -642,9 +642,9 @@
   {
    "id": "g3",
    "type": "text",
-   "text": "Daily: which 2–3 actions would your future self simply do, without debate?",
+   "text": "**Daily: which 2–3 actions would your future self simply do, without debate?**\n\nTwo or three, not ten. They have to be doable on a bad day, or they are not levers.",
    "x": 1580,
-   "y": 5037,
+   "y": 4890,
    "width": 360,
    "height": 72,
    "color": "4"
@@ -652,19 +652,19 @@
   {
    "id": "implementation",
    "type": "text",
-   "text": "**Implementation: Turn Life Into a Game**",
+   "text": "**Implementation: Turn Life Into a Game**\n\n*What you walk away with, and how to keep playing it.*",
    "x": 410,
-   "y": 5646,
+   "y": 5489,
    "width": 250,
-   "height": 72,
+   "height": 93,
    "color": "2"
   },
   {
    "id": "six-components",
    "type": "text",
-   "text": "**Six Components to Document**",
+   "text": "**Six Components to Document**\n\nThis is the deliverable of the whole day. Every slot gets something, even a rough draft. Keep it where you will physically see it.",
    "x": 770,
-   "y": 5380,
+   "y": 5233,
    "width": 270,
    "height": 56,
    "color": "2"
@@ -672,9 +672,9 @@
   {
    "id": "c-anti-vision",
    "type": "text",
-   "text": "Anti-vision\n\nThe life you refuse to end up in.",
+   "text": "**Anti-vision**\n\n*The life you refuse to end up in.*\n\nWrite it as a scene, not a fear. You will re-read this on the days you do not feel like doing the work — that is its only job.",
    "x": 1150,
-   "y": 5135,
+   "y": 4988,
    "width": 320,
    "height": 72,
    "color": "2"
@@ -682,9 +682,9 @@
   {
    "id": "c-vision",
    "type": "text",
-   "text": "Vision\n\nThe life you are building toward.",
+   "text": "**Vision**\n\n*The life you are building toward.*\n\nA direction, not a destination. Concrete enough that you would recognise it if you arrived.",
    "x": 1150,
-   "y": 5233,
+   "y": 5086,
    "width": 320,
    "height": 56,
    "color": "2"
@@ -692,9 +692,9 @@
   {
    "id": "c-year-goal",
    "type": "text",
-   "text": "1-year goal\n\nWhat is true twelve months from now.",
+   "text": "**1-year goal**\n\n*What is true twelve months from now.*\n\nOne sentence, verifiable. If you could argue about whether you hit it, it is still too vague.",
    "x": 1150,
-   "y": 5315,
+   "y": 5168,
    "width": 320,
    "height": 72,
    "color": "2"
@@ -702,9 +702,9 @@
   {
    "id": "c-month-project",
    "type": "text",
-   "text": "1-month project\n\nThe skill to acquire or the thing to build.",
+   "text": "**1-month project**\n\n*The skill to acquire or the thing to build.*\n\nSomething that ships or is learned inside 30 days. It should scare you slightly and produce evidence either way.",
    "x": 1150,
-   "y": 5413,
+   "y": 5266,
    "width": 320,
    "height": 72,
    "color": "2"
@@ -712,9 +712,9 @@
   {
    "id": "c-daily-levers",
    "type": "text",
-   "text": "Daily levers\n\nThe 2–3 tasks that actually move it.",
+   "text": "**Daily levers**\n\n*The 2–3 tasks that actually move it.*\n\nTwo or three tasks, done before anything else. These are the only things that must happen for a day to count.",
    "x": 1150,
-   "y": 5511,
+   "y": 5364,
    "width": 320,
    "height": 72,
    "color": "2"
@@ -722,9 +722,9 @@
   {
    "id": "c-constraints",
    "type": "text",
-   "text": "Constraints\n\nWhat you will not sacrifice to get it.",
+   "text": "**Constraints**\n\n*What you will not sacrifice to get it.*\n\nHealth, relationships, ethics, sleep — whatever you will not trade. Constraints are not obstacles; they force the creative path.",
    "x": 1150,
-   "y": 5609,
+   "y": 5462,
    "width": 320,
    "height": 72,
    "color": "2"
@@ -732,9 +732,9 @@
   {
    "id": "game-mechanics",
    "type": "text",
-   "text": "**Game Mechanics**",
+   "text": "**Game Mechanics**\n\nThe six components map onto the parts of any decent game. This is not decoration — it is why the structure holds attention when a to-do list does not.",
    "x": 770,
-   "y": 5928,
+   "y": 5781,
    "width": 270,
    "height": 56,
    "color": "2"
@@ -742,9 +742,9 @@
   {
    "id": "gm-vision",
    "type": "text",
-   "text": "Vision = the win condition",
+   "text": "**Vision = the win condition**\n\nKnow what winning looks like, or every choice becomes a coin flip.",
    "x": 1150,
-   "y": 5707,
+   "y": 5560,
    "width": 320,
    "height": 56,
    "color": "2"
@@ -752,9 +752,9 @@
   {
    "id": "gm-anti",
    "type": "text",
-   "text": "Anti-vision = what is at stake if you lose",
+   "text": "**Anti-vision = what is at stake if you lose**\n\nStakes are what make a game real. No downside, no urgency.",
    "x": 1150,
-   "y": 5789,
+   "y": 5642,
    "width": 320,
    "height": 72,
    "color": "2"
@@ -762,9 +762,9 @@
   {
    "id": "gm-year",
    "type": "text",
-   "text": "1-year goal = the main mission",
+   "text": "**1-year goal = the main mission**\n\nThe mission is what gives this month its meaning. Without it, the month is busywork.",
    "x": 1150,
-   "y": 5887,
+   "y": 5740,
    "width": 320,
    "height": 56,
    "color": "2"
@@ -772,9 +772,9 @@
   {
    "id": "gm-month",
    "type": "text",
-   "text": "1-month project = the boss fight",
+   "text": "**1-month project = the boss fight**\n\nWhere skill actually increases. Boss fights, not grinding.",
    "x": 1150,
-   "y": 5969,
+   "y": 5822,
    "width": 320,
    "height": 56,
    "color": "2"
@@ -782,9 +782,9 @@
   {
    "id": "gm-levers",
    "type": "text",
-   "text": "Daily levers = daily quests",
+   "text": "**Daily levers = daily quests**\n\nSmall, repeatable, done every day. This is where the hours actually go.",
    "x": 1150,
-   "y": 6051,
+   "y": 5904,
    "width": 320,
    "height": 56,
    "color": "2"
@@ -792,9 +792,9 @@
   {
    "id": "gm-constraints",
    "type": "text",
-   "text": "Constraints = the rules that force creativity",
+   "text": "**Constraints = the rules that force creativity**\n\nLimits force invention. A game with no rules is not a game.",
    "x": 1150,
-   "y": 6133,
+   "y": 5986,
    "width": 320,
    "height": 72,
    "color": "2"
@@ -802,19 +802,19 @@
   {
    "id": "insights",
    "type": "text",
-   "text": "**Critical Insights**",
+   "text": "**Critical Insights**\n\n*Things worth knowing before you expect a result.*",
    "x": 410,
-   "y": 6589,
+   "y": 6403,
    "width": 250,
-   "height": 56,
+   "height": 93,
    "color": "3"
   },
   {
    "id": "ci-tension",
    "type": "text",
-   "text": "Change is sudden, but only after tension builds\n\nDissonance leads to uncertainty, uncertainty leads to discovery.",
+   "text": "**Change is sudden, but only after tension builds**\n\n*Dissonance leads to uncertainty, uncertainty leads to discovery.*\n\nNothing changes, nothing changes, then everything does. The plateau is the tension accumulating, and it is exactly where most people quit.",
    "x": 770,
-   "y": 6231,
+   "y": 6084,
    "width": 270,
    "height": 114,
    "color": "3"
@@ -822,9 +822,9 @@
   {
    "id": "ci-clarity",
    "type": "text",
-   "text": "Clarity compresses time, hours do not\n\nYou cannot make six years of progress in six months without knowing exactly what you are aiming at.",
+   "text": "**Clarity compresses time, hours do not**\n\n*You cannot make six years of progress in six months without knowing what you are aiming at.*\n\nEffort spent in the wrong direction is still effort. Clarity is what makes the same number of hours count for more.",
    "x": 770,
-   "y": 6371,
+   "y": 6224,
    "width": 270,
    "height": 114,
    "color": "3"
@@ -832,9 +832,9 @@
   {
    "id": "ci-full-day",
    "type": "text",
-   "text": "This takes one full day of focused work\n\nHalf-doing it produces half-answers.",
+   "text": "**This takes one full day of focused work**\n\n*Half-doing it produces half-answers.*\n\nTwo hours gives you back the answers you already had. The useful material only shows up once you have exhausted the rehearsed ones.",
    "x": 770,
-   "y": 6511,
+   "y": 6364,
    "width": 270,
    "height": 93,
    "color": "3"
@@ -842,19 +842,19 @@
   {
    "id": "ci-chapter",
    "type": "text",
-   "text": "It lands differently depending on your chapter\n\nTiming is part of the result. The same questions hit harder at some points in life than others.",
+   "text": "**It lands differently depending on your chapter**\n\n*Timing is part of the result.*\n\nIf the questions do not land, the timing may be wrong rather than you. Put it down and come back in a few months.",
    "x": 770,
-   "y": 6630,
+   "y": 6483,
    "width": 270,
-   "height": 135,
+   "height": 93,
    "color": "3"
   },
   {
    "id": "ci-questioning",
    "type": "text",
-   "text": "Questioning is thinking\n\nMost of what passes for thinking is rehearsing things you already believe.",
+   "text": "**Questioning is thinking**\n\n*Most of what passes for thinking is rehearsing things you already believe.*\n\nRehearsing a position feels like thinking and produces nothing new. A real question is one you do not already have the answer to.",
    "x": 770,
-   "y": 6791,
+   "y": 6602,
    "width": 270,
    "height": 93,
    "color": "3"
@@ -862,9 +862,9 @@
   {
    "id": "ci-goals-shape-reality",
    "type": "text",
-   "text": "Your goals build your reality\n\nThey decide what you notice and what you treat as valuable.",
+   "text": "**Your goals build your reality**\n\n*They decide what you notice and what you treat as valuable.*\n\nChange the goal and the same room contains different information. This is why a genuine shift in perspective feels like the world changed rather than you.",
    "x": 770,
-   "y": 6910,
+   "y": 6721,
    "width": 270,
    "height": 93,
    "color": "3"

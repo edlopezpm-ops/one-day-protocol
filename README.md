@@ -1,88 +1,60 @@
 # The One-Day Protocol
 
-An interactive model of the ideas in **"How to fix your entire life in 1 day"** by [Dan Koe](https://thedankoe.com/), organised after the mind map by [@MindBranches](https://x.com/MindBranches/status/2078988089393901842).
+An interactive model of **"How to fix your entire life in 1 day"** by [Dan Koe](https://thedankoe.com/), organised after the mind map by [@MindBranches](https://x.com/MindBranches/status/2078988089393901842).
 
-It is a **single HTML file** you open by double-clicking it. No install, no account, no internet, nothing to sign up for. It also ships as an **Obsidian vault** if you prefer notes.
+**[⬇ Download](https://github.com/edlopezpm-ops/one-day-protocol/releases/latest)** · **[Run the day](docs/SOP-03-run-the-day.md)** · Built with **[AEKR](https://aekr.io)**
 
 ![The map](docs/img/map.png)
 
 ---
 
-## Get started in 30 seconds
+## Start
 
-1. Go to the [**latest release**](https://github.com/edlopezpm-ops/one-day-protocol/releases/latest) and download `one-day-protocol.zip`.
-2. Unzip it. (Right-click → *Extract All* on Windows, double-click on Mac.)
-3. Double-click **`index.html`**. It opens in your browser. That's it.
+1. Download `One-Day-Protocol.zip` from the [latest release](https://github.com/edlopezpm-ops/one-day-protocol/releases/latest).
+2. Unzip it. *(Windows: right-click → Extract All. Mac: double-click.)*
+3. Double-click **`One Day Protocol.html`**.
 
-> Prefer to download the whole repo? Green **Code** button → *Download ZIP*. Same result.
+That's the whole install — one file, no account, no internet.
 
-### The three tabs
-
-| Tab | What it is |
+| Tab | What it does |
 | --- | --- |
-| **Map** | The whole model as a mind map. Click a node to fold it, drag to pan, scroll to zoom. |
-| **Workbook** | Every question with a box to type in. Saves as you type. Exports to Markdown. |
-| **Game board** | Your six answers laid out as a game. Fills itself from the Workbook. |
+| **Map** | Click the centre button, then keep clicking. Every node opens into a short explanation. Expand all / Contract all at the bottom left. |
+| **Workbook** | Every question with a box to type in. Saves as you type, exports to Markdown. |
+| **Game board** | Your answers as a game: stakes, six components, three horizons. |
 
----
+Stuck on any of it → **[docs/SOP-01-browser.md](docs/SOP-01-browser.md)**
 
-## Use it in Obsidian
+## Obsidian
 
-1. Open Obsidian → **Open folder as vault** → pick the `vault` folder from the download.
-2. Open **`00 START HERE.md`**.
-3. Open **`One-Day Protocol.canvas`** to see the mind map inside Obsidian.
-4. Press `Ctrl+G` (`Cmd+G` on Mac) for the graph view.
+Download `Obsidian-Vault.zip` from the same release, then *Open folder as vault* → pick `vault`. Wiki-linked notes, a Canvas mind map, and a fill-in worksheet. Details → **[docs/SOP-02-obsidian.md](docs/SOP-02-obsidian.md)**
 
-Full steps with screenshots-level detail: **[docs/SOP-02-obsidian.md](docs/SOP-02-obsidian.md)**
+## The day itself
 
----
+The map is theory. **[docs/SOP-03-run-the-day.md](docs/SOP-03-run-the-day.md)** is the part that does something — morning excavation, six alarms, evening synthesis. The Workbook generates a `.ics` that puts the alarms on your phone.
 
-## Actually running the day
+## Privacy
 
-The map is the theory. The day is the point. Follow **[docs/SOP-03-run-the-day.md](docs/SOP-03-run-the-day.md)** — morning excavation, six alarms during the day, evening synthesis. The Workbook can generate a `.ics` calendar file that puts all six alarms on your phone.
+Zero network requests — no analytics, no fonts, no CDN. Works with the Wi-Fi off. Answers live in your browser's local storage and nowhere else, so clearing browser data erases them: press **Export Markdown** when you're done.
 
----
+## Credits, licence, caveat
 
-## Your answers are yours
+The thinking belongs to Dan Koe and @MindBranches, not to me — see **[CREDITS.md](CREDITS.md)**. Code [MIT](LICENSE), text [CC BY 4.0](LICENSE-CONTENT.md).
 
-- Everything you type stays in **your browser's local storage, on your machine**.
-- The page makes **zero network requests**. Open it with the Wi-Fi off and it works identically.
-- There is no analytics, no tracking, no telemetry, no external font, no CDN.
-- **Erase my answers** in the Workbook wipes them permanently.
-- Clearing your browser data also erases them — so press **Export Markdown** when you're done. That file is the copy that survives.
-
----
-
-## Credits
-
-The thinking is not mine. See **[CREDITS.md](CREDITS.md)**.
-
-- **Dan Koe** — the original article and the underlying framework.
-- **[@MindBranches](https://x.com/MindBranches/status/2078988089393901842)** — the mind-map summary that this repo's structure follows.
-
-This repository is an independently written, non-commercial study aid. It reproduces neither the original article nor the original images. It is not affiliated with or endorsed by either author. If you are one of them and want a change, open an issue.
-
-## Licence
-
-- **Code** (`index.html`, `tools/`) — [MIT](LICENSE).
-- **Text** (`data/model.json`, `vault/`, `docs/`) — [CC BY 4.0](LICENSE-CONTENT.md), attribution as above.
-
-## Not advice
-
-Self-reflection material for educational use. It is not therapy, medical, or mental-health advice. Some questions are deliberately uncomfortable. If they surface something heavy, talk to a professional.
+Educational and self-reflection material. Not therapy, medical, or mental-health advice.
 
 ---
 
 <details>
 <summary><b>Español — inicio rápido</b></summary>
 
-1. Descarga `one-day-protocol.zip` desde [**releases**](https://github.com/edlopezpm-ops/one-day-protocol/releases/latest) y descomprímelo.
-2. Doble clic en **`index.html`**. Se abre en tu navegador. Listo.
-3. Para Obsidian: *Abrir carpeta como bóveda* → elige la carpeta `vault` → abre `00 START HERE.md`.
+1. Baja `One-Day-Protocol.zip` desde [releases](https://github.com/edlopezpm-ops/one-day-protocol/releases/latest) y descomprímelo.
+2. Doble clic en **`One Day Protocol.html`**. Se abre en tu navegador. Listo.
 
-Tres pestañas: **Map** (el mapa mental), **Workbook** (las preguntas, con cajas para escribir, se guarda solo) y **Game board** (tus seis respuestas como tablero).
+En **Map**, haz clic en el botón del centro y sigue haciendo clic: cada nodo se abre con su explicación. **Workbook** son las preguntas con cajas para escribir (se guarda solo). **Game board** muestra tus respuestas como tablero.
 
-Todo lo que escribes se queda en tu computador. La página no hace ninguna conexión a internet. Usa **Export Markdown** antes de cerrar para quedarte con una copia.
+Todo se queda en tu computador; la página no se conecta a internet. Usa **Export Markdown** antes de cerrar.
+
+Para Obsidian, baja `Obsidian-Vault.zip` y abre la carpeta `vault` como bóveda.
 
 Guía del día completo: [docs/SOP-03-run-the-day.md](docs/SOP-03-run-the-day.md)
 

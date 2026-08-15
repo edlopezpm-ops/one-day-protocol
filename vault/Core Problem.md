@@ -6,9 +6,11 @@ tags:
 
 # Core Problem
 
-- **Change fails at the action layer** — People swap behaviours while leaving their identity untouched, so the old self quietly reinstalls the old behaviour.
-- **You need the person, not the plan** — The durable move is becoming someone for whom the desired actions are simply the obvious ones.
-- **Your current life is not an accident** — Today's behaviour is already succeeding at goals you never consciously chose. That is exactly why it survives.
+*Why the usual approach to changing your life fails.*
 
----
-> Ideas from **How to fix your entire life in 1 day** by Dan Koe. Structure after the mind map by @MindBranches — <https://x.com/MindBranches/status/2078988089393901842>.
+- **Change fails at the action layer** — People swap behaviours while leaving their identity untouched.
+	- Resolutions, habit trackers, 5am alarms — they all operate on what you do. None of them touch who you think you are. The self that produced the old behaviour is still sitting there when motivation runs out, and it quietly restores its defaults.
+- **You need the person, not the plan** — Become someone for whom the desired actions are the obvious ones.
+	- A plan is a list of things a different person would do. If every item takes force, you are running someone else's operating system on your hardware. Change the operator and the list stops needing enforcement.
+- **Your current life is not an accident** — Today's behaviour is already succeeding at goals you never consciously chose.
+	- Whatever you are doing now is producing something you value — comfort, safety, an identity, a usable excuse. Until you can name what the current pattern is paying you, you will keep buying it back.

@@ -13,6 +13,8 @@ tags:
 2. Open **One-Day Protocol.canvas** (in this same folder) to see the whole model at once.
 3. Press `Ctrl/Cmd + G` for graph view — every note below is linked.
 
+Prefer the interactive version? Open **One Day Protocol.html** in the folder above this one.
+
 ## The five branches
 
 - [[Core Problem]]

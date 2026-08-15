@@ -8,12 +8,11 @@ tags:
 
 *15–30 minutes of honest writing, before the day gets loud.*
 
+Do this before your phone, your email, or anyone else's opinion reaches you. Write in full sentences — bullets let you skip the hard part. No editing while writing, and no audience.
+
 Part of [[The One-Day Protocol]].
 
 ## Sections
 
 - [[Anti-Vision Questions]]
 - [[Vision Questions]]
-
----
-> Ideas from **How to fix your entire life in 1 day** by Dan Koe. Structure after the mind map by @MindBranches — <https://x.com/MindBranches/status/2078988089393901842>.

@@ -1,0 +1,25 @@
+# build / release artefacts
+dist/
+*.zip
+
+# never commit anyone's filled-in answers
+*answers*.md
+*-answers.*
+one-day-protocol-answers*
+*.ics
+
+# never commit source material belonging to the original authors
+source/
+*.pdf
+*.jpg
+*.jpeg
+
+# editor / OS noise
+.obsidian/
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+desktop.ini
+node_modules/
+*.log

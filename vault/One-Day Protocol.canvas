@@ -1,0 +1,1563 @@
+{
+ "nodes": [
+  {
+   "id": "root",
+   "type": "text",
+   "text": "# The One-Day Protocol\n\nAn interactive model of \"How to fix your entire life in 1 day\"\n\nIdeas: Dan Koe · Map: @MindBranches",
+   "x": 0,
+   "y": 3350,
+   "width": 300,
+   "height": 135
+  },
+  {
+   "id": "core-problem",
+   "type": "text",
+   "text": "**Core Problem**",
+   "x": 410,
+   "y": 190,
+   "width": 250,
+   "height": 56,
+   "color": "6"
+  },
+  {
+   "id": "cp-action-layer",
+   "type": "text",
+   "text": "Change fails at the action layer\n\nPeople swap behaviours while leaving their identity untouched, so the old self quietly reinstalls the old behaviour.",
+   "x": 770,
+   "y": 0,
+   "width": 270,
+   "height": 135,
+   "color": "6"
+  },
+  {
+   "id": "cp-person-not-plan",
+   "type": "text",
+   "text": "You need the person, not the plan\n\nThe durable move is becoming someone for whom the desired actions are simply the obvious ones.",
+   "x": 770,
+   "y": 161,
+   "width": 270,
+   "height": 114,
+   "color": "6"
+  },
+  {
+   "id": "cp-not-an-accident",
+   "type": "text",
+   "text": "Your current life is not an accident\n\nToday's behaviour is already succeeding at goals you never consciously chose. That is exactly why it survives.",
+   "x": 770,
+   "y": 301,
+   "width": 270,
+   "height": 135,
+   "color": "6"
+  },
+  {
+   "id": "principles",
+   "type": "text",
+   "text": "**Key Psychological Principles**",
+   "x": 410,
+   "y": 1450,
+   "width": 250,
+   "height": 56,
+   "color": "5"
+  },
+  {
+   "id": "identity-first",
+   "type": "text",
+   "text": "**Identity First, Actions Second**",
+   "x": 770,
+   "y": 610,
+   "width": 270,
+   "height": 56,
+   "color": "5"
+  },
+  {
+   "id": "if-effort-symptom",
+   "type": "text",
+   "text": "Effort is a symptom, not a strategy\n\nPeople who look like they are grinding are usually just living a life that fits them.",
+   "x": 1150,
+   "y": 462,
+   "width": 320,
+   "height": 93,
+   "color": "5"
+  },
+  {
+   "id": "if-lifestyle-before",
+   "type": "text",
+   "text": "Adopt the lifestyle before the outcome\n\nLive as the person who already has the result. The result is what that life produces.",
+   "x": 1150,
+   "y": 581,
+   "width": 320,
+   "height": 93,
+   "color": "5"
+  },
+  {
+   "id": "if-misfit-repels",
+   "type": "text",
+   "text": "Misfit habits should start to repel you\n\nOnce identity actually shifts, old habits stop feeling tempting and start feeling wrong.",
+   "x": 1150,
+   "y": 700,
+   "width": 320,
+   "height": 114,
+   "color": "5"
+  },
+  {
+   "id": "your-mind",
+   "type": "text",
+   "text": "**Understanding Your Mind**",
+   "x": 770,
+   "y": 1037,
+   "width": 270,
+   "height": 56,
+   "color": "5"
+  },
+  {
+   "id": "ym-teleological",
+   "type": "text",
+   "text": "Behaviour is goal-directed\n\nNothing you do is random. Every pattern is aimed at something (teleology).",
+   "x": 1150,
+   "y": 840,
+   "width": 320,
+   "height": 93,
+   "color": "5"
+  },
+  {
+   "id": "ym-goals-against-you",
+   "type": "text",
+   "text": "Some of those goals work against you\n\nYou can pursue a goal for years without ever having chosen it.",
+   "x": 1150,
+   "y": 959,
+   "width": 320,
+   "height": 93,
+   "color": "5"
+  },
+  {
+   "id": "ym-change-the-goal",
+   "type": "text",
+   "text": "Change the goal, not just the schedule\n\nNew perspective produces new goals, which produce new behaviour. In that order.",
+   "x": 1150,
+   "y": 1078,
+   "width": 320,
+   "height": 93,
+   "color": "5"
+  },
+  {
+   "id": "ym-identity-defends",
+   "type": "text",
+   "text": "Identity defends itself\n\nYour sense of self reacts to contradiction the way your body reacts to infection.",
+   "x": 1150,
+   "y": 1197,
+   "width": 320,
+   "height": 93,
+   "color": "5"
+  },
+  {
+   "id": "anatomy",
+   "type": "text",
+   "text": "**The Anatomy of Identity**",
+   "x": 770,
+   "y": 1485,
+   "width": 270,
+   "height": 56,
+   "color": "5"
+  },
+  {
+   "id": "an-loop",
+   "type": "text",
+   "text": "The identity loop\n\nSet a goal, perceive reality through it, notice what is relevant, act and get feedback, repeat until automatic, it becomes \"who you are\", you defend it, and it starts generating your next goals.",
+   "x": 1150,
+   "y": 1316,
+   "width": 320,
+   "height": 156,
+   "color": "5"
+  },
+  {
+   "id": "an-childhood",
+   "type": "text",
+   "text": "It started before you were consulted\n\nMost of the loop was installed in childhood by environment and conditioning.",
+   "x": 1150,
+   "y": 1498,
+   "width": 320,
+   "height": 93,
+   "color": "5"
+  },
+  {
+   "id": "an-ideology",
+   "type": "text",
+   "text": "After survival comes ideology\n\nOnce the body is safe, you begin defending beliefs as if they were food and shelter.",
+   "x": 1150,
+   "y": 1617,
+   "width": 320,
+   "height": 93,
+   "color": "5"
+  },
+  {
+   "id": "stages",
+   "type": "text",
+   "text": "**Stages of Mind Development**",
+   "x": 770,
+   "y": 1874,
+   "width": 270,
+   "height": 56,
+   "color": "5"
+  },
+  {
+   "id": "st-where-most-are",
+   "type": "text",
+   "text": "Most people sit between self-aware and construct-aware\n\nRoughly stages 4 to 8 in adult-development models.",
+   "x": 1150,
+   "y": 1736,
+   "width": 320,
+   "height": 93,
+   "color": "5"
+  },
+  {
+   "id": "st-sequential",
+   "type": "text",
+   "text": "Development is sequential\n\nYou cannot skip a stage. You can only move through the next one.",
+   "x": 1150,
+   "y": 1855,
+   "width": 320,
+   "height": 93,
+   "color": "5"
+  },
+  {
+   "id": "st-upper",
+   "type": "text",
+   "text": "The upper stages question inherited beliefs\n\nThat is where you stop borrowing principles and start writing your own.",
+   "x": 1150,
+   "y": 1974,
+   "width": 320,
+   "height": 93,
+   "color": "5"
+  },
+  {
+   "id": "intelligence",
+   "type": "text",
+   "text": "**Intelligence Framework**",
+   "x": 770,
+   "y": 2290,
+   "width": 270,
+   "height": 56,
+   "color": "5"
+  },
+  {
+   "id": "in-definition",
+   "type": "text",
+   "text": "Intelligence = getting what you actually want\n\nA working definition, not an IQ score.",
+   "x": 1150,
+   "y": 2093,
+   "width": 320,
+   "height": 93,
+   "color": "5"
+  },
+  {
+   "id": "in-ingredients",
+   "type": "text",
+   "text": "Three ingredients: agency, opportunity, intelligence\n\nRemove any one of the three and results stall.",
+   "x": 1150,
+   "y": 2212,
+   "width": 320,
+   "height": 93,
+   "color": "5"
+  },
+  {
+   "id": "in-cybernetic",
+   "type": "text",
+   "text": "The cybernetic loop\n\nSet a goal, act, sense where you are, compare to the goal, adjust. Then repeat.",
+   "x": 1150,
+   "y": 2331,
+   "width": 320,
+   "height": 93,
+   "color": "5"
+  },
+  {
+   "id": "in-iteration",
+   "type": "text",
+   "text": "High intelligence = iteration speed\n\nPersisting and learning from mistakes beats being right early.",
+   "x": 1150,
+   "y": 2450,
+   "width": 320,
+   "height": 93,
+   "color": "5"
+  },
+  {
+   "id": "protocol",
+   "type": "text",
+   "text": "**The One-Day Protocol**",
+   "x": 410,
+   "y": 3987,
+   "width": 250,
+   "height": 56,
+   "color": "4"
+  },
+  {
+   "id": "part1",
+   "type": "text",
+   "text": "**Part 1 — Morning: Psychological Excavation**\n\n15–30 minutes of honest writing, before the day gets loud.",
+   "x": 770,
+   "y": 3171,
+   "width": 270,
+   "height": 93,
+   "color": "4"
+  },
+  {
+   "id": "anti-vision-q",
+   "type": "text",
+   "text": "**Anti-Vision Questions**",
+   "x": 1150,
+   "y": 2920,
+   "width": 320,
+   "height": 56,
+   "color": "4"
+  },
+  {
+   "id": "av1",
+   "type": "text",
+   "text": "What dissatisfaction have you quietly learned to tolerate?",
+   "x": 1580,
+   "y": 2569,
+   "width": 360,
+   "height": 72,
+   "color": "4"
+  },
+  {
+   "id": "av2",
+   "type": "text",
+   "text": "What do you complain about repeatedly and never change?",
+   "x": 1580,
+   "y": 2667,
+   "width": 360,
+   "height": 72,
+   "color": "4"
+  },
+  {
+   "id": "av3",
+   "type": "text",
+   "text": "What true thing about your life would be unbearable to say out loud?",
+   "x": 1580,
+   "y": 2765,
+   "width": 360,
+   "height": 72,
+   "color": "4"
+  },
+  {
+   "id": "av4",
+   "type": "text",
+   "text": "Five years out, nothing changes. Describe an ordinary Tuesday.",
+   "x": 1580,
+   "y": 2863,
+   "width": 360,
+   "height": 72,
+   "color": "4"
+  },
+  {
+   "id": "av5",
+   "type": "text",
+   "text": "Ten years out, same trajectory. Which doors have closed for good?",
+   "x": 1580,
+   "y": 2961,
+   "width": 360,
+   "height": 72,
+   "color": "4"
+  },
+  {
+   "id": "av6",
+   "type": "text",
+   "text": "At the end of your life, what did you never once attempt?",
+   "x": 1580,
+   "y": 3059,
+   "width": 360,
+   "height": 72,
+   "color": "4"
+  },
+  {
+   "id": "av7",
+   "type": "text",
+   "text": "Which identity would you have to stop defending in order to change?",
+   "x": 1580,
+   "y": 3157,
+   "width": 360,
+   "height": 72,
+   "color": "4"
+  },
+  {
+   "id": "av8",
+   "type": "text",
+   "text": "What is the embarrassing, real reason you have not changed yet?",
+   "x": 1580,
+   "y": 3255,
+   "width": 360,
+   "height": 72,
+   "color": "4"
+  },
+  {
+   "id": "vision-q",
+   "type": "text",
+   "text": "**Vision Questions**",
+   "x": 1150,
+   "y": 3459,
+   "width": 320,
+   "height": 56,
+   "color": "4"
+  },
+  {
+   "id": "vq1",
+   "type": "text",
+   "text": "Three years out, best realistic case. Describe an ordinary Tuesday in detail.",
+   "x": 1580,
+   "y": 3353,
+   "width": 360,
+   "height": 72,
+   "color": "4"
+  },
+  {
+   "id": "vq2",
+   "type": "text",
+   "text": "What would you have to believe about yourself for that life to feel normal?",
+   "x": 1580,
+   "y": 3451,
+   "width": 360,
+   "height": 72,
+   "color": "4"
+  },
+  {
+   "id": "vq3",
+   "type": "text",
+   "text": "If you were already that person, what would you do this week?",
+   "x": 1580,
+   "y": 3549,
+   "width": 360,
+   "height": 72,
+   "color": "4"
+  },
+  {
+   "id": "part2",
+   "type": "text",
+   "text": "**Part 2 — Throughout the Day: Pattern Interruption**\n\nSix alarms that catch you mid-behaviour, plus three questions to carry around.",
+   "x": 770,
+   "y": 4064,
+   "width": 270,
+   "height": 114,
+   "color": "4"
+  },
+  {
+   "id": "reminders",
+   "type": "text",
+   "text": "**Phone reminders**",
+   "x": 1150,
+   "y": 3884,
+   "width": 320,
+   "height": 56,
+   "color": "4"
+  },
+  {
+   "id": "r1100",
+   "type": "text",
+   "text": "`11:00` What am I avoiding right now?",
+   "x": 1580,
+   "y": 3647,
+   "width": 360,
+   "height": 56,
+   "color": "4"
+  },
+  {
+   "id": "r1330",
+   "type": "text",
+   "text": "`13:30` Judging only by my behaviour today, what would a stranger say I want?",
+   "x": 1580,
+   "y": 3729,
+   "width": 360,
+   "height": 72,
+   "color": "4"
+  },
+  {
+   "id": "r1515",
+   "type": "text",
+   "text": "`15:15` Is this moving me toward the life I want or the one I dread?",
+   "x": 1580,
+   "y": 3827,
+   "width": 360,
+   "height": 72,
+   "color": "4"
+  },
+  {
+   "id": "r1700",
+   "type": "text",
+   "text": "`17:00` What important thing am I pretending is not important?",
+   "x": 1580,
+   "y": 3925,
+   "width": 360,
+   "height": 72,
+   "color": "4"
+  },
+  {
+   "id": "r1930",
+   "type": "text",
+   "text": "`19:30` Today, what did I do to protect my image rather than to get what I want?",
+   "x": 1580,
+   "y": 4023,
+   "width": 360,
+   "height": 72,
+   "color": "4"
+  },
+  {
+   "id": "r2100",
+   "type": "text",
+   "text": "`21:00` When did I feel most alive today? Most dead?",
+   "x": 1580,
+   "y": 4121,
+   "width": 360,
+   "height": 56,
+   "color": "4"
+  },
+  {
+   "id": "contemplation",
+   "type": "text",
+   "text": "**Carry-around questions**",
+   "x": 1150,
+   "y": 4301,
+   "width": 320,
+   "height": 56,
+   "color": "4"
+  },
+  {
+   "id": "cq1",
+   "type": "text",
+   "text": "What changes if I stop needing people to see me as ______?",
+   "x": 1580,
+   "y": 4203,
+   "width": 360,
+   "height": 72,
+   "color": "4"
+  },
+  {
+   "id": "cq2",
+   "type": "text",
+   "text": "Where am I trading aliveness for safety?",
+   "x": 1580,
+   "y": 4301,
+   "width": 360,
+   "height": 56,
+   "color": "4"
+  },
+  {
+   "id": "cq3",
+   "type": "text",
+   "text": "What is the smallest version of my future self I could be tomorrow?",
+   "x": 1580,
+   "y": 4383,
+   "width": 360,
+   "height": 72,
+   "color": "4"
+  },
+  {
+   "id": "part3",
+   "type": "text",
+   "text": "**Part 3 — Evening: Synthesis**\n\nTurn the day's raw material into two sentences and three goals.",
+   "x": 770,
+   "y": 4765,
+   "width": 270,
+   "height": 93,
+   "color": "4"
+  },
+  {
+   "id": "integration",
+   "type": "text",
+   "text": "**Integration questions**",
+   "x": 1150,
+   "y": 4620,
+   "width": 320,
+   "height": 56,
+   "color": "4"
+  },
+  {
+   "id": "iq1",
+   "type": "text",
+   "text": "Why, specifically, have you been stuck?",
+   "x": 1580,
+   "y": 4481,
+   "width": 360,
+   "height": 56,
+   "color": "4"
+  },
+  {
+   "id": "iq2",
+   "type": "text",
+   "text": "Name the internal enemy: which pattern or belief is actually running this?",
+   "x": 1580,
+   "y": 4563,
+   "width": 360,
+   "height": 72,
+   "color": "4"
+  },
+  {
+   "id": "iq3",
+   "type": "text",
+   "text": "One sentence: what you refuse to let your life become.",
+   "x": 1580,
+   "y": 4661,
+   "width": 360,
+   "height": 72,
+   "color": "4"
+  },
+  {
+   "id": "iq4",
+   "type": "text",
+   "text": "One sentence: what you are building toward.",
+   "x": 1580,
+   "y": 4759,
+   "width": 360,
+   "height": 56,
+   "color": "4"
+  },
+  {
+   "id": "goals",
+   "type": "text",
+   "text": "**Goal setting — lenses, not finish lines**",
+   "x": 1150,
+   "y": 4947,
+   "width": 320,
+   "height": 56,
+   "color": "4"
+  },
+  {
+   "id": "g1",
+   "type": "text",
+   "text": "1 year: what would have to be true for you to know the pattern is broken?",
+   "x": 1580,
+   "y": 4841,
+   "width": 360,
+   "height": 72,
+   "color": "4"
+  },
+  {
+   "id": "g2",
+   "type": "text",
+   "text": "1 month: what must be true this month to keep the 1-year goal possible?",
+   "x": 1580,
+   "y": 4939,
+   "width": 360,
+   "height": 72,
+   "color": "4"
+  },
+  {
+   "id": "g3",
+   "type": "text",
+   "text": "Daily: which 2–3 actions would your future self simply do, without debate?",
+   "x": 1580,
+   "y": 5037,
+   "width": 360,
+   "height": 72,
+   "color": "4"
+  },
+  {
+   "id": "implementation",
+   "type": "text",
+   "text": "**Implementation: Turn Life Into a Game**",
+   "x": 410,
+   "y": 5646,
+   "width": 250,
+   "height": 72,
+   "color": "2"
+  },
+  {
+   "id": "six-components",
+   "type": "text",
+   "text": "**Six Components to Document**",
+   "x": 770,
+   "y": 5380,
+   "width": 270,
+   "height": 56,
+   "color": "2"
+  },
+  {
+   "id": "c-anti-vision",
+   "type": "text",
+   "text": "Anti-vision\n\nThe life you refuse to end up in.",
+   "x": 1150,
+   "y": 5135,
+   "width": 320,
+   "height": 72,
+   "color": "2"
+  },
+  {
+   "id": "c-vision",
+   "type": "text",
+   "text": "Vision\n\nThe life you are building toward.",
+   "x": 1150,
+   "y": 5233,
+   "width": 320,
+   "height": 56,
+   "color": "2"
+  },
+  {
+   "id": "c-year-goal",
+   "type": "text",
+   "text": "1-year goal\n\nWhat is true twelve months from now.",
+   "x": 1150,
+   "y": 5315,
+   "width": 320,
+   "height": 72,
+   "color": "2"
+  },
+  {
+   "id": "c-month-project",
+   "type": "text",
+   "text": "1-month project\n\nThe skill to acquire or the thing to build.",
+   "x": 1150,
+   "y": 5413,
+   "width": 320,
+   "height": 72,
+   "color": "2"
+  },
+  {
+   "id": "c-daily-levers",
+   "type": "text",
+   "text": "Daily levers\n\nThe 2–3 tasks that actually move it.",
+   "x": 1150,
+   "y": 5511,
+   "width": 320,
+   "height": 72,
+   "color": "2"
+  },
+  {
+   "id": "c-constraints",
+   "type": "text",
+   "text": "Constraints\n\nWhat you will not sacrifice to get it.",
+   "x": 1150,
+   "y": 5609,
+   "width": 320,
+   "height": 72,
+   "color": "2"
+  },
+  {
+   "id": "game-mechanics",
+   "type": "text",
+   "text": "**Game Mechanics**",
+   "x": 770,
+   "y": 5928,
+   "width": 270,
+   "height": 56,
+   "color": "2"
+  },
+  {
+   "id": "gm-vision",
+   "type": "text",
+   "text": "Vision = the win condition",
+   "x": 1150,
+   "y": 5707,
+   "width": 320,
+   "height": 56,
+   "color": "2"
+  },
+  {
+   "id": "gm-anti",
+   "type": "text",
+   "text": "Anti-vision = what is at stake if you lose",
+   "x": 1150,
+   "y": 5789,
+   "width": 320,
+   "height": 72,
+   "color": "2"
+  },
+  {
+   "id": "gm-year",
+   "type": "text",
+   "text": "1-year goal = the main mission",
+   "x": 1150,
+   "y": 5887,
+   "width": 320,
+   "height": 56,
+   "color": "2"
+  },
+  {
+   "id": "gm-month",
+   "type": "text",
+   "text": "1-month project = the boss fight",
+   "x": 1150,
+   "y": 5969,
+   "width": 320,
+   "height": 56,
+   "color": "2"
+  },
+  {
+   "id": "gm-levers",
+   "type": "text",
+   "text": "Daily levers = daily quests",
+   "x": 1150,
+   "y": 6051,
+   "width": 320,
+   "height": 56,
+   "color": "2"
+  },
+  {
+   "id": "gm-constraints",
+   "type": "text",
+   "text": "Constraints = the rules that force creativity",
+   "x": 1150,
+   "y": 6133,
+   "width": 320,
+   "height": 72,
+   "color": "2"
+  },
+  {
+   "id": "insights",
+   "type": "text",
+   "text": "**Critical Insights**",
+   "x": 410,
+   "y": 6589,
+   "width": 250,
+   "height": 56,
+   "color": "3"
+  },
+  {
+   "id": "ci-tension",
+   "type": "text",
+   "text": "Change is sudden, but only after tension builds\n\nDissonance leads to uncertainty, uncertainty leads to discovery.",
+   "x": 770,
+   "y": 6231,
+   "width": 270,
+   "height": 114,
+   "color": "3"
+  },
+  {
+   "id": "ci-clarity",
+   "type": "text",
+   "text": "Clarity compresses time, hours do not\n\nYou cannot make six years of progress in six months without knowing exactly what you are aiming at.",
+   "x": 770,
+   "y": 6371,
+   "width": 270,
+   "height": 114,
+   "color": "3"
+  },
+  {
+   "id": "ci-full-day",
+   "type": "text",
+   "text": "This takes one full day of focused work\n\nHalf-doing it produces half-answers.",
+   "x": 770,
+   "y": 6511,
+   "width": 270,
+   "height": 93,
+   "color": "3"
+  },
+  {
+   "id": "ci-chapter",
+   "type": "text",
+   "text": "It lands differently depending on your chapter\n\nTiming is part of the result. The same questions hit harder at some points in life than others.",
+   "x": 770,
+   "y": 6630,
+   "width": 270,
+   "height": 135,
+   "color": "3"
+  },
+  {
+   "id": "ci-questioning",
+   "type": "text",
+   "text": "Questioning is thinking\n\nMost of what passes for thinking is rehearsing things you already believe.",
+   "x": 770,
+   "y": 6791,
+   "width": 270,
+   "height": 93,
+   "color": "3"
+  },
+  {
+   "id": "ci-goals-shape-reality",
+   "type": "text",
+   "text": "Your goals build your reality\n\nThey decide what you notice and what you treat as valuable.",
+   "x": 770,
+   "y": 6910,
+   "width": 270,
+   "height": 93,
+   "color": "3"
+  }
+ ],
+ "edges": [
+  {
+   "id": "e-root-core-problem",
+   "fromNode": "root",
+   "fromSide": "right",
+   "toNode": "core-problem",
+   "toSide": "left",
+   "color": "6"
+  },
+  {
+   "id": "e-core-problem-cp-action-layer",
+   "fromNode": "core-problem",
+   "fromSide": "right",
+   "toNode": "cp-action-layer",
+   "toSide": "left",
+   "color": "6"
+  },
+  {
+   "id": "e-core-problem-cp-person-not-plan",
+   "fromNode": "core-problem",
+   "fromSide": "right",
+   "toNode": "cp-person-not-plan",
+   "toSide": "left",
+   "color": "6"
+  },
+  {
+   "id": "e-core-problem-cp-not-an-accident",
+   "fromNode": "core-problem",
+   "fromSide": "right",
+   "toNode": "cp-not-an-accident",
+   "toSide": "left",
+   "color": "6"
+  },
+  {
+   "id": "e-root-principles",
+   "fromNode": "root",
+   "fromSide": "right",
+   "toNode": "principles",
+   "toSide": "left",
+   "color": "5"
+  },
+  {
+   "id": "e-principles-identity-first",
+   "fromNode": "principles",
+   "fromSide": "right",
+   "toNode": "identity-first",
+   "toSide": "left",
+   "color": "5"
+  },
+  {
+   "id": "e-identity-first-if-effort-symptom",
+   "fromNode": "identity-first",
+   "fromSide": "right",
+   "toNode": "if-effort-symptom",
+   "toSide": "left",
+   "color": "5"
+  },
+  {
+   "id": "e-identity-first-if-lifestyle-before",
+   "fromNode": "identity-first",
+   "fromSide": "right",
+   "toNode": "if-lifestyle-before",
+   "toSide": "left",
+   "color": "5"
+  },
+  {
+   "id": "e-identity-first-if-misfit-repels",
+   "fromNode": "identity-first",
+   "fromSide": "right",
+   "toNode": "if-misfit-repels",
+   "toSide": "left",
+   "color": "5"
+  },
+  {
+   "id": "e-principles-your-mind",
+   "fromNode": "principles",
+   "fromSide": "right",
+   "toNode": "your-mind",
+   "toSide": "left",
+   "color": "5"
+  },
+  {
+   "id": "e-your-mind-ym-teleological",
+   "fromNode": "your-mind",
+   "fromSide": "right",
+   "toNode": "ym-teleological",
+   "toSide": "left",
+   "color": "5"
+  },
+  {
+   "id": "e-your-mind-ym-goals-against-you",
+   "fromNode": "your-mind",
+   "fromSide": "right",
+   "toNode": "ym-goals-against-you",
+   "toSide": "left",
+   "color": "5"
+  },
+  {
+   "id": "e-your-mind-ym-change-the-goal",
+   "fromNode": "your-mind",
+   "fromSide": "right",
+   "toNode": "ym-change-the-goal",
+   "toSide": "left",
+   "color": "5"
+  },
+  {
+   "id": "e-your-mind-ym-identity-defends",
+   "fromNode": "your-mind",
+   "fromSide": "right",
+   "toNode": "ym-identity-defends",
+   "toSide": "left",
+   "color": "5"
+  },
+  {
+   "id": "e-principles-anatomy",
+   "fromNode": "principles",
+   "fromSide": "right",
+   "toNode": "anatomy",
+   "toSide": "left",
+   "color": "5"
+  },
+  {
+   "id": "e-anatomy-an-loop",
+   "fromNode": "anatomy",
+   "fromSide": "right",
+   "toNode": "an-loop",
+   "toSide": "left",
+   "color": "5"
+  },
+  {
+   "id": "e-anatomy-an-childhood",
+   "fromNode": "anatomy",
+   "fromSide": "right",
+   "toNode": "an-childhood",
+   "toSide": "left",
+   "color": "5"
+  },
+  {
+   "id": "e-anatomy-an-ideology",
+   "fromNode": "anatomy",
+   "fromSide": "right",
+   "toNode": "an-ideology",
+   "toSide": "left",
+   "color": "5"
+  },
+  {
+   "id": "e-principles-stages",
+   "fromNode": "principles",
+   "fromSide": "right",
+   "toNode": "stages",
+   "toSide": "left",
+   "color": "5"
+  },
+  {
+   "id": "e-stages-st-where-most-are",
+   "fromNode": "stages",
+   "fromSide": "right",
+   "toNode": "st-where-most-are",
+   "toSide": "left",
+   "color": "5"
+  },
+  {
+   "id": "e-stages-st-sequential",
+   "fromNode": "stages",
+   "fromSide": "right",
+   "toNode": "st-sequential",
+   "toSide": "left",
+   "color": "5"
+  },
+  {
+   "id": "e-stages-st-upper",
+   "fromNode": "stages",
+   "fromSide": "right",
+   "toNode": "st-upper",
+   "toSide": "left",
+   "color": "5"
+  },
+  {
+   "id": "e-principles-intelligence",
+   "fromNode": "principles",
+   "fromSide": "right",
+   "toNode": "intelligence",
+   "toSide": "left",
+   "color": "5"
+  },
+  {
+   "id": "e-intelligence-in-definition",
+   "fromNode": "intelligence",
+   "fromSide": "right",
+   "toNode": "in-definition",
+   "toSide": "left",
+   "color": "5"
+  },
+  {
+   "id": "e-intelligence-in-ingredients",
+   "fromNode": "intelligence",
+   "fromSide": "right",
+   "toNode": "in-ingredients",
+   "toSide": "left",
+   "color": "5"
+  },
+  {
+   "id": "e-intelligence-in-cybernetic",
+   "fromNode": "intelligence",
+   "fromSide": "right",
+   "toNode": "in-cybernetic",
+   "toSide": "left",
+   "color": "5"
+  },
+  {
+   "id": "e-intelligence-in-iteration",
+   "fromNode": "intelligence",
+   "fromSide": "right",
+   "toNode": "in-iteration",
+   "toSide": "left",
+   "color": "5"
+  },
+  {
+   "id": "e-root-protocol",
+   "fromNode": "root",
+   "fromSide": "right",
+   "toNode": "protocol",
+   "toSide": "left",
+   "color": "4"
+  },
+  {
+   "id": "e-protocol-part1",
+   "fromNode": "protocol",
+   "fromSide": "right",
+   "toNode": "part1",
+   "toSide": "left",
+   "color": "4"
+  },
+  {
+   "id": "e-part1-anti-vision-q",
+   "fromNode": "part1",
+   "fromSide": "right",
+   "toNode": "anti-vision-q",
+   "toSide": "left",
+   "color": "4"
+  },
+  {
+   "id": "e-anti-vision-q-av1",
+   "fromNode": "anti-vision-q",
+   "fromSide": "right",
+   "toNode": "av1",
+   "toSide": "left",
+   "color": "4"
+  },
+  {
+   "id": "e-anti-vision-q-av2",
+   "fromNode": "anti-vision-q",
+   "fromSide": "right",
+   "toNode": "av2",
+   "toSide": "left",
+   "color": "4"
+  },
+  {
+   "id": "e-anti-vision-q-av3",
+   "fromNode": "anti-vision-q",
+   "fromSide": "right",
+   "toNode": "av3",
+   "toSide": "left",
+   "color": "4"
+  },
+  {
+   "id": "e-anti-vision-q-av4",
+   "fromNode": "anti-vision-q",
+   "fromSide": "right",
+   "toNode": "av4",
+   "toSide": "left",
+   "color": "4"
+  },
+  {
+   "id": "e-anti-vision-q-av5",
+   "fromNode": "anti-vision-q",
+   "fromSide": "right",
+   "toNode": "av5",
+   "toSide": "left",
+   "color": "4"
+  },
+  {
+   "id": "e-anti-vision-q-av6",
+   "fromNode": "anti-vision-q",
+   "fromSide": "right",
+   "toNode": "av6",
+   "toSide": "left",
+   "color": "4"
+  },
+  {
+   "id": "e-anti-vision-q-av7",
+   "fromNode": "anti-vision-q",
+   "fromSide": "right",
+   "toNode": "av7",
+   "toSide": "left",
+   "color": "4"
+  },
+  {
+   "id": "e-anti-vision-q-av8",
+   "fromNode": "anti-vision-q",
+   "fromSide": "right",
+   "toNode": "av8",
+   "toSide": "left",
+   "color": "4"
+  },
+  {
+   "id": "e-part1-vision-q",
+   "fromNode": "part1",
+   "fromSide": "right",
+   "toNode": "vision-q",
+   "toSide": "left",
+   "color": "4"
+  },
+  {
+   "id": "e-vision-q-vq1",
+   "fromNode": "vision-q",
+   "fromSide": "right",
+   "toNode": "vq1",
+   "toSide": "left",
+   "color": "4"
+  },
+  {
+   "id": "e-vision-q-vq2",
+   "fromNode": "vision-q",
+   "fromSide": "right",
+   "toNode": "vq2",
+   "toSide": "left",
+   "color": "4"
+  },
+  {
+   "id": "e-vision-q-vq3",
+   "fromNode": "vision-q",
+   "fromSide": "right",
+   "toNode": "vq3",
+   "toSide": "left",
+   "color": "4"
+  },
+  {
+   "id": "e-protocol-part2",
+   "fromNode": "protocol",
+   "fromSide": "right",
+   "toNode": "part2",
+   "toSide": "left",
+   "color": "4"
+  },
+  {
+   "id": "e-part2-reminders",
+   "fromNode": "part2",
+   "fromSide": "right",
+   "toNode": "reminders",
+   "toSide": "left",
+   "color": "4"
+  },
+  {
+   "id": "e-reminders-r1100",
+   "fromNode": "reminders",
+   "fromSide": "right",
+   "toNode": "r1100",
+   "toSide": "left",
+   "color": "4"
+  },
+  {
+   "id": "e-reminders-r1330",
+   "fromNode": "reminders",
+   "fromSide": "right",
+   "toNode": "r1330",
+   "toSide": "left",
+   "color": "4"
+  },
+  {
+   "id": "e-reminders-r1515",
+   "fromNode": "reminders",
+   "fromSide": "right",
+   "toNode": "r1515",
+   "toSide": "left",
+   "color": "4"
+  },
+  {
+   "id": "e-reminders-r1700",
+   "fromNode": "reminders",
+   "fromSide": "right",
+   "toNode": "r1700",
+   "toSide": "left",
+   "color": "4"
+  },
+  {
+   "id": "e-reminders-r1930",
+   "fromNode": "reminders",
+   "fromSide": "right",
+   "toNode": "r1930",
+   "toSide": "left",
+   "color": "4"
+  },
+  {
+   "id": "e-reminders-r2100",
+   "fromNode": "reminders",
+   "fromSide": "right",
+   "toNode": "r2100",
+   "toSide": "left",
+   "color": "4"
+  },
+  {
+   "id": "e-part2-contemplation",
+   "fromNode": "part2",
+   "fromSide": "right",
+   "toNode": "contemplation",
+   "toSide": "left",
+   "color": "4"
+  },
+  {
+   "id": "e-contemplation-cq1",
+   "fromNode": "contemplation",
+   "fromSide": "right",
+   "toNode": "cq1",
+   "toSide": "left",
+   "color": "4"
+  },
+  {
+   "id": "e-contemplation-cq2",
+   "fromNode": "contemplation",
+   "fromSide": "right",
+   "toNode": "cq2",
+   "toSide": "left",
+   "color": "4"
+  },
+  {
+   "id": "e-contemplation-cq3",
+   "fromNode": "contemplation",
+   "fromSide": "right",
+   "toNode": "cq3",
+   "toSide": "left",
+   "color": "4"
+  },
+  {
+   "id": "e-protocol-part3",
+   "fromNode": "protocol",
+   "fromSide": "right",
+   "toNode": "part3",
+   "toSide": "left",
+   "color": "4"
+  },
+  {
+   "id": "e-part3-integration",
+   "fromNode": "part3",
+   "fromSide": "right",
+   "toNode": "integration",
+   "toSide": "left",
+   "color": "4"
+  },
+  {
+   "id": "e-integration-iq1",
+   "fromNode": "integration",
+   "fromSide": "right",
+   "toNode": "iq1",
+   "toSide": "left",
+   "color": "4"
+  },
+  {
+   "id": "e-integration-iq2",
+   "fromNode": "integration",
+   "fromSide": "right",
+   "toNode": "iq2",
+   "toSide": "left",
+   "color": "4"
+  },
+  {
+   "id": "e-integration-iq3",
+   "fromNode": "integration",
+   "fromSide": "right",
+   "toNode": "iq3",
+   "toSide": "left",
+   "color": "4"
+  },
+  {
+   "id": "e-integration-iq4",
+   "fromNode": "integration",
+   "fromSide": "right",
+   "toNode": "iq4",
+   "toSide": "left",
+   "color": "4"
+  },
+  {
+   "id": "e-part3-goals",
+   "fromNode": "part3",
+   "fromSide": "right",
+   "toNode": "goals",
+   "toSide": "left",
+   "color": "4"
+  },
+  {
+   "id": "e-goals-g1",
+   "fromNode": "goals",
+   "fromSide": "right",
+   "toNode": "g1",
+   "toSide": "left",
+   "color": "4"
+  },
+  {
+   "id": "e-goals-g2",
+   "fromNode": "goals",
+   "fromSide": "right",
+   "toNode": "g2",
+   "toSide": "left",
+   "color": "4"
+  },
+  {
+   "id": "e-goals-g3",
+   "fromNode": "goals",
+   "fromSide": "right",
+   "toNode": "g3",
+   "toSide": "left",
+   "color": "4"
+  },
+  {
+   "id": "e-root-implementation",
+   "fromNode": "root",
+   "fromSide": "right",
+   "toNode": "implementation",
+   "toSide": "left",
+   "color": "2"
+  },
+  {
+   "id": "e-implementation-six-components",
+   "fromNode": "implementation",
+   "fromSide": "right",
+   "toNode": "six-components",
+   "toSide": "left",
+   "color": "2"
+  },
+  {
+   "id": "e-six-components-c-anti-vision",
+   "fromNode": "six-components",
+   "fromSide": "right",
+   "toNode": "c-anti-vision",
+   "toSide": "left",
+   "color": "2"
+  },
+  {
+   "id": "e-six-components-c-vision",
+   "fromNode": "six-components",
+   "fromSide": "right",
+   "toNode": "c-vision",
+   "toSide": "left",
+   "color": "2"
+  },
+  {
+   "id": "e-six-components-c-year-goal",
+   "fromNode": "six-components",
+   "fromSide": "right",
+   "toNode": "c-year-goal",
+   "toSide": "left",
+   "color": "2"
+  },
+  {
+   "id": "e-six-components-c-month-project",
+   "fromNode": "six-components",
+   "fromSide": "right",
+   "toNode": "c-month-project",
+   "toSide": "left",
+   "color": "2"
+  },
+  {
+   "id": "e-six-components-c-daily-levers",
+   "fromNode": "six-components",
+   "fromSide": "right",
+   "toNode": "c-daily-levers",
+   "toSide": "left",
+   "color": "2"
+  },
+  {
+   "id": "e-six-components-c-constraints",
+   "fromNode": "six-components",
+   "fromSide": "right",
+   "toNode": "c-constraints",
+   "toSide": "left",
+   "color": "2"
+  },
+  {
+   "id": "e-implementation-game-mechanics",
+   "fromNode": "implementation",
+   "fromSide": "right",
+   "toNode": "game-mechanics",
+   "toSide": "left",
+   "color": "2"
+  },
+  {
+   "id": "e-game-mechanics-gm-vision",
+   "fromNode": "game-mechanics",
+   "fromSide": "right",
+   "toNode": "gm-vision",
+   "toSide": "left",
+   "color": "2"
+  },
+  {
+   "id": "e-game-mechanics-gm-anti",
+   "fromNode": "game-mechanics",
+   "fromSide": "right",
+   "toNode": "gm-anti",
+   "toSide": "left",
+   "color": "2"
+  },
+  {
+   "id": "e-game-mechanics-gm-year",
+   "fromNode": "game-mechanics",
+   "fromSide": "right",
+   "toNode": "gm-year",
+   "toSide": "left",
+   "color": "2"
+  },
+  {
+   "id": "e-game-mechanics-gm-month",
+   "fromNode": "game-mechanics",
+   "fromSide": "right",
+   "toNode": "gm-month",
+   "toSide": "left",
+   "color": "2"
+  },
+  {
+   "id": "e-game-mechanics-gm-levers",
+   "fromNode": "game-mechanics",
+   "fromSide": "right",
+   "toNode": "gm-levers",
+   "toSide": "left",
+   "color": "2"
+  },
+  {
+   "id": "e-game-mechanics-gm-constraints",
+   "fromNode": "game-mechanics",
+   "fromSide": "right",
+   "toNode": "gm-constraints",
+   "toSide": "left",
+   "color": "2"
+  },
+  {
+   "id": "e-root-insights",
+   "fromNode": "root",
+   "fromSide": "right",
+   "toNode": "insights",
+   "toSide": "left",
+   "color": "3"
+  },
+  {
+   "id": "e-insights-ci-tension",
+   "fromNode": "insights",
+   "fromSide": "right",
+   "toNode": "ci-tension",
+   "toSide": "left",
+   "color": "3"
+  },
+  {
+   "id": "e-insights-ci-clarity",
+   "fromNode": "insights",
+   "fromSide": "right",
+   "toNode": "ci-clarity",
+   "toSide": "left",
+   "color": "3"
+  },
+  {
+   "id": "e-insights-ci-full-day",
+   "fromNode": "insights",
+   "fromSide": "right",
+   "toNode": "ci-full-day",
+   "toSide": "left",
+   "color": "3"
+  },
+  {
+   "id": "e-insights-ci-chapter",
+   "fromNode": "insights",
+   "fromSide": "right",
+   "toNode": "ci-chapter",
+   "toSide": "left",
+   "color": "3"
+  },
+  {
+   "id": "e-insights-ci-questioning",
+   "fromNode": "insights",
+   "fromSide": "right",
+   "toNode": "ci-questioning",
+   "toSide": "left",
+   "color": "3"
+  },
+  {
+   "id": "e-insights-ci-goals-shape-reality",
+   "fromNode": "insights",
+   "fromSide": "right",
+   "toNode": "ci-goals-shape-reality",
+   "toSide": "left",
+   "color": "3"
+  }
+ ]
+}

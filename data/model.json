@@ -1,0 +1,365 @@
+{
+  "meta": {
+    "version": "1.0.0",
+    "title": "The One-Day Protocol",
+    "subtitle": "An interactive model of \"How to fix your entire life in 1 day\"",
+    "sourceAuthor": "Dan Koe",
+    "sourceWork": "How to fix your entire life in 1 day",
+    "mapAuthor": "@MindBranches",
+    "mapUrl": "https://x.com/MindBranches/status/2078988089393901842",
+    "disclaimer": "Educational and self-reflection material. Not therapy, medical, or mental-health advice."
+  },
+  "root": {
+    "id": "root",
+    "label": "How to fix your entire life in 1 day",
+    "kind": "root",
+    "note": "A model of the ideas in Dan Koe's \"How to fix your entire life in 1 day\", organised after the mind map by @MindBranches.",
+    "children": [
+      {
+        "id": "core-problem",
+        "label": "Core Problem",
+        "kind": "branch",
+        "children": [
+          {
+            "id": "cp-action-layer",
+            "label": "Change fails at the action layer",
+            "kind": "point",
+            "note": "People swap behaviours while leaving their identity untouched, so the old self quietly reinstalls the old behaviour."
+          },
+          {
+            "id": "cp-person-not-plan",
+            "label": "You need the person, not the plan",
+            "kind": "point",
+            "note": "The durable move is becoming someone for whom the desired actions are simply the obvious ones."
+          },
+          {
+            "id": "cp-not-an-accident",
+            "label": "Your current life is not an accident",
+            "kind": "point",
+            "note": "Today's behaviour is already succeeding at goals you never consciously chose. That is exactly why it survives."
+          }
+        ]
+      },
+      {
+        "id": "principles",
+        "label": "Key Psychological Principles",
+        "kind": "branch",
+        "children": [
+          {
+            "id": "identity-first",
+            "label": "Identity First, Actions Second",
+            "kind": "sub",
+            "children": [
+              {
+                "id": "if-effort-symptom",
+                "label": "Effort is a symptom, not a strategy",
+                "kind": "point",
+                "note": "People who look like they are grinding are usually just living a life that fits them."
+              },
+              {
+                "id": "if-lifestyle-before",
+                "label": "Adopt the lifestyle before the outcome",
+                "kind": "point",
+                "note": "Live as the person who already has the result. The result is what that life produces."
+              },
+              {
+                "id": "if-misfit-repels",
+                "label": "Misfit habits should start to repel you",
+                "kind": "point",
+                "note": "Once identity actually shifts, old habits stop feeling tempting and start feeling wrong."
+              }
+            ]
+          },
+          {
+            "id": "your-mind",
+            "label": "Understanding Your Mind",
+            "kind": "sub",
+            "children": [
+              {
+                "id": "ym-teleological",
+                "label": "Behaviour is goal-directed",
+                "kind": "point",
+                "note": "Nothing you do is random. Every pattern is aimed at something (teleology)."
+              },
+              {
+                "id": "ym-goals-against-you",
+                "label": "Some of those goals work against you",
+                "kind": "point",
+                "note": "You can pursue a goal for years without ever having chosen it."
+              },
+              {
+                "id": "ym-change-the-goal",
+                "label": "Change the goal, not just the schedule",
+                "kind": "point",
+                "note": "New perspective produces new goals, which produce new behaviour. In that order."
+              },
+              {
+                "id": "ym-identity-defends",
+                "label": "Identity defends itself",
+                "kind": "point",
+                "note": "Your sense of self reacts to contradiction the way your body reacts to infection."
+              }
+            ]
+          },
+          {
+            "id": "anatomy",
+            "label": "The Anatomy of Identity",
+            "kind": "sub",
+            "children": [
+              {
+                "id": "an-loop",
+                "label": "The identity loop",
+                "kind": "point",
+                "note": "Set a goal, perceive reality through it, notice what is relevant, act and get feedback, repeat until automatic, it becomes \"who you are\", you defend it, and it starts generating your next goals."
+              },
+              {
+                "id": "an-childhood",
+                "label": "It started before you were consulted",
+                "kind": "point",
+                "note": "Most of the loop was installed in childhood by environment and conditioning."
+              },
+              {
+                "id": "an-ideology",
+                "label": "After survival comes ideology",
+                "kind": "point",
+                "note": "Once the body is safe, you begin defending beliefs as if they were food and shelter."
+              }
+            ]
+          },
+          {
+            "id": "stages",
+            "label": "Stages of Mind Development",
+            "kind": "sub",
+            "children": [
+              {
+                "id": "st-where-most-are",
+                "label": "Most people sit between self-aware and construct-aware",
+                "kind": "point",
+                "note": "Roughly stages 4 to 8 in adult-development models."
+              },
+              {
+                "id": "st-sequential",
+                "label": "Development is sequential",
+                "kind": "point",
+                "note": "You cannot skip a stage. You can only move through the next one."
+              },
+              {
+                "id": "st-upper",
+                "label": "The upper stages question inherited beliefs",
+                "kind": "point",
+                "note": "That is where you stop borrowing principles and start writing your own."
+              }
+            ]
+          },
+          {
+            "id": "intelligence",
+            "label": "Intelligence Framework",
+            "kind": "sub",
+            "children": [
+              {
+                "id": "in-definition",
+                "label": "Intelligence = getting what you actually want",
+                "kind": "point",
+                "note": "A working definition, not an IQ score."
+              },
+              {
+                "id": "in-ingredients",
+                "label": "Three ingredients: agency, opportunity, intelligence",
+                "kind": "point",
+                "note": "Remove any one of the three and results stall."
+              },
+              {
+                "id": "in-cybernetic",
+                "label": "The cybernetic loop",
+                "kind": "point",
+                "note": "Set a goal, act, sense where you are, compare to the goal, adjust. Then repeat."
+              },
+              {
+                "id": "in-iteration",
+                "label": "High intelligence = iteration speed",
+                "kind": "point",
+                "note": "Persisting and learning from mistakes beats being right early."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "protocol",
+        "label": "The One-Day Protocol",
+        "kind": "branch",
+        "children": [
+          {
+            "id": "part1",
+            "label": "Part 1 — Morning: Psychological Excavation",
+            "kind": "sub",
+            "note": "15–30 minutes of honest writing, before the day gets loud.",
+            "children": [
+              {
+                "id": "anti-vision-q",
+                "label": "Anti-Vision Questions",
+                "kind": "group",
+                "children": [
+                  { "id": "av1", "label": "What dissatisfaction have you quietly learned to tolerate?", "kind": "prompt" },
+                  { "id": "av2", "label": "What do you complain about repeatedly and never change?", "kind": "prompt" },
+                  { "id": "av3", "label": "What true thing about your life would be unbearable to say out loud?", "kind": "prompt" },
+                  { "id": "av4", "label": "Five years out, nothing changes. Describe an ordinary Tuesday.", "kind": "prompt" },
+                  { "id": "av5", "label": "Ten years out, same trajectory. Which doors have closed for good?", "kind": "prompt" },
+                  { "id": "av6", "label": "At the end of your life, what did you never once attempt?", "kind": "prompt" },
+                  { "id": "av7", "label": "Which identity would you have to stop defending in order to change?", "kind": "prompt" },
+                  { "id": "av8", "label": "What is the embarrassing, real reason you have not changed yet?", "kind": "prompt" }
+                ]
+              },
+              {
+                "id": "vision-q",
+                "label": "Vision Questions",
+                "kind": "group",
+                "children": [
+                  { "id": "vq1", "label": "Three years out, best realistic case. Describe an ordinary Tuesday in detail.", "kind": "prompt" },
+                  { "id": "vq2", "label": "What would you have to believe about yourself for that life to feel normal?", "kind": "prompt" },
+                  { "id": "vq3", "label": "If you were already that person, what would you do this week?", "kind": "prompt" }
+                ]
+              }
+            ]
+          },
+          {
+            "id": "part2",
+            "label": "Part 2 — Throughout the Day: Pattern Interruption",
+            "kind": "sub",
+            "note": "Six alarms that catch you mid-behaviour, plus three questions to carry around.",
+            "children": [
+              {
+                "id": "reminders",
+                "label": "Phone reminders",
+                "kind": "group",
+                "children": [
+                  { "id": "r1100", "label": "What am I avoiding right now?", "kind": "prompt", "time": "11:00" },
+                  { "id": "r1330", "label": "Judging only by my behaviour today, what would a stranger say I want?", "kind": "prompt", "time": "13:30" },
+                  { "id": "r1515", "label": "Is this moving me toward the life I want or the one I dread?", "kind": "prompt", "time": "15:15" },
+                  { "id": "r1700", "label": "What important thing am I pretending is not important?", "kind": "prompt", "time": "17:00" },
+                  { "id": "r1930", "label": "Today, what did I do to protect my image rather than to get what I want?", "kind": "prompt", "time": "19:30" },
+                  { "id": "r2100", "label": "When did I feel most alive today? Most dead?", "kind": "prompt", "time": "21:00" }
+                ]
+              },
+              {
+                "id": "contemplation",
+                "label": "Carry-around questions",
+                "kind": "group",
+                "children": [
+                  { "id": "cq1", "label": "What changes if I stop needing people to see me as ______?", "kind": "prompt" },
+                  { "id": "cq2", "label": "Where am I trading aliveness for safety?", "kind": "prompt" },
+                  { "id": "cq3", "label": "What is the smallest version of my future self I could be tomorrow?", "kind": "prompt" }
+                ]
+              }
+            ]
+          },
+          {
+            "id": "part3",
+            "label": "Part 3 — Evening: Synthesis",
+            "kind": "sub",
+            "note": "Turn the day's raw material into two sentences and three goals.",
+            "children": [
+              {
+                "id": "integration",
+                "label": "Integration questions",
+                "kind": "group",
+                "children": [
+                  { "id": "iq1", "label": "Why, specifically, have you been stuck?", "kind": "prompt" },
+                  { "id": "iq2", "label": "Name the internal enemy: which pattern or belief is actually running this?", "kind": "prompt" },
+                  { "id": "iq3", "label": "One sentence: what you refuse to let your life become.", "kind": "prompt" },
+                  { "id": "iq4", "label": "One sentence: what you are building toward.", "kind": "prompt" }
+                ]
+              },
+              {
+                "id": "goals",
+                "label": "Goal setting — lenses, not finish lines",
+                "kind": "group",
+                "children": [
+                  { "id": "g1", "label": "1 year: what would have to be true for you to know the pattern is broken?", "kind": "prompt" },
+                  { "id": "g2", "label": "1 month: what must be true this month to keep the 1-year goal possible?", "kind": "prompt" },
+                  { "id": "g3", "label": "Daily: which 2–3 actions would your future self simply do, without debate?", "kind": "prompt" }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "implementation",
+        "label": "Implementation: Turn Life Into a Game",
+        "kind": "branch",
+        "children": [
+          {
+            "id": "six-components",
+            "label": "Six Components to Document",
+            "kind": "sub",
+            "children": [
+              { "id": "c-anti-vision", "label": "Anti-vision", "kind": "field", "note": "The life you refuse to end up in.", "mechanic": "What is at stake if you lose." },
+              { "id": "c-vision", "label": "Vision", "kind": "field", "note": "The life you are building toward.", "mechanic": "The win condition." },
+              { "id": "c-year-goal", "label": "1-year goal", "kind": "field", "note": "What is true twelve months from now.", "mechanic": "The main mission." },
+              { "id": "c-month-project", "label": "1-month project", "kind": "field", "note": "The skill to acquire or the thing to build.", "mechanic": "The boss fight, where the XP comes from." },
+              { "id": "c-daily-levers", "label": "Daily levers", "kind": "field", "note": "The 2–3 tasks that actually move it.", "mechanic": "Daily quests." },
+              { "id": "c-constraints", "label": "Constraints", "kind": "field", "note": "What you will not sacrifice to get it.", "mechanic": "The rules that force creativity." }
+            ]
+          },
+          {
+            "id": "game-mechanics",
+            "label": "Game Mechanics",
+            "kind": "sub",
+            "children": [
+              { "id": "gm-vision", "label": "Vision = the win condition", "kind": "point" },
+              { "id": "gm-anti", "label": "Anti-vision = what is at stake if you lose", "kind": "point" },
+              { "id": "gm-year", "label": "1-year goal = the main mission", "kind": "point" },
+              { "id": "gm-month", "label": "1-month project = the boss fight", "kind": "point" },
+              { "id": "gm-levers", "label": "Daily levers = daily quests", "kind": "point" },
+              { "id": "gm-constraints", "label": "Constraints = the rules that force creativity", "kind": "point" }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "insights",
+        "label": "Critical Insights",
+        "kind": "branch",
+        "children": [
+          {
+            "id": "ci-tension",
+            "label": "Change is sudden, but only after tension builds",
+            "kind": "point",
+            "note": "Dissonance leads to uncertainty, uncertainty leads to discovery."
+          },
+          {
+            "id": "ci-clarity",
+            "label": "Clarity compresses time, hours do not",
+            "kind": "point",
+            "note": "You cannot make six years of progress in six months without knowing exactly what you are aiming at."
+          },
+          {
+            "id": "ci-full-day",
+            "label": "This takes one full day of focused work",
+            "kind": "point",
+            "note": "Half-doing it produces half-answers."
+          },
+          {
+            "id": "ci-chapter",
+            "label": "It lands differently depending on your chapter",
+            "kind": "point",
+            "note": "Timing is part of the result. The same questions hit harder at some points in life than others."
+          },
+          {
+            "id": "ci-questioning",
+            "label": "Questioning is thinking",
+            "kind": "point",
+            "note": "Most of what passes for thinking is rehearsing things you already believe."
+          },
+          {
+            "id": "ci-goals-shape-reality",
+            "label": "Your goals build your reality",
+            "kind": "point",
+            "note": "They decide what you notice and what you treat as valuable."
+          }
+        ]
+      }
+    ]
+  }
+}

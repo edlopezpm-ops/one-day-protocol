@@ -267,6 +267,73 @@ async function run() {
   await clickSel("#tab-map");
   ok((await state()).tab === "tab-map", "the Map tab opens again");
 
+  /* --- Expand all must stay readable: fitting both axes gives 3px text --- */
+  await clickSel('.maptools [data-map="expand"]');
+  const expanded = await state();
+  ok(expanded.scale >= 0.5, `Expand all keeps text readable (scale ${expanded.scale.toFixed(2)})`);
+  const px = await evaluate(
+    '(function(){var el=document.querySelector("#nodes .node");' +
+    'return parseFloat(getComputedStyle(el).fontSize) * __T__.scale()})()');
+  ok(px >= 6, `rendered label text is at least 6px (got ${px.toFixed(1)}px)`);
+
+  /* --- the mechanics table must not keep stale colours across a theme flip --- */
+  await clickSel("#tab-board");
+  const themeBtn = "#themeBtn";
+  const before1 = await evaluate('getComputedStyle(document.querySelector("#mechanics td.c1")).color');
+  await clickSel(themeBtn);
+  await sleep(150);
+  const after1 = await evaluate('getComputedStyle(document.querySelector("#mechanics td.c1")).color');
+  ok(before1 !== after1, "the mechanics table repaints when the theme changes");
+  await clickSel("#paletteBtn");
+  await sleep(150);
+  const after2 = await evaluate('getComputedStyle(document.querySelector("#mechanics td.c1")).color');
+  ok(after1 !== after2, "the mechanics table repaints when the palette changes");
+  await clickSel(themeBtn); await clickSel("#paletteBtn");
+  await clickSel("#tab-map");
+
+  /* --- small text must clear WCAG AA (4.5:1) in both themes --- */
+  const CONTRAST = `(function(){
+    function lum(c){var m=c.match(/[0-9.]+/g).map(Number);
+      var f=m.slice(0,3).map(function(v){v/=255;
+        return v<=0.03928?v/12.92:Math.pow((v+0.055)/1.055,2.4);});
+      return 0.2126*f[0]+0.7152*f[1]+0.0722*f[2];}
+    function bg(el){while(el){var b=getComputedStyle(el).backgroundColor;
+      if(b&&b!=="rgba(0, 0, 0, 0)"&&b!=="transparent")return b;el=el.parentElement;}
+      return "rgb(255, 255, 255)";}
+    var sels=[".stake .k",".card .desc",".card .val.empty",".runrow .t small",
+              ".doc th","#mechanics td.c1",".doc p.sub",".hint",".built a"];
+    var worst=99, who="";
+    sels.forEach(function(s){var el=document.querySelector(s); if(!el) return;
+      var a=lum(getComputedStyle(el).color), b=lum(bg(el));
+      var r=(Math.max(a,b)+0.05)/(Math.min(a,b)+0.05);
+      if(r<worst){worst=r;who=s;}});
+    return who+" "+worst.toFixed(2);
+  })()`;
+  for (const theme of ["light", "dark"]) {
+    await evaluate(`document.documentElement.dataset.theme=${JSON.stringify(theme)}`);
+    await clickSel("#tab-board");
+    await sleep(120);
+    const res = await evaluate(CONTRAST);
+    const worst = parseFloat(String(res).split(" ").pop());
+    ok(worst >= 4.5, `${theme} theme: worst small-text contrast is ${res} (needs 4.5)`);
+  }
+  await clickSel("#tab-map");
+
+  /* --- printing must not silently truncate a long answer --- */
+  const longAnswer = "PARA ".repeat(220).trim();
+  await evaluate(`(function(){var t=document.getElementById("f_av1");
+    t.value=${JSON.stringify(longAnswer)};
+    t.dispatchEvent(new Event("input",{bubbles:true}));return true})()`);
+  await send("Emulation.setEmulatedMedia", { media: "print" });
+  await evaluate('window.dispatchEvent(new Event("beforeprint"))');
+  await sleep(150);
+  const printed = await evaluate(
+    '(function(){var el=document.getElementById("printout");' +
+    'if(!el) return -1;' +
+    'return el.scrollHeight <= el.clientHeight + 2 ? el.textContent.length : -2})()');
+  ok(printed > longAnswer.length, "the printable copy contains the whole answer, unclipped");
+  await send("Emulation.setEmulatedMedia", { media: "" });
+
   /* --- and the in-page suite still passes --- */
   const inner = await evaluate("__ODP__.selfTest().report.split('\\n')[0]");
   ok(String(inner).startsWith("PASS"), `in-page suite: ${inner}`);
@@ -288,6 +355,28 @@ async function run() {
      "at 390px the AEKR footer stays on screen");
   await clickSel('.maptools [data-map="expand"]');
   ok((await state()).visible.length > 1, "at 390px the map toolbar still works");
+
+  /* nothing may sit on top of a toolbar button */
+  for (const action of ["expand", "collapse", "fit"]) {
+    const owns = await evaluate(
+      `(function(){var b=document.querySelector('.maptools [data-map="${action}"]');` +
+      `var r=b.getBoundingClientRect();` +
+      `var el=document.elementFromPoint(r.left+r.width/2, r.top+r.height/2);` +
+      `return !!(el && b.contains(el))})()`);
+    ok(owns, `at 390px nothing covers the ${action} button`);
+  }
+
+  /* a touch tap after a mouse drag must still open a node */
+  await clickSel('.maptools [data-map="collapse"]');
+  await drag(200, 400, 300, 500);
+  const rootBox = JSON.parse(await evaluate('JSON.stringify(__T__.nodeRect("root"))'));
+  await send("Input.dispatchTouchEvent", {
+    type: "touchStart", touchPoints: [{ x: Math.round(rootBox.x), y: Math.round(rootBox.y) }],
+  });
+  await send("Input.dispatchTouchEvent", { type: "touchEnd", touchPoints: [] });
+  await sleep(200);
+  ok((await state()).visible.length > 1, "a touch tap still works after a mouse drag");
+
   await send("Emulation.clearDeviceMetricsOverride");
 }
 

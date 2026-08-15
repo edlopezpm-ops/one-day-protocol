@@ -10,7 +10,7 @@
 /* ---------- tokens ---------- */
 :root{
   --bg:#0b0b0f; --bg-2:#131319; --bg-3:#1b1b23;
-  --fg:#e9e9f0; --fg-dim:#a4a4b4; --fg-faint:#6f6f81;
+  --fg:#e9e9f0; --fg-dim:#a8a8b8; --fg-faint:#9292a6;   /* faint still clears 4.5:1 */
   --line:#2a2a35; --line-2:#3a3a48;
   --accent:#6f8cff; --accent-fg:#0b0b0f;
   --ok:#4fbf8f; --warn:#e0a13f;
@@ -22,10 +22,10 @@
 }
 :root[data-theme="light"]{
   --bg:#fbfbfd; --bg-2:#f2f2f6; --bg-3:#e9e9ef;
-  --fg:#16161c; --fg-dim:#55555f; --fg-faint:#8b8b96;
+  --fg:#16161c; --fg-dim:#4c4c57; --fg-faint:#63636f;
   --line:#dedee6; --line-2:#c7c7d2;
   --accent:#3b5bdb; --accent-fg:#ffffff;
-  --sat:58%; --lum:42%;
+  --sat:64%; --lum:26%;   /* branch colours double as text on a light ground */
   --shadow:0 6px 24px rgba(20,20,40,.10);
 }
 *{box-sizing:border-box}
@@ -138,6 +138,8 @@ main{flex:1;min-height:0;position:relative}
   border-radius:50%;background:var(--bg);border:2px solid var(--nc,var(--line-2));
   cursor:pointer;padding:0;
 }
+/* the visible dot stays small; the tap target does not (WCAG 2.5.8) */
+.dot::before{content:"";position:absolute;inset:-8px;border-radius:50%}
 .dot:hover{background:var(--nc)}
 .dot.filled{background:var(--nc)}
 .maptools{
@@ -153,12 +155,15 @@ main{flex:1;min-height:0;position:relative}
   background:var(--bg-2);border:1px solid var(--line);
   border-radius:999px;padding:6px 14px;box-shadow:var(--shadow);
 }
-.built a{color:var(--fg-faint);text-decoration:none;display:flex;align-items:center}
+.built a{color:var(--fg-faint);text-decoration:none;display:flex;align-items:center;min-height:24px}
+.built a:last-child{min-width:24px;justify-content:center}
 .built a:hover{color:var(--accent)}
 .built b{color:var(--fg-dim);font-weight:700;letter-spacing:.13em}
 .built a:hover b{color:var(--accent)}
 @media (max-width:640px){
-  .built{right:10px;bottom:8px;gap:9px;padding:5px 11px}
+  /* the toolbar goes full-width down here, so the pill moves above it
+     rather than sitting on top of the Fit button */
+  .built{right:10px;bottom:62px;gap:9px;padding:5px 11px}
   .built .lbl{display:none}
 }
 
@@ -240,12 +245,19 @@ input[type="date"]{
 }
 
 /* ---------- print ---------- */
+#printout{display:none}
 @media print{
-  header.bar,.maptools,.hint,.notice,.row,.built,#mapView,#boardView{display:none!important}
+  header.bar,.maptools,.hint,.notice,.row,.built,#mapView,#boardView,#workBody{display:none!important}
   body,.view{position:static;overflow:visible;height:auto;background:#fff;color:#000}
   .view{display:block!important}
   .doc{max-width:none;padding:0}
-  .field textarea{border:1px solid #999;background:#fff;color:#000;min-height:60px}
+  /* a textarea cannot grow to fit its value, so print a rendered copy instead */
+  #printout{display:block!important}
+  #printout h2{font-size:15pt;margin:18pt 0 4pt;border-bottom:1px solid #000;page-break-after:avoid}
+  #printout h3{font-size:11pt;margin:12pt 0 2pt;text-transform:uppercase;letter-spacing:.06em;page-break-after:avoid}
+  #printout .q{font-size:10.5pt;font-weight:700;margin:10pt 0 2pt;page-break-after:avoid}
+  #printout .a{font-size:10.5pt;white-space:pre-wrap;margin:0 0 8pt;padding-left:10pt;border-left:2px solid #999}
+  #printout .a.blank{color:#888;font-style:italic;border-left-style:dotted}
 }
 @media (max-width:640px){
   /* the header must never be the thing that makes the page scroll sideways */
@@ -271,7 +283,7 @@ input[type="date"]{
       <span>after <a href="https://thedankoe.com/" target="_blank" rel="noopener noreferrer">Dan Koe</a>
         &middot; mapped by <a href="https://x.com/MindBranches/status/2078988089393901842" target="_blank" rel="noopener noreferrer">@MindBranches</a></span>
     </div>
-    <div class="tabs" role="tablist">
+    <div class="tabs" role="tablist" aria-label="Views">
       <button role="tab" id="tab-map" aria-selected="true" aria-controls="mapView">Map</button>
       <button role="tab" id="tab-work" aria-selected="false" aria-controls="workView">Workbook</button>
       <button role="tab" id="tab-board" aria-selected="false" aria-controls="boardView">Game board</button>
@@ -282,7 +294,7 @@ input[type="date"]{
     </div>
   </header>
 
-  <p class="notice" id="notice" hidden></p>
+  <p class="notice" id="notice" role="status" aria-live="polite" hidden></p>
 
   <main>
     <!-- MAP -->
@@ -317,6 +329,7 @@ input[type="date"]{
           <button class="btn danger" id="clearBtn">Erase my answers</button>
         </div>
         <div id="workBody"></div>
+        <div id="printout" aria-hidden="true"></div>
       </div>
     </section>
 
@@ -530,6 +543,9 @@ function buildNodes(){
       dot.className = "dot";
       dot.type = "button";
       dot.dataset.id = n.id;
+      /* the node itself is the keyboard control; the dot is a mouse shortcut,
+         so it stays out of the tab order rather than doubling every stop */
+      dot.tabIndex = -1;
       dot.style.setProperty("--nc", colorFor(n));
       dot.setAttribute("aria-label", "Fold or unfold: " + n.label);
       n._dot = dot;
@@ -622,6 +638,7 @@ function layout(){
     if(n._dot){
       n._dot.style.transform = "translate(" + (x + n.w) + "px," + outY(n) + "px)";
       n._dot.classList.toggle("filled", !n._expanded);
+      n._dot.setAttribute("aria-expanded", String(!!n._expanded));
     }
     var p = n._parent;
     if(!p) return;
@@ -664,10 +681,13 @@ function nodePos(n){
     y: (parseFloat(stage.style.top)  || 0) + (n.y + PAD) * scale - scroller.scrollTop
   };
 }
+/* Fits the WIDTH, not the whole map. The fully expanded map is ~8000px tall, so
+   fitting both axes would force a scale near 0.1 and render 3px text. Fitting the
+   width shows the full breadth at a readable size and lets you scroll down. */
 function fit(){
   var r = scroller.getBoundingClientRect();
-  var k = Math.min(r.width / (stage._w || 1), r.height / (stage._h || 1));
-  scale = Math.max(0.25, Math.min(1, k));
+  var k = r.width / (stage._w || 1);
+  scale = Math.max(0.5, Math.min(1, k));
   applyView();
   scroller.scrollTo(0, 0);
 }
@@ -706,8 +726,9 @@ var drag = null, dragged = false;
 
 scroller.addEventListener("pointerdown", function(e){
   if(e.pointerType === "mouse" && e.button !== 0) return;
-  if(e.pointerType !== "mouse") return;               /* touch scrolls natively */
+  /* clear the latch first: a touch tap after a mouse drag must not inherit it */
   dragged = false;
+  if(e.pointerType !== "mouse") return;               /* touch scrolls natively */
   drag = {
     id: e.pointerId, x: e.clientX, y: e.clientY,
     sl: scroller.scrollLeft, st: scroller.scrollTop, active: false
@@ -795,14 +816,20 @@ function fieldFor(n){
   }
   lab.appendChild(document.createTextNode(n.label));
   d.appendChild(lab);
-  if(n.note){
+  var describedBy = [];
+  [["note", n.note], ["hint", n.summary]].forEach(function(pair){
+    if(!pair[1]) return;
     var m = document.createElement("span");
-    m.className = "meta"; m.textContent = n.note;
+    m.className = "meta";
+    m.id = pair[0] + "_" + n.id;
+    m.textContent = pair[1];
+    describedBy.push(m.id);
     d.appendChild(m);
-  }
+  });
   var ta = document.createElement("textarea");
   ta.id = "f_" + n.id;
   ta.dataset.id = n.id;
+  if(describedBy.length) ta.setAttribute("aria-describedby", describedBy.join(" "));
   ta.value = answers[n.id] || "";
   ta.classList.toggle("filled", !!ta.value.trim());
   ta.addEventListener("input", function(){
@@ -942,8 +969,11 @@ function refreshBoard(){
   });
 
   /* --- the legend, straight from the model --- */
+  /* rebuilt every time: it resolves --nc at build time, so caching it left the
+     table on stale colours after a theme or palette switch */
   var mech = document.getElementById("mechanics");
-  if(!mech.firstChild){
+  mech.textContent = "";
+  {
     var tbl = document.createElement("table");
     var thead = document.createElement("tr");
     ["Component", "In the game", "Why it matters"].forEach(function(h){
@@ -1066,7 +1096,40 @@ document.getElementById("copyBtn").addEventListener("click", function(){
     document.body.removeChild(ta);
   }
 });
-document.getElementById("printBtn").addEventListener("click", function(){ window.print(); });
+/* Textareas print only their first visible lines, so build a rendered copy of the
+   answers just before printing. Also wired to beforeprint for Ctrl+P. */
+function buildPrintout(){
+  var out = document.getElementById("printout");
+  out.textContent = "";
+  var h1 = document.createElement("h2");
+  h1.textContent = "The One-Day Protocol — " + new Date().toISOString().slice(0, 10);
+  out.appendChild(h1);
+
+  function section(node, level){
+    var h = document.createElement(level === 2 ? "h2" : "h3");
+    h.textContent = node.label;
+    out.appendChild(h);
+    (node.children || []).forEach(function(c){
+      if(c.kind === "prompt" || c.kind === "field"){
+        var q = document.createElement("div");
+        q.className = "q";
+        q.textContent = (c.time ? c.time + " — " : "") + c.label;
+        var a = document.createElement("div");
+        var v = (answers[c.id] || "").trim();
+        a.className = "a" + (v ? "" : " blank");
+        a.textContent = v || "(blank)";
+        out.appendChild(q); out.appendChild(a);
+      } else section(c, level + 1);
+    });
+  }
+  (byId["protocol"].children || []).forEach(function(p){ section(p, 2); });
+  section(byId["six-components"], 2);
+}
+window.addEventListener("beforeprint", buildPrintout);
+document.getElementById("printBtn").addEventListener("click", function(){
+  buildPrintout();
+  window.print();
+});
 document.getElementById("clearBtn").addEventListener("click", function(){
   if(!confirm("Erase every answer stored in this browser? This cannot be undone.")) return;
   answers = {};
@@ -1103,6 +1166,18 @@ document.querySelector(".tabs").addEventListener("click", function(e){
 window.addEventListener("hashchange", function(){
   if(HASHES[location.hash]) selectTab(HASHES[location.hash]);
 });
+/* arrow-key navigation, per the ARIA tabs pattern */
+document.querySelector(".tabs").addEventListener("keydown", function(e){
+  var step = e.key === "ArrowRight" ? 1 : e.key === "ArrowLeft" ? -1 : 0;
+  if(!step) return;
+  e.preventDefault();
+  var ids = Object.keys(TABS);
+  var i = ids.indexOf(document.activeElement.id);
+  if(i < 0) return;
+  var next = document.getElementById(ids[(i + step + ids.length) % ids.length]);
+  next.focus();
+  selectTab(next.id);
+});
 
 function repaintColors(){
   walk(ROOT, function(n){
@@ -1111,7 +1186,8 @@ function repaintColors(){
     n._el.style.setProperty("--nc", c);
     if(n._dot) n._dot.style.setProperty("--nc", c);
   });
-  layout();
+  /* measuring a display:none panel yields zeros, which would flatten the map */
+  if(mapView.classList.contains("active")) layout();
   refreshBoard();
 }
 var PREF_KEY = "one-day-protocol/prefs";

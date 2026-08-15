@@ -10,7 +10,7 @@ Everything the [README](../README.md) skips: what each control does, and what to
 - Every node opens — branches reveal their children, end points reveal a short explanation. The small circle on a node's right edge means it has children; the number in the pill is how many.
 - **Scroll** the map like any other page — the wheel never zooms. You can also drag the background to move around.
 - Clicking a node never moves the map out from under you: the node you clicked stays put and the map grows around it.
-- **Expand all** opens everything at once. **Contract all** takes you back to the single button. **Fit to screen** shrinks the whole map to fit, for when you want the shape of it rather than the words.
+- **Expand all** opens everything at once. **Contract all** takes you back to the single button. **Fit to screen** scales the map so its full width is visible — you then scroll down through it, which keeps the text readable instead of shrinking an 8000-pixel-tall map into one screen.
 - **Palette** switches between the two colour schemes; **Theme** switches light and dark. Both are remembered.
 
 ## Saving your work

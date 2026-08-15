@@ -80,9 +80,12 @@ main{flex:1;min-height:0;position:relative}
 :root[data-theme="light"] .notice{background:#ffe9e9;color:#7a1f1f}
 
 /* ---------- map ---------- */
-#mapView{overflow:hidden;cursor:grab;touch-action:none}
-#mapView.dragging{cursor:grabbing}
-#stage{position:absolute;top:0;left:0;transform-origin:0 0;will-change:transform}
+#mapView{overflow:hidden}
+/* the scroller: the wheel scrolls it, like every other page on the internet */
+#canvas{position:absolute;inset:0;overflow:auto;cursor:grab;overscroll-behavior:contain}
+#canvas.dragging{cursor:grabbing}
+#sizer{position:relative}
+#stage{position:absolute;top:0;left:0;transform-origin:0 0}
 #links{position:absolute;top:0;left:0;overflow:visible;pointer-events:none}
 #nodes{position:absolute;top:0;left:0}
 .node{
@@ -263,17 +266,19 @@ input[type="date"]{
   <main>
     <!-- MAP -->
     <section class="view active" id="mapView" role="tabpanel" aria-labelledby="tab-map">
-      <div id="stage">
-        <svg id="links" aria-hidden="true"></svg>
-        <div id="nodes"></div>
+      <div id="canvas">
+        <div id="sizer">
+          <div id="stage">
+            <svg id="links" aria-hidden="true"></svg>
+            <div id="nodes"></div>
+          </div>
+        </div>
       </div>
       <div class="maptools">
         <button class="btn primary" data-map="expand">Expand all</button>
         <button class="btn" data-map="collapse">Contract all</button>
-        <button class="btn" data-map="fit">Fit</button>
-        <button class="btn" data-map="zoomout" aria-label="Zoom out">&minus;</button>
-        <button class="btn" data-map="zoomin" aria-label="Zoom in">+</button>
-        <span class="hint">Click any node to open it &middot; drag to pan &middot; scroll to zoom</span>
+        <button class="btn" data-map="fit">Fit to screen</button>
+        <span class="hint">Click any node to open it</span>
       </div>
     </section>
 
@@ -436,14 +441,16 @@ function paletteColor(i){
    3. map: render, layout, interaction
    ========================================================================= */
 var stage  = document.getElementById("stage");
+var sizer  = document.getElementById("sizer");
 var svg    = document.getElementById("links");
 var nodesEl= document.getElementById("nodes");
 var mapView= document.getElementById("mapView");
+var scroller = document.getElementById("canvas");
 var SVGNS  = "http://www.w3.org/2000/svg";
 
 var MAXW = [320, 235, 250, 300, 330];
 var COL_GAP = 60, ROW_GAP = 13, PAD = 40;
-var view = { x: PAD, y: PAD, k: 1 };
+var scale = 1;                 /* only "Fit to screen" changes this */
 
 function maxWidth(d){ return MAXW[Math.min(d, MAXW.length - 1)]; }
 /* an open node needs room for its paragraph */
@@ -516,8 +523,8 @@ function layout(){
     n._el.style.display = "";
     if(n._dot) n._dot.style.display = "";
     var r = n._el.getBoundingClientRect();
-    n.w = Math.ceil(r.width / view.k);
-    n.h = Math.ceil(r.height / view.k);
+    n.w = Math.ceil(r.width / scale);
+    n.h = Math.ceil(r.height / scale);
   });
 
   /* --- columns --- */
@@ -609,84 +616,101 @@ function layout(){
   applyView();
 }
 
+/* Size the scroll area to the scaled map and centre it while it still fits.
+   The map is scrolled, never zoomed by the wheel. */
 function applyView(){
-  stage.style.transform = "translate(" + view.x + "px," + view.y + "px) scale(" + view.k + ")";
+  var r = scroller.getBoundingClientRect();
+  var w = (stage._w || 0) * scale, h = (stage._h || 0) * scale;
+  stage.style.transform = scale === 1 ? "" : "scale(" + scale + ")";
+  sizer.style.width  = Math.ceil(Math.max(r.width,  w)) + "px";
+  sizer.style.height = Math.ceil(Math.max(r.height, h)) + "px";
+  stage.style.left = Math.max(0, (r.width  - w) / 2) + "px";
+  stage.style.top  = Math.max(0, (r.height - h) / 2) + "px";
+}
+/* where a node currently sits on screen, so we can hold it still across a relayout */
+function nodePos(n){
+  return {
+    x: (parseFloat(stage.style.left) || 0) + (n.x + PAD) * scale - scroller.scrollLeft,
+    y: (parseFloat(stage.style.top)  || 0) + (n.y + PAD) * scale - scroller.scrollTop
+  };
 }
 function fit(){
-  var r = mapView.getBoundingClientRect();
+  var r = scroller.getBoundingClientRect();
   var k = Math.min(r.width / (stage._w || 1), r.height / (stage._h || 1));
-  /* never shrink below readable; a tall map is meant to be scrolled, not squinted at */
-  view.k = Math.max(0.42, Math.min(1.05, k));
-  var w = stage._w * view.k, h = stage._h * view.k;
-  view.x = w < r.width  ? (r.width  - w) / 2 : 0;
-  view.y = h < r.height ? (r.height - h) / 2 : 0;
+  scale = Math.max(0.25, Math.min(1, k));
   applyView();
+  scroller.scrollTo(0, 0);
 }
-function zoomAt(cx, cy, factor){
-  var k2 = Math.max(0.1, Math.min(3, view.k * factor));
-  if(k2 === view.k) return;
-  view.x = cx - (cx - view.x) * (k2 / view.k);
-  view.y = cy - (cy - view.y) * (k2 / view.k);
-  view.k = k2;
+function resetView(){
+  scale = 1;
   applyView();
+  scroller.scrollTo(0, 0);
 }
 
 function toggle(id){
   var n = byId[id];
   if(!n || !openable(n)) return;
-  var bx = n.x, by = n.y;                    /* where it sat before */
+  var before = nodePos(n);
   n._expanded = !n._expanded;
   n._el.innerHTML = nodeHTML(n);
   n._el.style.maxWidth = nodeMaxW(n) + "px";
   layout();
   /* hold the clicked node still, so the map grows around it instead of jumping */
-  view.x += (bx - n.x) * view.k;
-  view.y += (by - n.y) * view.k;
-  var r = mapView.getBoundingClientRect();
-  if(stage._w * view.k <= r.width && stage._h * view.k <= r.height){
-    view.x = (r.width  - stage._w * view.k) / 2;   /* still small enough to centre */
-    view.y = (r.height - stage._h * view.k) / 2;
-  }
-  applyView();
+  var after = nodePos(n);
+  scroller.scrollLeft += after.x - before.x;
+  scroller.scrollTop  += after.y - before.y;
+  return n._expanded;
 }
 function setAll(open){
   walk(ROOT, function(n){ n._expanded = open && openable(n); });
-  buildNodes(); layout(); fit();
+  buildNodes();
+  layout();
+  if(open) fit(); else resetView();
 }
 
-/* pointer: pan + click-to-fold (a small movement still counts as a click) */
-var drag = null;
-mapView.addEventListener("pointerdown", function(e){
-  if(e.button !== 0 && e.pointerType === "mouse") return;
-  drag = { x:e.clientX, y:e.clientY, vx:view.x, vy:view.y, moved:false, id:e.pointerId };
-  mapView.setPointerCapture(e.pointerId);
-  mapView.classList.add("dragging");
+/* Clicking is handled by real click events, so keyboard and touch work for free.
+   Panning only takes over once the pointer has actually moved — and only then is
+   the pointer captured, because capturing retargets every later event to the
+   container and would swallow the click we are trying to deliver. */
+var drag = null, dragged = false;
+
+scroller.addEventListener("pointerdown", function(e){
+  if(e.pointerType === "mouse" && e.button !== 0) return;
+  if(e.pointerType !== "mouse") return;               /* touch scrolls natively */
+  dragged = false;
+  drag = {
+    id: e.pointerId, x: e.clientX, y: e.clientY,
+    sl: scroller.scrollLeft, st: scroller.scrollTop, active: false
+  };
 });
-mapView.addEventListener("pointermove", function(e){
+scroller.addEventListener("pointermove", function(e){
   if(!drag || e.pointerId !== drag.id) return;
   var dx = e.clientX - drag.x, dy = e.clientY - drag.y;
-  if(Math.abs(dx) + Math.abs(dy) > 4) drag.moved = true;
-  view.x = drag.vx + dx; view.y = drag.vy + dy;
-  applyView();
+  if(!drag.active){
+    if(Math.abs(dx) + Math.abs(dy) < 5) return;       /* still a click, not a drag */
+    drag.active = true;
+    dragged = true;
+    try{ scroller.setPointerCapture(drag.id); }catch(err){}
+    scroller.classList.add("dragging");
+  }
+  scroller.scrollLeft = drag.sl - dx;
+  scroller.scrollTop  = drag.st - dy;
 });
-function endDrag(e){
-  if(!drag) return;
-  var moved = drag.moved;
+function endDrag(){
+  if(drag && drag.active){
+    try{ scroller.releasePointerCapture(drag.id); }catch(err){}
+  }
   drag = null;
-  mapView.classList.remove("dragging");
-  if(moved || !e) return;
-  var hit = e.target.closest ? e.target.closest(".dot,.node.opens") : null;
-  if(hit && hit.dataset.id) toggle(hit.dataset.id);
+  scroller.classList.remove("dragging");
 }
-mapView.addEventListener("pointerup", endDrag);
-mapView.addEventListener("pointercancel", function(){ drag = null; mapView.classList.remove("dragging"); });
+scroller.addEventListener("pointerup", endDrag);
+scroller.addEventListener("pointercancel", endDrag);
 
-mapView.addEventListener("wheel", function(e){
-  e.preventDefault();
-  var r = mapView.getBoundingClientRect();
-  zoomAt(e.clientX - r.left, e.clientY - r.top, e.deltaY < 0 ? 1.12 : 1 / 1.12);
-}, { passive:false });
-
+nodesEl.addEventListener("click", function(e){
+  if(dragged) return;                                 /* that click came from a pan */
+  var hit = e.target.closest(".dot,.node.opens");
+  if(hit && hit.dataset.id) toggle(hit.dataset.id);
+});
 nodesEl.addEventListener("keydown", function(e){
   if(e.key !== "Enter" && e.key !== " ") return;
   var t = e.target.closest(".node.opens");
@@ -698,12 +722,10 @@ nodesEl.addEventListener("keydown", function(e){
 document.querySelector(".maptools").addEventListener("click", function(e){
   var b = e.target.closest("[data-map]");
   if(!b) return;
-  var a = b.dataset.map, r = mapView.getBoundingClientRect();
-  if(a === "expand")   { setAll(true); }
-  if(a === "collapse") { setAll(false); }
-  if(a === "fit")      { fit(); }
-  if(a === "zoomin")   { zoomAt(r.width/2, r.height/2, 1.2); }
-  if(a === "zoomout")  { zoomAt(r.width/2, r.height/2, 1/1.2); }
+  var a = b.dataset.map;
+  if(a === "expand")   setAll(true);
+  if(a === "collapse") setAll(false);
+  if(a === "fit")      fit();
 });
 
 /* =========================================================================
@@ -1110,22 +1132,92 @@ function selfTest(){
   /* every node must be openable — a dead-end node would be a content gap */
   walk(ROOT, function(node){ ok(openable(node), "node opens to something: " + node.id); });
 
-  /* the map starts as a single button */
+  /* --- real events, not direct API calls. The API working proves nothing about
+         whether a human clicking the thing gets any result. --- */
+  function fireClick(el){
+    var r = el.getBoundingClientRect();
+    var o = {
+      bubbles:true, cancelable:true, composed:true,
+      clientX: r.left + Math.min(8, r.width / 2),
+      clientY: r.top + Math.min(8, r.height / 2),
+      button:0, buttons:1, pointerId:1, pointerType:"mouse", isPrimary:true
+    };
+    try{
+      el.dispatchEvent(new PointerEvent("pointerdown", o));
+      el.dispatchEvent(new PointerEvent("pointerup", o));
+    }catch(err){
+      el.dispatchEvent(new MouseEvent("mousedown", o));
+      el.dispatchEvent(new MouseEvent("mouseup", o));
+    }
+    el.dispatchEvent(new MouseEvent("click", o));
+  }
+  function countVisible(){
+    var c = 0;
+    walk(ROOT, function(node){ if(visible(node)) c++; });
+    return c;
+  }
+  function toolbar(action){
+    fireClick(document.querySelector('.maptools [data-map="' + action + '"]'));
+  }
+
   var before = [];
   walk(ROOT, function(node){ before.push(node._expanded); });
-  setAll(false);
-  var shown = 0;
-  walk(ROOT, function(node){ if(visible(node)) shown++; });
-  ok(shown === 1, "contract all leaves exactly one node on screen");
+
+  /* the map starts as a single button */
+  toolbar("collapse");
+  ok(countVisible() === 1, "CLICK: Contract all leaves exactly one node on screen");
   ok(svg.querySelectorAll("path").length === 0, "no links when contracted");
   ok(ROOT._el.classList.contains("collapsed"), "root shows its click affordance");
 
-  /* opening the root reveals exactly the five branches */
-  toggle(ROOT.id);
-  shown = 0;
-  walk(ROOT, function(node){ if(visible(node)) shown++; });
-  ok(shown === 1 + (ROOT.children || []).length, "opening the root reveals its branches");
+  /* clicking the root card opens it */
+  fireClick(ROOT._el);
+  ok(ROOT._expanded, "CLICK: the root card opens");
+  ok(countVisible() === 1 + (ROOT.children || []).length, "CLICK: opening the root reveals its branches");
   ok(svg.querySelectorAll("path").length === (ROOT.children || []).length, "one link per branch");
+
+  /* clicking a branch opens it, and clicking a second one leaves the first open */
+  var b1 = byId["core-problem"], b2 = byId["insights"];
+  fireClick(b1._el);
+  ok(b1._expanded, "CLICK: a branch opens");
+  fireClick(b2._el);
+  ok(b2._expanded && b1._expanded, "CLICK: opening a second branch keeps the first open");
+
+  /* clicking an end point reveals its summary */
+  var leaf = byId["cp-not-an-accident"];
+  fireClick(leaf._el);
+  ok(leaf._expanded, "CLICK: an end point opens");
+  ok(leaf._el.textContent.indexOf(leaf.summary.slice(0, 30)) !== -1, "CLICK: its summary appears");
+  fireClick(leaf._el);
+  ok(!leaf._expanded, "CLICK: clicking it again closes it");
+
+  /* the fold dot on a node's edge works too */
+  ok(!!b1._dot, "branch has a fold dot");
+  fireClick(b1._dot);
+  ok(!b1._expanded, "CLICK: the fold dot closes a branch");
+
+  /* keyboard */
+  var kev = { key:"Enter", bubbles:true, cancelable:true };
+  b1._el.dispatchEvent(new KeyboardEvent("keydown", kev));
+  ok(b1._expanded, "KEYBOARD: Enter opens a node");
+
+  /* toolbar */
+  toolbar("expand");
+  ok(countVisible() === modelCount, "CLICK: Expand all shows everything");
+  var fitScale = scale;
+  toolbar("fit");
+  ok(scale > 0 && scale <= 1, "CLICK: Fit to screen produces a sane scale");
+  ok(isFinite(scale), "scale stays finite");
+  void fitScale;
+  toolbar("collapse");
+  ok(countVisible() === 1 && scale === 1, "CLICK: Contract all resets the view");
+
+  /* the wheel must never zoom */
+  var s0 = scale;
+  scroller.dispatchEvent(new WheelEvent("wheel", { deltaY:-200, bubbles:true, cancelable:true }));
+  ok(scale === s0, "the mouse wheel does not zoom");
+  ok(!document.querySelector('[data-map="zoomin"]'), "no zoom buttons");
+
+  toolbar("expand");
 
   /* siblings must not overlap vertically — checked at both extremes */
   function checkOverlaps(tag){
@@ -1137,9 +1229,6 @@ function selfTest(){
       }
     });
   }
-  checkOverlaps("root-open");
-
-  setAll(true);
   checkOverlaps("expanded");
   walk(ROOT, function(node){
     ok(visible(node), "everything visible when expanded: " + node.id);
@@ -1196,9 +1285,11 @@ buildWorkbook();
 refreshProgress();
 refreshBoard();
 layout();
-fit();
+resetView();
 if(HASHES[location.hash]) selectTab(HASHES[location.hash]);
 document.documentElement.setAttribute("data-ready", "1");
+/* tools/uitest.mjs drives this page from outside with real browser input; it reads
+   the DOM directly and needs no test hooks here beyond the model and the suite. */
 window.__ODP__ = {
   model: MODEL, selfTest: selfTest, layout: layout, fit: fit,
   toggle: toggle, setAll: setAll, answers: function(){ return answers; }

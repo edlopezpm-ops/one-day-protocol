@@ -6,7 +6,7 @@
 
 ## Steps
 
-1. **Download.** Open the [latest release](../../../releases/latest) and click `one-day-protocol.zip`.
+1. **Download.** Open the [latest release](https://github.com/edlopezpm-ops/one-day-protocol/releases/latest) and click `one-day-protocol.zip`.
 2. **Unzip.**
    - *Windows:* right-click the file → **Extract All** → **Extract**.
    - *Mac:* double-click the file.

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>aekr banner source</title>
+<!--
+  Source for docs/img/aekr.png. Render at 1200x150, scale factor 2:
+
+  msedge --headless=new --window-size=1200,150 --force-device-scale-factor=2 \
+         --screenshot=docs/img/aekr.png tools/aekr-banner.html
+-->
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{width:1200px;height:150px;overflow:hidden}
+  body{
+    background:#0b0b0f;
+    font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+    color:#e9e9f0;display:flex;align-items:center;justify-content:space-between;
+    padding:0 56px;position:relative;
+  }
+  body::before{
+    content:"";position:absolute;left:0;right:0;top:0;height:1px;
+    background:linear-gradient(90deg,transparent,#6f8cff66,#8b6cf066,transparent);
+  }
+  body::after{
+    content:"";position:absolute;left:50%;top:-190px;width:520px;height:380px;
+    transform:translateX(-50%);
+    background:radial-gradient(circle,rgba(111,140,255,.10),transparent 65%);
+  }
+  .left{display:flex;align-items:baseline;gap:16px;position:relative;z-index:2}
+  .mark{font-size:40px;font-weight:800;letter-spacing:.16em;color:#e9e9f0}
+  .tag{font-size:13px;color:#6f6f81;letter-spacing:.1em;text-transform:uppercase}
+  .right{display:flex;align-items:center;gap:26px;position:relative;z-index:2}
+  .item{display:flex;align-items:center;gap:9px;font-size:15px;color:#a4a4b4}
+  .item svg{flex:none}
+  .item b{color:#e9e9f0;font-weight:600}
+</style>
+</head>
+<body>
+  <div class="left">
+    <span class="tag">Built with</span>
+    <span class="mark">AEKR</span>
+  </div>
+  <div class="right">
+    <span class="item">
+      <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="#6f8cff" stroke-width="1.9">
+        <circle cx="12" cy="12" r="9.2"/>
+        <path d="M3 12h18M12 2.8c2.6 2.6 2.6 15.8 0 18.4M12 2.8c-2.6 2.6-2.6 15.8 0 18.4"/>
+      </svg>
+      <b>aekr.io</b>
+    </span>
+    <span class="item">
+      <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="#8b6cf0" stroke-width="1.9">
+        <rect x="2.6" y="2.6" width="18.8" height="18.8" rx="5.4"/>
+        <circle cx="12" cy="12" r="4"/>
+        <circle cx="17.4" cy="6.6" r="1.15" fill="#8b6cf0" stroke="none"/>
+      </svg>
+      <b>@__aerk</b>
+    </span>
+  </div>
+</body>
+</html>

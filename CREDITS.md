@@ -22,6 +22,10 @@ Designed, built and verified with **[AEKR](https://aekr.io)** — the method beh
 repository was scoped, structured and checked. Every artefact here is generated from a single
 content model and validated automatically before release.
 
+[![Built with AEKR](docs/img/aekr.png)](https://aekr.io)
+
+**[aekr.io](https://aekr.io)** · **[@__aerk on Instagram](https://www.instagram.com/__aerk/)**
+
 ## Standing offer
 
 Non-commercial, unaffiliated, unendorsed. If either author wants attribution changed, phrasing adjusted, or this taken down — open an issue or contact the owner. It gets done, no argument.

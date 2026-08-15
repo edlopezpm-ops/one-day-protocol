@@ -10,9 +10,10 @@
  *                            README. Nothing else — the HTML needs nothing else.
  *   dist/Obsidian-Vault/     optional extra for people who want it as notes.
  */
-import { readFileSync, writeFileSync, mkdirSync, rmSync, cpSync } from "node:fs";
-import { dirname, join } from "node:path";
+import { readFileSync, writeFileSync, mkdirSync, rmSync, cpSync, readdirSync, statSync } from "node:fs";
+import { dirname, join, relative } from "node:path";
 import { fileURLToPath } from "node:url";
+import { deflateRawSync } from "node:zlib";
 
 const ROOT_DIR = join(dirname(fileURLToPath(import.meta.url)), "..");
 const p = (...s) => join(ROOT_DIR, ...s);
@@ -82,6 +83,7 @@ ${META.disclaimer}
 
 Guides, Obsidian version, source   ${REPO}
 Built with AEKR                    https://aekr.io
+                                   instagram.com/__aerk
 `;
 writeFileSync(join(app, "README.txt"), readme.replace(/\n/g, "\r\n"), "utf8");
 
@@ -115,8 +117,92 @@ An unaffiliated study aid. Text licensed CC BY 4.0, see LICENSE-CONTENT.md.
 
 ${META.disclaimer}
 
-Built with AEKR - https://aekr.io
+Built with AEKR - https://aekr.io - instagram.com/__aerk
 `.replace(/\n/g, "\r\n"), "utf8");
 
-console.log("staged dist/One-Day-Protocol  (app + licences + README.txt)");
-console.log("staged dist/Obsidian-Vault    (notes + canvas)");
+/* ---------------------------------------------------------------- zipping --
+ * Written here rather than shelled out to PowerShell: Compress-Archive writes
+ * BACKSLASH path separators, which the zip spec forbids. Windows tolerates it;
+ * macOS and Linux extract one file with a literal backslash in its name. A
+ * download that only unpacks on one OS is not a download.
+ */
+const CRC_TABLE = (() => {
+  const t = new Int32Array(256);
+  for (let n = 0; n < 256; n++) {
+    let c = n;
+    for (let k = 0; k < 8; k++) c = c & 1 ? 0xedb88320 ^ (c >>> 1) : c >>> 1;
+    t[n] = c;
+  }
+  return t;
+})();
+const crc32 = (buf) => {
+  let c = -1;
+  for (let i = 0; i < buf.length; i++) c = CRC_TABLE[(c ^ buf[i]) & 0xff] ^ (c >>> 8);
+  return (c ^ -1) >>> 0;
+};
+const dosTime = (d) => ((d.getHours() << 11) | (d.getMinutes() << 5) | (d.getSeconds() >> 1)) & 0xffff;
+const dosDate = (d) => (((d.getFullYear() - 1980) << 9) | ((d.getMonth() + 1) << 5) | d.getDate()) & 0xffff;
+
+function listAll(dir, base = dir, out = []) {
+  for (const name of readdirSync(dir).sort()) {
+    const full = join(dir, name);
+    const st = statSync(full);
+    const rel = relative(base, full).split("\\").join("/");   // forward slashes, always
+    if (st.isDirectory()) { out.push({ rel: rel + "/", dir: true, mtime: st.mtime }); listAll(full, base, out); }
+    else out.push({ rel, dir: false, mtime: st.mtime, data: readFileSync(full) });
+  }
+  return out;
+}
+
+function writeZip(srcDir, zipPath, prefix) {
+  const entries = listAll(srcDir);
+  const locals = [], central = [];
+  let offset = 0;
+
+  for (const e of entries) {
+    const name = Buffer.from(prefix + "/" + e.rel, "utf8");
+    const raw = e.dir ? Buffer.alloc(0) : e.data;
+    const deflated = e.dir ? Buffer.alloc(0) : deflateRawSync(raw, { level: 9 });
+    /* never let "compression" make a file bigger */
+    const useStore = e.dir || deflated.length >= raw.length;
+    const body = useStore ? raw : deflated;
+    const method = useStore ? 0 : 8;
+    const crc = e.dir ? 0 : crc32(raw);
+    const t = dosTime(e.mtime), d = dosDate(e.mtime);
+
+    const lh = Buffer.alloc(30);
+    lh.writeUInt32LE(0x04034b50, 0); lh.writeUInt16LE(20, 4); lh.writeUInt16LE(0x0800, 6); // UTF-8 names
+    lh.writeUInt16LE(method, 8); lh.writeUInt16LE(t, 10); lh.writeUInt16LE(d, 12);
+    lh.writeUInt32LE(crc, 14); lh.writeUInt32LE(body.length, 18); lh.writeUInt32LE(raw.length, 22);
+    lh.writeUInt16LE(name.length, 26); lh.writeUInt16LE(0, 28);
+    locals.push(lh, name, body);
+
+    const ch = Buffer.alloc(46);
+    ch.writeUInt32LE(0x02014b50, 0); ch.writeUInt16LE(20, 4); ch.writeUInt16LE(20, 6);
+    ch.writeUInt16LE(0x0800, 8); ch.writeUInt16LE(method, 10);
+    ch.writeUInt16LE(t, 12); ch.writeUInt16LE(d, 14);
+    ch.writeUInt32LE(crc, 16); ch.writeUInt32LE(body.length, 20); ch.writeUInt32LE(raw.length, 24);
+    ch.writeUInt16LE(name.length, 28);
+    ch.writeUInt32LE(e.dir ? 0x10 : 0, 38);              // directory attribute
+    ch.writeUInt32LE(offset, 42);
+    central.push(ch, name);
+
+    offset += lh.length + name.length + body.length;
+  }
+
+  const cd = Buffer.concat(central);
+  const eocd = Buffer.alloc(22);
+  eocd.writeUInt32LE(0x06054b50, 0);
+  eocd.writeUInt16LE(entries.length, 8); eocd.writeUInt16LE(entries.length, 10);
+  eocd.writeUInt32LE(cd.length, 12); eocd.writeUInt32LE(offset, 16);
+
+  writeFileSync(zipPath, Buffer.concat([...locals, cd, eocd]));
+  return entries.length;
+}
+
+const n1 = writeZip(app,   p("dist", "One-Day-Protocol.zip"), "One-Day-Protocol");
+const n2 = writeZip(vault, p("dist", "Obsidian-Vault.zip"),   "Obsidian-Vault");
+
+const kb = (f) => (statSync(p("dist", f)).size / 1024).toFixed(0) + " KB";
+console.log(`One-Day-Protocol.zip  ${n1} entries, ${kb("One-Day-Protocol.zip")}  (app + licences + README.txt)`);
+console.log(`Obsidian-Vault.zip    ${n2} entries, ${kb("Obsidian-Vault.zip")}  (notes + canvas)`);

@@ -81,6 +81,7 @@ Code MIT (LICENSE). Text CC BY 4.0 (LICENSE-CONTENT.md).
 ${META.disclaimer}
 
 
+Use it online                      https://edlopezpm-ops.github.io/one-day-protocol/
 Guides, Obsidian version, source   ${REPO}
 Built with AEKR                    https://aekr.io
                                    instagram.com/__aerk

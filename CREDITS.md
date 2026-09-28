@@ -28,4 +28,4 @@ content model and validated automatically before release.
 
 ## Standing offer
 
-Non-commercial, unaffiliated, unendorsed. If either author wants attribution changed, phrasing adjusted, or this taken down — open an issue or contact the owner. It gets done, no argument.
+Non-commercial, unaffiliated, unendorsed. If either author wants attribution changed, phrasing adjusted, or this taken down — open an issue or contact the owner. It gets done, no argument. You can reach us at aekr@aekr.io if you need additional details.

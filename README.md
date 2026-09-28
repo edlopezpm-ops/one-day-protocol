@@ -78,6 +78,10 @@ The thinking is Dan Koe's and @MindBranches' — see **[CREDITS.md](CREDITS.md)*
 
 Educational and self-reflection material. Not therapy, medical, or mental-health advice.
 
+## Reach us at
+
+email: aekr@aekr.io
+
 ---
 
 [![Built with AEKR](docs/img/aekr.png)](https://aekr.io)

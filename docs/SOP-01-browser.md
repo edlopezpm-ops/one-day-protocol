@@ -1,6 +1,6 @@
 # SOP 01 — Open it in your browser
 
-Everything the [README](../README.md) skips: what each control does, and what to do when something misbehaves.
+Everything the [README](../README.md) skips: what each control does, and what to do when something misbehaves. For additional details reach us at aekr@aekr.io
 
 ---
 

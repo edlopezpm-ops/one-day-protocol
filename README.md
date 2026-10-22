@@ -70,7 +70,9 @@ GitHub Pages, from `main`, root. It redeploys on push; `index.html` exists purel
 
 **Note:** Pages on this account requires the repo to stay **public** — flipping it to private disables Pages and takes the link down. Moving to Cloudflare Pages or transferring the repo to an org in the AEKR enterprise both remove that constraint.
 
-The page itself is self-contained and stores answers only in the visitor's own browser — no analytics, no telemetry, no network calls at all.
+The page is self-contained and stores workbook answers only in the visitor's own browser. The persistent **Privacy and data** control adds optional local feature totals (off by default), an independent local structured usability survey, retention and real JSON downloads. Nothing is sent automatically; no central collector or remote telemetry exists. Reflection answers never enter optional usage or research. [Catalogue, limits and verification](docs/COLLECT_SECURITY.md).
+
+Run `node tools/privacy-test.mjs` with Node 24+ and Edge or Chrome for real local browser, withdrawal, GPC, expiry, corrupted-storage, blocked-storage and download checks. Keep editing `tools/template.html` and `tools/local-privacy.js`; `tools/build.mjs` embeds the privacy code into both identical offline HTML files and applies its no-network guard to the composed template. GitHub Pages paths share an origin; namespaced keys prevent accidental mixing, not malicious sibling-origin scripts. Use the offline file or a trusted browser profile for private workbook content.
 
 ## Credits and licence
 

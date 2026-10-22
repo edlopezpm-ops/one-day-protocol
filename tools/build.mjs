@@ -74,7 +74,11 @@ const assert = (cond, msg) => { if (!cond) { console.error("BUILD FAILED: " + ms
 
 /* --------------------------------------------------------- 1. index.html */
 {
-  const tpl = readFileSync(p("tools", "template.html"), "utf8");
+  let tpl = readFileSync(p("tools", "template.html"), "utf8");
+  assert(tpl.includes("/*__LOCAL_PRIVACY__*/"), "template.html lost its local privacy marker");
+  const privacy = readFileSync(p("tools", "local-privacy.js"), "utf8");
+  assert(!/<\/script/i.test(privacy), "local privacy code must not close its inline script");
+  tpl = tpl.replace("/*__LOCAL_PRIVACY__*/", () => privacy);
   assert(tpl.includes("/*__MODEL_JSON__*/"), "template.html lost its /*__MODEL_JSON__*/ marker");
 
   /* attribution is not optional — the page must credit both authors, visibly */

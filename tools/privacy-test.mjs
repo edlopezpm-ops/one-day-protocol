@@ -143,6 +143,37 @@ try {
     assert.equal(data.research.length, 1);
     assert(!JSON.stringify(data).includes("SYNTHETIC local workbook"));
   });
+  await check("tainted records export only closed fields, including survey-only download", async () => {
+    const savedResearch = await p.eval(`JSON.parse(localStorage.getItem(${JSON.stringify(key("research"))}))[0]`);
+    const fixture = `const at=Date.now();localStorage.setItem(${JSON.stringify(key("choice"))},JSON.stringify({product:${JSON.stringify(id)},notice:'2026-10-22.1',action:'accept',usage:true,at,expires:at+180*86400000,unexpected:'SYNTHETIC_PRIVATE_REFLECTION'}));localStorage.setItem(${JSON.stringify(key("usage"))},JSON.stringify([{feature:${JSON.stringify(sckb ? "runtime" : "board")},day:new Date().toISOString().slice(0,10),count:2,unexpected:'SYNTHETIC_PRIVATE_REFLECTION'}]));localStorage.setItem(${JSON.stringify(key("research"))},JSON.stringify([{...${JSON.stringify(savedResearch)},reflectionAnswers:'SYNTHETIC_PRIVATE_REFLECTION'}]));localStorage.setItem(${JSON.stringify(key("retention"))},JSON.stringify({days:7,changedAt:at,unexpected:'SYNTHETIC_PRIVATE_REFLECTION'}));`;
+    const tainted = await page(fixture); await open(tainted);
+    const folder = join(downloads, "closed-fields"); mkdirSync(folder);
+    await browser.send("Browser.setDownloadBehavior", { behavior: "allow", downloadPath: folder });
+    await tainted.click("#privacy-download"); await tainted.click("#privacy-research-download");
+    for (let i = 0; i < 50 && readdirSync(folder).filter(f => f.endsWith(".json")).length < 2; i++) await sleep(100);
+    const full = JSON.parse(readFileSync(join(folder, id + "-local-data.json"), "utf8"));
+    const survey = JSON.parse(readFileSync(join(folder, id + "-research-local.json"), "utf8"));
+    assert(!JSON.stringify(full).includes("SYNTHETIC_PRIVATE_REFLECTION"));
+    assert(!JSON.stringify(survey).includes("SYNTHETIC_PRIVATE_REFLECTION"));
+    assert.deepEqual(Object.keys(full.privacyChoice).sort(), ["action", "at", "expires", "notice", "product", "usage"]);
+    assert.deepEqual(Object.keys(full.retention).sort(), ["changedAt", "days"]);
+    assert.equal(full.usage.length, 1);
+    assert.deepEqual(Object.keys(full.usage[0]).sort(), ["count", "day", "feature"]);
+    assert.equal(survey.research.length, 1);
+    assert.deepEqual(Object.keys(survey.research[0]).sort(), ["answers", "at", "notice", "purpose"]);
+    assert.deepEqual(Object.keys(survey).sort(), ["manifest", "research"]);
+    await browser.send("Browser.setDownloadBehavior", { behavior: "allow", downloadPath: downloads });
+  });
+  await check("valid optional records are read without storage rewrites", async () => {
+    const r = await page(`window.optionalWrites=[];const originalSet=Storage.prototype.setItem;Storage.prototype.setItem=function(k,v){if(${JSON.stringify([key("usage"), key("research")])}.includes(k))window.optionalWrites.push(k);return originalSet.call(this,k,v)};`);
+    assert.deepEqual(await r.eval("window.optionalWrites"), []);
+  });
+  await check("wrong or absent research purpose is rejected rather than relabelled", async () => {
+    const saved = await p.eval(`JSON.parse(localStorage.getItem(${JSON.stringify(key("research"))}))[0]`);
+    const r = await page(`localStorage.setItem(${JSON.stringify(key("research"))},JSON.stringify([{...${JSON.stringify(saved)},purpose:'other-purpose'},{...${JSON.stringify(saved)},purpose:undefined}]));`);
+    assert.equal(await r.eval(`localStorage.getItem(${JSON.stringify(key("research"))})`), null);
+  });
+  await p.click("#privacy-withdraw"); // End the projection fixture before the fresh opt-in scenario.
   await p.click("#privacy-accept"); await close(p);
   await check("explicit opt-in creates bounded coarse local counts only", async () => {
     await p.click(sckb ? "#runtime-reset" : "#tab-board");

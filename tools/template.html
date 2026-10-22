@@ -2,6 +2,7 @@
 <html lang="en" data-theme="dark" data-palette="aurora">
 <head>
 <meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src data:; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'; frame-src 'none'">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>The One-Day Protocol</title>
 <meta name="description" content="An interactive model of the ideas in Dan Koe's &quot;How to fix your entire life in 1 day&quot;. Works offline in any browser.">
@@ -369,6 +370,7 @@ input[type="date"]{
 window.addEventListener("error", function(e){
   document.documentElement.setAttribute("data-boot-error", (e.message || "error") + " @ " + (e.lineno || "?"));
 });
+/*__LOCAL_PRIVACY__*/
 (function(){
 /* =========================================================================
    0. boot + safety
@@ -398,15 +400,16 @@ if(!storeOK) notify("Heads up: this browser is blocking local storage, so your a
 
 var answers = {};
 if(storeOK){
-  try{ answers = JSON.parse(localStorage.getItem(STORE_KEY) || "{}") || {}; }
+  try{ var rawAnswers = localStorage.getItem(STORE_KEY) || "{}"; answers = rawAnswers.length <= 1000000 ? JSON.parse(rawAnswers) : {}; }
   catch(e){ answers = {}; }
 }
 var saveTimer = null;
+var privacy = null;
 function save(){
   if(!storeOK) return;
   clearTimeout(saveTimer);
   saveTimer = setTimeout(function(){
-    try{ localStorage.setItem(STORE_KEY, JSON.stringify(answers)); }
+    try{ localStorage.setItem(STORE_KEY, JSON.stringify(answers)); if(privacy) privacy.productChanged(); }
     catch(e){ notify("Could not save locally (storage full or blocked). Export your answers to be safe."); }
   }, 250);
 }
@@ -442,6 +445,13 @@ function collect(node, pred, out){
 var PROMPTS = collect(ROOT, function(n){ return n.kind === "prompt"; });
 var FIELDS  = collect(ROOT, function(n){ return n.kind === "field"; });
 var INPUTS  = PROMPTS.concat(FIELDS);
+/* Local browser storage is untrusted input. Only model fields and bounded strings survive. */
+var cleanAnswers = {};
+if(answers && typeof answers === "object" && !Array.isArray(answers)) INPUTS.forEach(function(n){
+  if(Object.prototype.hasOwnProperty.call(answers,n.id) && typeof answers[n.id] === "string" && answers[n.id].length <= 20000) cleanAnswers[n.id] = answers[n.id];
+});
+if(JSON.stringify(answers) !== JSON.stringify(cleanAnswers)) notify("Some local records were invalid or exceeded the size limit and were excluded. Valid workbook fields remain available; no data was sent.");
+answers = cleanAnswers;
 
 /* =========================================================================
    2. colour
@@ -827,6 +837,7 @@ function fieldFor(n){
     d.appendChild(m);
   });
   var ta = document.createElement("textarea");
+  ta.maxLength = 20000;
   ta.id = "f_" + n.id;
   ta.dataset.id = n.id;
   if(describedBy.length) ta.setAttribute("aria-describedby", describedBy.join(" "));
@@ -1132,12 +1143,24 @@ document.getElementById("printBtn").addEventListener("click", function(){
 });
 document.getElementById("clearBtn").addEventListener("click", function(){
   if(!confirm("Erase every answer stored in this browser? This cannot be undone.")) return;
+  eraseAnswers();
+});
+function eraseAnswers(){
+  clearTimeout(saveTimer);
   answers = {};
-  if(storeOK){ try{ localStorage.removeItem(STORE_KEY); }catch(e){} }
+  var cleared = true;
+  try{ localStorage.removeItem(STORE_KEY); }catch(e){ cleared = false; }
   document.querySelectorAll("#workBody textarea").forEach(function(ta){
     ta.value = ""; ta.classList.remove("filled");
   });
   refreshProgress(); refreshBoard();
+  return cleared;
+}
+window.addEventListener("storage", function(event){
+  if((event.key === STORE_KEY && event.newValue === null) || event.key === null) eraseAnswers();
+  if((event.key === PREF_KEY && event.newValue === null) || event.key === null){
+    P = {}; document.documentElement.dataset.theme = "dark"; document.documentElement.dataset.palette = "aurora"; repaintColors();
+  }
 });
 
 /* =========================================================================
@@ -1155,6 +1178,7 @@ function selectTab(tabId){
   });
   if(tabId === "tab-map") layout();
   if(tabId === "tab-board") refreshBoard();
+  if(privacy) privacy.event(tabId.replace("tab-", ""));
 }
 document.querySelector(".tabs").addEventListener("click", function(e){
   var b = e.target.closest("button[role=tab]");
@@ -1194,8 +1218,13 @@ var PREF_KEY = "one-day-protocol/prefs";
 function prefs(obj){
   if(!storeOK) return {};
   try{
-    if(obj){ localStorage.setItem(PREF_KEY, JSON.stringify(obj)); return obj; }
-    return JSON.parse(localStorage.getItem(PREF_KEY) || "{}") || {};
+    var rawPrefs = obj ? "{}" : localStorage.getItem(PREF_KEY) || "{}";
+    var value = obj || (rawPrefs.length < 2048 ? JSON.parse(rawPrefs) : {});
+    var safe = {};
+    if(value && ["light","dark"].includes(value.theme)) safe.theme = value.theme;
+    if(value && ["aurora","ember"].includes(value.palette)) safe.palette = value.palette;
+    if(obj){ localStorage.setItem(PREF_KEY, JSON.stringify(safe)); if(privacy) privacy.productChanged(); }
+    return safe;
   }catch(e){ return {}; }
 }
 var P = prefs();
@@ -1394,6 +1423,27 @@ refreshBoard();
 layout();
 resetView();
 if(HASHES[location.hash]) selectTab(HASHES[location.hash]);
+privacy = window.createAEKRLocalPrivacy({
+  id: "one-day-protocol", product: "The One-Day Protocol", lang: "en", defaultRetention: 0, entryMount: ".tools",
+  features: ["map", "work", "board"],
+  dataDescription: "Your requested workbook answers stay here until you erase them by default. Choose a shorter inactivity period if needed. The JSON download includes current in-memory answers (including changes not yet saved), display preferences and the exact local privacy records in its manifest. Existing Markdown, print and calendar exports remain available. Reflection answers are never included in optional usage or research.",
+  snapshot: function(){ return { answers: Object.assign({},answers), preferences: Object.assign({},P), storageAvailable: storeOK, answerLimit: "20,000 characters per known model field" }; },
+  hasData: function(){ try { return localStorage.getItem(STORE_KEY) !== null || localStorage.getItem(PREF_KEY) !== null; }catch(e){ return false; } },
+  clear: function(){
+    var cleared = eraseAnswers();
+    try{ localStorage.removeItem(PREF_KEY); }catch(e){ cleared = false; }
+    P = {}; document.documentElement.dataset.theme = "dark"; document.documentElement.dataset.palette = "aurora"; repaintColors();
+    return cleared;
+  },
+  questions: [
+    { id: "experience", label: "Experience using this tool", options: [["unspecified","Prefer not to answer"],["first","First visit"],["returning","Returning visitor"]] },
+    { id: "format", label: "Most useful format", options: [["unspecified","Prefer not to answer"],["map","Map"],["workbook","Workbook"],["board","Game board"],["print","Printable copy"]] },
+    { id: "future", label: "Most useful future improvement", options: [["unspecified","Prefer not to answer"],["accessibility","Accessibility"],["language","Additional languages"],["offline","Offline packaging"],["navigation","Navigation"],["export","Export options"]] },
+    { id: "frequency", label: "Expected use", options: [["unspecified","Prefer not to answer"],["once","Once"],["monthly","Monthly"],["weekly","Weekly"]] },
+    { id: "value", label: "Interface usefulness (not personal wellbeing)", options: [["unspecified","Prefer not to answer"],["low","Low"],["medium","Medium"],["high","High"]] }
+  ]
+});
+
 document.documentElement.setAttribute("data-ready", "1");
 /* tools/uitest.mjs drives this page from outside with real browser input; it reads
    the DOM directly and needs no test hooks here beyond the model and the suite. */

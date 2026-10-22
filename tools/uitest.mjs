@@ -182,6 +182,11 @@ async function run() {
   ok(await evaluate('document.documentElement.getAttribute("data-ready") === "1"'), "page reaches ready state");
   ok(!(await evaluate('document.documentElement.hasAttribute("data-boot-error")')), "no boot error");
   await evaluate(PROBE);
+  /* Reject optional local counters before exercising the unchanged product UI. */
+  if(await evaluate("!!document.getElementById('privacy-dialog')?.open")) {
+    await clickSel("#privacy-reject");
+    await clickSel("#privacy-close");
+  }
 
   const model = await evaluate("__ODP__.model.root.children.length");
 

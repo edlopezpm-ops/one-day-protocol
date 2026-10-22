@@ -32,7 +32,11 @@
       choice = value && value.notice === notice && value.product === config.id &&
         typeof value.usage === "boolean" && ["accept", "reject", "configure", "withdraw"].includes(value.action) &&
         (value.researchFloor === undefined || validTime(value.researchFloor)) &&
-        validTime(value.at) && value.expires === value.at + 180 * DAY && value.expires > now() ? value : null;
+        validTime(value.at) && value.expires === value.at + 180 * DAY && value.expires > now() &&
+        (!value.usage || ["accept", "configure"].includes(value.action)) ? {
+          product: config.id, notice, action: value.action, usage: value.usage, at: value.at, expires: value.expires,
+          ...(value.researchFloor === undefined ? {} : { researchFloor: value.researchFloor })
+        } : null;
       if (signal() && choice?.usage) {
         const at = now();
         const denied = { product: config.id, notice, action: "withdraw", usage: false, at, expires: at + 180 * DAY, ...(choice.researchFloor ? { researchFloor: choice.researchFloor } : {}) };
@@ -46,14 +50,17 @@
       const rows = read(keys.usage);
       if (!choice?.usage || signal() || !Array.isArray(rows)) return [];
       return rows.filter(r => r && config.features.includes(r.feature) && /^\d{4}-\d{2}-\d{2}$/.test(r.day) &&
-        Date.parse(r.day) > now() - 90 * DAY && Date.parse(r.day) <= now() && Number.isInteger(r.count) && r.count > 0 && r.count <= 10000).slice(-200);
+        Date.parse(r.day) > now() - 90 * DAY && Date.parse(r.day) <= now() && Number.isInteger(r.count) && r.count > 0 && r.count <= 10000).slice(-200).map(r => ({ feature: r.feature, day: r.day, count: r.count }));
     }
     function research() {
       const rows = read(keys.research);
       if (!Array.isArray(rows)) return [];
-      return rows.filter(r => r && r.notice === notice && validTime(r.at) && r.at > (choice?.researchFloor || 0) && r.at > now() - 180 * DAY &&
+      return rows.filter(r => r && r.purpose === "local-product-research" && r.notice === notice && validTime(r.at) && r.at > (choice?.researchFloor || 0) && r.at > now() - 180 * DAY &&
         r.answers && typeof r.answers === "object" && !Array.isArray(r.answers) &&
-        Object.keys(r.answers).length === config.questions.length && config.questions.every(q => q.options.some(o => o[0] === r.answers[q.id]))).slice(-6);
+        Object.keys(r.answers).length === config.questions.length && config.questions.every(q => q.options.some(o => o[0] === r.answers[q.id]))).slice(-6).map(r => ({
+          notice, at: r.at, purpose: "local-product-research",
+          answers: Object.fromEntries(config.questions.map(q => [q.id, r.answers[q.id]]))
+        }));
     }
     const cleanOptional = () => {
       const beforeUsage = read(keys.usage), beforeResearch = read(keys.research);
@@ -68,7 +75,7 @@
     };
     function retention() {
       const value = read(keys.retention);
-      return value && [0, 7, 30, 90, 365].includes(value.days) && validTime(value.changedAt) ? value : null;
+      return value && [0, 7, 30, 90, 365].includes(value.days) && validTime(value.changedAt) ? { days: value.days, changedAt: value.changedAt } : null;
     }
     function checkRetention() {
       const r = retention();

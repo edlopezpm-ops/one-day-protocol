@@ -20,7 +20,12 @@
     };
     const write = (key, value) => {
       try { const encoded = JSON.stringify(value); localStorage.setItem(key, encoded); if (localStorage.getItem(key) !== encoded) throw new Error("storage write unconfirmed"); return true; }
-      catch (_) { storageOK = false; return false; }
+      catch (_) {
+        storageOK = false;
+        // A failed denial must not leave an older optional grant for the next page.
+        if (key === keys.choice) remove(keys.choice);
+        return false;
+      }
     };
     const remove = (key) => {
       try { localStorage.removeItem(key); if (localStorage.getItem(key) !== null) throw new Error("storage deletion unconfirmed"); return true; }

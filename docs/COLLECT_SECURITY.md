@@ -1,5 +1,11 @@
 # The One-Day Protocol: Collect and Security implementation
 
+## Quota-denial correction candidate — 2026-10-22
+
+Based on canonical main `b6577595a96bcdbc9a22c127f5e9b0e9f06a93aa`. A failed consent replacement could leave a previously accepted choice on disk, so a fresh page resumed optional usage after rejection. A failed write of this product's choice now immediately calls the existing scoped removal and verifies absence with readback. It never clears origin storage or workbook answers, retention, display preferences or another product's keys. If removal cannot be confirmed, the existing storage-failure latch keeps optional event recording off in that module; the browser must allow deletion to persist the change across reloads. No remote grant or receiver exists.
+
+The new browser regression failed on canonical generated HTML at the fresh-module assertion. After regenerating both identical HTML files, all 27 real Edge privacy checks pass, including nine combinations of reject/configure/withdraw with choice-only quota, all-write quota and silent unconfirmed writes. Each uses legitimate acceptance, a fresh module, preserved workbook/retention/foreign records, no optional event after recovery, then a new explicit opt-in that alone restores counts. Existing GPC/DNT, research withdrawal floor, retention, closed exports, blocked storage and cross-tab checks remain green. Build, packaging, 46 real UI checks and the in-page 586/586 checks pass. The two HTML files match SHA-256 `a6c451d11597888ccccea568bd2bf3b7fab9f4201791499696dfae3b79bf7d7d`. Gitleaks 8.30.1 diff scan and `git diff --check` pass. Independently copied SCKB/One-Day source bytes match SHA-256 `eb8db11ad845d45fc921b9506d8852441a9ee84aec6c8306bbd05ad9005f9e9f` (LF). Candidate review, Git delivery and hosted observation remain separate pending steps.
+
 Date: 2026-10-22. State: tested local candidate, publication and independent review pending. Source baseline `8dedc670fb1e13f8e1540f6ff2442ded0183898f`. Current Pages metadata identifies `https://edlopezpm-ops.github.io/one-day-protocol/` with `main` root publication and HTTPS enforced. Metadata does not establish candidate deployment. No provider configuration, visibility, billing or public runtime was changed by this implementation.
 
 ## Real capabilities and proportionality

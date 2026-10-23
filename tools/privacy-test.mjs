@@ -65,8 +65,8 @@ async function connect(url) {
 }
 const browser = await connect(browserUrl);
 await browser.send("Browser.setDownloadBehavior", { behavior: "allow", downloadPath: downloads });
-async function page(init = "", path = "") {
-  const { targetId } = await browser.send("Target.createTarget", { url: "about:blank" });
+async function page(init = "", path = "", browserContextId) {
+  const { targetId } = await browser.send("Target.createTarget", { url: "about:blank", ...(browserContextId ? { browserContextId } : {}) });
   const targets = await (await fetch(`http://127.0.0.1:${port}/json/list`)).json();
   const p = await connect(targets.find(x => x.id === targetId).webSocketDebuggerUrl);
   p.targetId = targetId;
@@ -96,6 +96,38 @@ const checks = [];
 async function check(name, fn) { await fn(); checks.push(name); console.log("PASS " + name); }
 let failure;
 try {
+  for (const mode of ["choice-quota", "all-quota", "unconfirmed-write"]) {
+    for (const action of ["reject", "configure", "withdraw"]) {
+      await check(`${action} survives ${mode}, a fresh module and storage recovery`, async () => {
+        const { browserContextId } = await browser.send("Target.createBrowserContext");
+        try {
+          const a = await page("", "", browserContextId);
+          await a.click("#privacy-accept");
+          await close(a);
+          if (sckb) await a.click("#runtime-reset");
+          else { await a.click("#tab-work"); await a.click("#workBody textarea"); await a.send("Input.insertText", { text: "SYNTHETIC quota workbook" }); await sleep(350); }
+          await a.eval("localStorage.setItem('other-product-fixture','preserve')");
+          const preserved = await a.eval(`Object.fromEntries(${JSON.stringify([essential, key("retention"), "other-product-fixture"])}.map(k=>[k,localStorage.getItem(k)]))`);
+          assert.notEqual(preserved[essential], null);
+          await open(a);
+          await a.eval(`(()=>{const original=Storage.prototype.setItem;Storage.prototype.setItem=function(k,v){if(${JSON.stringify(mode)}==='all-quota'||k===${JSON.stringify(key("choice"))}){if(${JSON.stringify(mode)}==='unconfirmed-write')return;throw new DOMException('synthetic full storage','QuotaExceededError')}return original.call(this,k,v)}})()`);
+          if (action === "configure") { await a.click("#privacy-configure"); await a.click("#privacy-usage"); await a.click("#privacy-save"); }
+          else await a.click("#privacy-" + action);
+          assert.equal(await a.eval("document.getElementById('privacy-usage').checked"), false);
+          assert.deepEqual(await a.eval(`Object.fromEntries(${JSON.stringify(Object.keys(preserved))}.map(k=>[k,localStorage.getItem(k)]))`), preserved);
+          // A fresh document has normal storage again; an old on-disk grant must not revive.
+          const fresh = await page("", "", browserContextId); await open(fresh);
+          assert.equal(await fresh.eval("document.getElementById('privacy-usage').checked"), false, "fresh module must remain off after a failed denial write");
+          assert.equal(await fresh.eval(`localStorage.getItem(${JSON.stringify(key("choice"))})`), null);
+          await close(fresh); await fresh.click(sckb ? "#runtime-reset" : "#tab-board");
+          assert.equal(await fresh.eval(`localStorage.getItem(${JSON.stringify(key("usage"))})`), null);
+          await open(fresh); await fresh.click("#privacy-accept"); await close(fresh);
+          await fresh.click(sckb ? "#runtime-reset" : "#tab-work");
+          assert.equal((await fresh.eval(`JSON.parse(localStorage.getItem(${JSON.stringify(key("usage"))}))`))[0].count, 1, "only a new explicit choice restores optional usage");
+        } finally { await browser.send("Target.disposeBrowserContext", { browserContextId }); }
+      });
+    }
+  }
   const p = await page();
   await check("default off; equally visible choices; institutional facts", async () => {
     assert.equal(await p.eval(`localStorage.getItem(${JSON.stringify(key("usage"))})`), null);

@@ -469,7 +469,7 @@ window.addEventListener("error", function(e){
       ackStatus.textContent = t("Choose both declarations explicitly to continue. Your cookie preferences are independent.", "Elige ambas declaraciones explícitamente para continuar. Las preferencias de cookies son independientes.");
       show(ack); return false;
     }
-    const selectors = config.id === "sckb" ? "#runtime-choices button,#runtime-next,#runtime-reset,#runtime-track button,.journey-tab,.flow-node,#prev-step,#next-step,.architecture-card,.route-button,#route-reset,.warehouse-zone,#route-hint" : "#nodes .node,.maptools button,.tabs button,#workBody textarea,#workBody button";
+    const selectors = config.id === "sckb" ? "#runtime-choices button,#runtime-next,#runtime-reset,#runtime-track button,.journey-tab,.flow-node,#prev-step,#next-step,.architecture-card,.route-button,#route-reset,.warehouse-zone,#route-hint" : "#nodes .node,#nodes .dot,.maptools button,.tabs button,#workBody textarea,#workBody button";
     for (const type of ["click", "pointerdown", "beforeinput", "keydown"]) document.addEventListener(type, event => {
       if (type === "keydown" && !["Enter", " ", "ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown", "Home", "End"].includes(event.key)) return;
       if (!(event.target instanceof Element) || !event.target.closest(selectors)) return;

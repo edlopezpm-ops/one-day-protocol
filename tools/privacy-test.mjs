@@ -113,6 +113,14 @@ try {
       assert(await v.eval("!document.getElementById('privacy-download').disabled && document.getElementById('privacy-dialog').contains(document.getElementById('privacy-download'))"));
       assert.equal(await v.eval("document.querySelectorAll('#privacy-download').length"), 1);
       await v.click("#privacy-reject"); await v.click("#privacy-close");
+      if (!sckb) {
+        const expandedBefore = await v.eval("document.querySelector('#nodes .node[data-id=root]').getAttribute('aria-expanded')");
+        await v.click("#nodes .dot[data-id=root]");
+        assert(await v.eval("document.getElementById('policy-ack-dialog').open"), "fold shortcut must request acknowledgement");
+        assert.equal(await v.eval("document.querySelector('#nodes .node[data-id=root]').getAttribute('aria-expanded')"), expandedBefore, "fold shortcut cannot change the map before acknowledgement");
+        assert.equal(await v.eval(`localStorage.getItem(${JSON.stringify(ackKey)})`), null);
+        await v.click("#policy-ack-dialog-close");
+      }
       await v.click("#terms-open");
       assert(await v.eval("document.getElementById('terms-dialog').textContent.includes(document.documentElement.lang==='es'?'Uso autorizado':'Authorized and responsible')"));
       assert.equal(await v.eval(`localStorage.getItem(${JSON.stringify(ackKey)})`), null);
@@ -135,6 +143,11 @@ try {
       const records = await v.eval(`JSON.parse(localStorage.getItem(${JSON.stringify(ackKey)}))`);
       assert.equal(records.length,1);assert.equal(records[0].productId,id);assert.equal(records[0].action,"explicit-policy-acknowledgement");assert.equal(records[0].scope,"browser-local-unverified");
       assert.equal(records[0].termsRevision,"terms-20261025.1");assert.equal(records[0].privacyRevision,"privacy-20261025.1");
+      if (!sckb) {
+        const expandedBefore = await v.eval("document.querySelector('#nodes .node[data-id=root]').getAttribute('aria-expanded')");
+        await v.click("#nodes .dot[data-id=root]");
+        assert.notEqual(await v.eval("document.querySelector('#nodes .node[data-id=root]').getAttribute('aria-expanded')"), expandedBefore, "fold shortcut works after explicit acknowledgement");
+      }
       assert.equal(await v.eval(`localStorage.getItem(${JSON.stringify(key("usage"))})`),null);
       await v.click("#cookies-open");await v.click("#cookies-reject");await v.click("#cookies-dialog-close");
       assert(await v.eval("!!window.AEKR_POLICY.current()"));

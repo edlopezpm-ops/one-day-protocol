@@ -135,6 +135,7 @@ try {
       await v.click("#terms-dialog-close");
       await v.click(sckb ? "#runtime-reset" : "#tab-work");
       assert(await v.eval("document.getElementById('policy-ack-dialog').open && !document.getElementById('policy-terms-check').checked && !document.getElementById('policy-privacy-check').checked && document.getElementById('policy-continue').disabled"));
+      assert(await v.eval("document.getElementById('policy-privacy-check').closest('label').textContent.includes(document.documentElement.lang==='es'?'privacidad y cookies':'Privacy and Cookies')"));
       assert.equal(await v.eval(`localStorage.getItem(${JSON.stringify(essential)})`), null);
       await v.eval("document.getElementById('policy-terms-check').checked=true;document.getElementById('policy-privacy-check').checked=true;document.getElementById('policy-continue').disabled=false;document.getElementById('policy-continue').click()");
       assert.equal(await v.eval(`localStorage.getItem(${JSON.stringify(ackKey)})`), null, "script click is not a user action");
@@ -142,7 +143,7 @@ try {
       await v.click("#policy-terms-check"); await v.click("#policy-privacy-check"); await v.click("#policy-continue");
       const records = await v.eval(`JSON.parse(localStorage.getItem(${JSON.stringify(ackKey)}))`);
       assert.equal(records.length,1);assert.equal(records[0].productId,id);assert.equal(records[0].action,"explicit-policy-acknowledgement");assert.equal(records[0].scope,"browser-local-unverified");
-      assert.equal(records[0].termsRevision,"terms-20261025.1");assert.equal(records[0].privacyRevision,"privacy-20261025.1");
+      assert.equal(records[0].termsRevision,"terms-20261025.1");assert.equal(records[0].privacyRevision,"privacy-20261025.2");assert.equal(records[0].cookiesRevision,"cookies-20261025.2");
       if (!sckb) {
         const expandedBefore = await v.eval("document.querySelector('#nodes .node[data-id=root]').getAttribute('aria-expanded')");
         await v.click("#nodes .dot[data-id=root]");
@@ -160,6 +161,32 @@ try {
       await v.click(sckb ? "#runtime-reset" : "#tab-work");assert(await v.eval("document.getElementById('policy-ack-dialog').open"));
       await v.send("Emulation.setDeviceMetricsOverride",{width:390,height:844,deviceScaleFactor:1,mobile:true});
       assert(await v.eval("(()=>{const d=document.getElementById('policy-ack-dialog');return d.scrollWidth<=d.clientWidth+1&&d.getBoundingClientRect().width<=innerWidth})()"));
+    } finally { await browser.send("Target.disposeBrowserContext",{browserContextId}); }
+  });
+  await check("older two-notice declaration renews without backfill or optional-choice changes", async () => {
+    const { browserContextId } = await browser.send("Target.createBrowserContext");
+    try {
+      const ackKey=id+"/policies/ack/v1",at=Date.now();
+      const legacy={schema:1,productId:id,termsRevision:"terms-20261025.1",privacyRevision:"privacy-20261025.1",language:sckb?"es":"en",at,action:"explicit-policy-acknowledgement",scope:"browser-local-unverified"};
+      const oldBytes=JSON.stringify([legacy]);
+      const choiceBytes=JSON.stringify({product:id,notice:"2026-10-22.1",action:"reject",usage:false,at,expires:at+180*86400000});
+      const v=await page(`localStorage.setItem(${JSON.stringify(ackKey)},${JSON.stringify(oldBytes)});localStorage.setItem(${JSON.stringify(key("choice"))},${JSON.stringify(choiceBytes)});`,"",browserContextId);
+      assert.equal(await v.eval("window.AEKR_POLICY.current()"),null);
+      await v.click("#privacy-open");assert(await v.eval("!document.getElementById('privacy-download').disabled"));await v.click("#privacy-close");
+      assert.equal(await v.eval(`localStorage.getItem(${JSON.stringify(ackKey)})`),oldBytes);
+      await v.click(sckb?"#runtime-reset":"#nodes .dot[data-id=root]");
+      assert(await v.eval("document.getElementById('policy-ack-dialog').open && !document.getElementById('policy-privacy-check').checked"));
+      assert(await v.eval("document.getElementById('policy-privacy-check').closest('label').textContent.includes(document.documentElement.lang==='es'?'privacidad y cookies':'Privacy and Cookies')"));
+      assert(await v.eval("document.getElementById('policy-ack-dialog').textContent.includes(document.documentElement.lang==='es'?'avisos de privacidad y cookies':'Privacy and Cookies notices')"));
+      assert.equal(await v.eval(`localStorage.getItem(${JSON.stringify(ackKey)})`),oldBytes);
+      await v.click("#policy-terms-check");await v.click("#policy-privacy-check");await v.click("#policy-continue");
+      const records=await v.eval(`JSON.parse(localStorage.getItem(${JSON.stringify(ackKey)}))`);
+      assert.equal(records.length,2);assert.deepEqual(records[0],legacy);assert.equal("cookiesRevision" in records[0],false);
+      assert.equal(records[1].schema,1);assert.equal(records[1].termsRevision,"terms-20261025.1");assert.equal(records[1].privacyRevision,"privacy-20261025.2");assert.equal(records[1].cookiesRevision,"cookies-20261025.2");
+      assert.equal(await v.eval(`localStorage.getItem(${JSON.stringify(key("choice"))})`),choiceBytes);
+      assert.equal(await v.eval(`localStorage.getItem(${JSON.stringify(key("usage"))})`),null);
+      await v.eval(`const rows=JSON.parse(localStorage.getItem(${JSON.stringify(ackKey)}));rows[1].cookiesRevision='cookies-20261025.1';localStorage.setItem(${JSON.stringify(ackKey)},JSON.stringify(rows));`);
+      await v.click(sckb?"#runtime-reset":"#nodes .dot[data-id=root]");assert(await v.eval("document.getElementById('policy-ack-dialog').open"));
     } finally { await browser.send("Target.disposeBrowserContext",{browserContextId}); }
   });
   await check("blocked storage acknowledgement lasts only for the current document", async () => {

@@ -19,6 +19,7 @@ const scratch = mkdtempSync(join(tmpdir(), `${id}-privacy-`));
 const downloads = join(scratch, "downloads");
 const { mkdirSync } = await import("node:fs");
 mkdirSync(downloads);
+const { writeFileSync } = await import("node:fs");
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 const requests = [];
 const server = createServer((req, res) => {
@@ -76,9 +77,11 @@ async function page(init = "", path = "", browserContextId) {
     return result.result.value;
   };
   p.click = async selector => {
-    const r = await p.eval(`(()=>{const e=document.querySelector(${JSON.stringify(selector)});if(!e)throw Error('missing control');e.scrollIntoView({block:'center'});const r=e.getBoundingClientRect();return {x:r.x+r.width/2,y:r.y+r.height/2}})()`);
+    await p.send("Page.bringToFront");
+    const r = await p.eval(`(()=>{const e=document.querySelector(${JSON.stringify(selector)});if(!e)throw Error('missing control');e.scrollIntoView({block:'center',behavior:'instant'});const r=e.getBoundingClientRect();return {x:r.x+r.width/2,y:r.y+r.height/2}})()`);
     await p.send("Input.dispatchMouseEvent", { type: "mousePressed", button: "left", clickCount: 1, ...r });
     await p.send("Input.dispatchMouseEvent", { type: "mouseReleased", button: "left", clickCount: 1, ...r });
+    await p.eval("new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)))");
   };
   await p.send("Page.enable"); await p.send("Runtime.enable"); await p.send("Network.enable");
   if (init) await p.send("Page.addScriptToEvaluateOnNewDocument", { source: init });
@@ -90,12 +93,72 @@ async function ready(p) {
   for (let i = 0; i < 100; i++) { if (await p.eval("!!document.getElementById('privacy-dialog')")) return; await sleep(50); }
   throw new Error("privacy UI did not initialize: " + JSON.stringify(p.events.filter(e => e.method === "Runtime.exceptionThrown")));
 }
-async function close(p) { if (await p.eval("document.getElementById('privacy-dialog').open")) await p.click("#privacy-close"); }
+async function acknowledge(p) {
+  if (await p.eval("!!window.AEKR_POLICY.current()")) return;
+  await p.eval("window.AEKR_POLICY.ensure()");
+  await p.click("#policy-terms-check"); await p.click("#policy-privacy-check"); await p.click("#policy-continue");
+}
+async function close(p) { if (await p.eval("document.getElementById('privacy-dialog').open")) await p.click("#privacy-close"); await acknowledge(p); }
 async function open(p) { if (!await p.eval("document.getElementById('privacy-dialog').open")) await p.click("#privacy-open"); }
 const checks = [];
 async function check(name, fn) { await fn(); checks.push(name); console.log("PASS " + name); }
 let failure;
 try {
+  await check("new visitor: public policies and data rights never imply acknowledgement", async () => {
+    const { browserContextId } = await browser.send("Target.createBrowserContext");
+    try {
+      const v = await page("", "", browserContextId);
+      const ackKey = id + "/policies/ack/v1";
+      assert.equal(await v.eval(`localStorage.getItem(${JSON.stringify(ackKey)})`), null);
+      assert(await v.eval("!document.getElementById('privacy-download').disabled && document.getElementById('privacy-dialog').contains(document.getElementById('privacy-download'))"));
+      assert.equal(await v.eval("document.querySelectorAll('#privacy-download').length"), 1);
+      await v.click("#privacy-reject"); await v.click("#privacy-close");
+      await v.click("#terms-open");
+      assert(await v.eval("document.getElementById('terms-dialog').textContent.includes(document.documentElement.lang==='es'?'Uso autorizado':'Authorized and responsible')"));
+      assert.equal(await v.eval(`localStorage.getItem(${JSON.stringify(ackKey)})`), null);
+      assert(await v.eval("!document.getElementById('terms-dialog').textContent.includes('20261025') && document.querySelector('meta[name=aekr-public-version]').content==='20261025'"));
+      if (sckb) {
+        assert.equal(await v.eval("document.querySelectorAll('#language-toggle').length"), 1);
+        await v.click("#language-toggle"); await sleep(500); await ready(v);
+        assert.equal(await v.eval("document.documentElement.lang"), "en");
+        assert(await v.eval("document.getElementById('terms-dialog').open && !document.getElementById('terms-dialog').textContent.includes('Uso autorizado')"));
+        assert.equal(await v.eval(`localStorage.getItem(${JSON.stringify(ackKey)})`), null);
+      }
+      await v.click("#terms-dialog-close");
+      await v.click(sckb ? "#runtime-reset" : "#tab-work");
+      assert(await v.eval("document.getElementById('policy-ack-dialog').open && !document.getElementById('policy-terms-check').checked && !document.getElementById('policy-privacy-check').checked && document.getElementById('policy-continue').disabled"));
+      assert.equal(await v.eval(`localStorage.getItem(${JSON.stringify(essential)})`), null);
+      await v.eval("document.getElementById('policy-terms-check').checked=true;document.getElementById('policy-privacy-check').checked=true;document.getElementById('policy-continue').disabled=false;document.getElementById('policy-continue').click()");
+      assert.equal(await v.eval(`localStorage.getItem(${JSON.stringify(ackKey)})`), null, "script click is not a user action");
+      await v.eval("document.getElementById('policy-terms-check').checked=false;document.getElementById('policy-privacy-check').checked=false");
+      await v.click("#policy-terms-check"); await v.click("#policy-privacy-check"); await v.click("#policy-continue");
+      const records = await v.eval(`JSON.parse(localStorage.getItem(${JSON.stringify(ackKey)}))`);
+      assert.equal(records.length,1);assert.equal(records[0].productId,id);assert.equal(records[0].action,"explicit-policy-acknowledgement");assert.equal(records[0].scope,"browser-local-unverified");
+      assert.equal(records[0].termsRevision,"terms-20261025.1");assert.equal(records[0].privacyRevision,"privacy-20261025.1");
+      assert.equal(await v.eval(`localStorage.getItem(${JSON.stringify(key("usage"))})`),null);
+      await v.click("#cookies-open");await v.click("#cookies-reject");await v.click("#cookies-dialog-close");
+      assert(await v.eval("!!window.AEKR_POLICY.current()"));
+      await v.click(sckb ? "#runtime-reset" : "#tab-work");
+      if (!sckb) { await v.click("#workBody textarea"); await v.send("Input.insertText",{text:"SYNTHETIC explicit acknowledgement"}); await sleep(350); }
+      assert.notEqual(await v.eval(`localStorage.getItem(${JSON.stringify(essential)})`),null);
+      await v.send("Page.reload");await sleep(250);await ready(v);assert(await v.eval("!!window.AEKR_POLICY.current()"));
+      if(await v.eval("document.getElementById('terms-dialog').open")) await v.click("#terms-dialog-close");
+      await v.eval(`localStorage.setItem(${JSON.stringify(ackKey)},JSON.stringify([{...${JSON.stringify(records[0])},termsRevision:'terms-20261024.1'}]))`);
+      await v.click(sckb ? "#runtime-reset" : "#tab-work");assert(await v.eval("document.getElementById('policy-ack-dialog').open"));
+      await v.send("Emulation.setDeviceMetricsOverride",{width:390,height:844,deviceScaleFactor:1,mobile:true});
+      assert(await v.eval("(()=>{const d=document.getElementById('policy-ack-dialog');return d.scrollWidth<=d.clientWidth+1&&d.getBoundingClientRect().width<=innerWidth})()"));
+    } finally { await browser.send("Target.disposeBrowserContext",{browserContextId}); }
+  });
+  await check("blocked storage acknowledgement lasts only for the current document", async () => {
+    const { browserContextId } = await browser.send("Target.createBrowserContext");
+    try {
+      const v=await page("for(const method of ['getItem','setItem','removeItem'])Storage.prototype[method]=function(){throw new DOMException('fixture blocked','SecurityError')};","",browserContextId);
+      await v.click("#privacy-close");await acknowledge(v);
+      assert(await v.eval("!!window.AEKR_POLICY.current()"));
+      await v.click("#privacy-open");assert(await v.eval("document.getElementById('policy-local-status').textContent.includes('página abierta')||document.getElementById('policy-local-status').textContent.includes('open page')"));
+      await v.send("Page.reload");await sleep(250);await ready(v);assert.equal(await v.eval("window.AEKR_POLICY.current()"),null);
+    } finally {await browser.send("Target.disposeBrowserContext",{browserContextId});}
+  });
   for (const mode of ["choice-quota", "all-quota", "unconfirmed-write"]) {
     for (const action of ["reject", "configure", "withdraw"]) {
       await check(`${action} survives ${mode}, a fresh module and storage recovery`, async () => {
@@ -123,7 +186,9 @@ try {
           assert.equal(await fresh.eval(`localStorage.getItem(${JSON.stringify(key("usage"))})`), null);
           await open(fresh); await fresh.click("#privacy-accept"); await close(fresh);
           await fresh.click(sckb ? "#runtime-reset" : "#tab-work");
-          assert.equal((await fresh.eval(`JSON.parse(localStorage.getItem(${JSON.stringify(key("usage"))}))`))[0].count, 1, "only a new explicit choice restores optional usage");
+          const counted = await fresh.eval(`JSON.parse(localStorage.getItem(${JSON.stringify(key("usage"))}))`);
+          assert(counted, "explicit choice/action did not count: " + JSON.stringify(await fresh.eval(`({choice:JSON.parse(localStorage.getItem(${JSON.stringify(key("choice"))})),privacyOpen:document.getElementById('privacy-dialog').open,ackOpen:document.getElementById('policy-ack-dialog').open,ack:!!window.AEKR_POLICY.current(),focus:document.activeElement.id})`)));
+          assert.equal(counted[0].count, 1, "only a new explicit choice restores optional usage");
         } finally { await browser.send("Target.disposeBrowserContext", { browserContextId }); }
       });
     }
@@ -291,6 +356,24 @@ try {
     await p.send("Input.dispatchKeyEvent", { type: "keyUp", key: "Escape", code: "Escape", windowsVirtualKeyCode: 27 });
     assert.equal(await p.eval("document.getElementById('privacy-dialog').open"), false);
     assert.equal(await p.eval("document.activeElement.id"), "privacy-open");
+  });
+  await check("footer policies and desktop/mobile Terms fit without visible versions", async () => {
+    await close(p);
+    await p.send("Page.bringToFront");
+    for (const width of [1440,390]) {
+      await p.send("Emulation.setDeviceMetricsOverride",{width,height:900,deviceScaleFactor:1,mobile:width<600});
+      await p.click("#terms-open");
+      assert(await p.eval("(()=>{const d=document.getElementById('terms-dialog');return d.scrollWidth<=d.clientWidth+1&&d.getBoundingClientRect().width<=innerWidth&&!d.textContent.includes('20261025')})()"));
+      if(process.env.AEKR_POLICY_SCREENSHOT_DIR){
+        const dir=resolve(process.env.AEKR_POLICY_SCREENSHOT_DIR);mkdirSync(dir,{recursive:true});
+        const shot=await p.send("Page.captureScreenshot",{format:"png",captureBeyondViewport:false});writeFileSync(join(dir,id+"-terms-"+width+".png"),Buffer.from(shot.data,"base64"));
+      }
+      await p.click("#terms-dialog-close");
+      assert(await p.eval("document.documentElement.scrollWidth<=innerWidth+1 && ['terms-open','privacy-open','cookies-open'].every(id=>document.querySelector('.aekr-policy-links').contains(document.getElementById(id)))"));
+      if(process.env.AEKR_POLICY_SCREENSHOT_DIR){
+        const shot=await p.send("Page.captureScreenshot",{format:"png",captureBeyondViewport:false});writeFileSync(join(resolve(process.env.AEKR_POLICY_SCREENSHOT_DIR),id+"-footer-"+width+".png"),Buffer.from(shot.data,"base64"));
+      }
+    }
   });
   if (sckb) await check("Spanish and English controls and simulation render", async () => {
     const en = await page("", "?lang=en"); await open(en);

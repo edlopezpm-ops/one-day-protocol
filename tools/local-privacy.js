@@ -10,6 +10,7 @@
     let storageOK = true;
     let choice = null;
     let focusBefore;
+    let policies;
     const signal = () => navigator.globalPrivacyControl === true || navigator.doNotTrack === "1" || window.doNotTrack === "1";
     const now = () => Date.now();
     const read = (key) => {
@@ -168,11 +169,10 @@
     const contact = make("p", t("For access, correction, deletion, objection or privacy questions, contact ", "Para acceso, rectificación, eliminación, oposición o consultas de privacidad, contacta a "));
     contact.append(make("a", "aekr@aekr.io", { href: "mailto:aekr@aekr.io" }));
     institutional.append(contact,
-      make("p", "To request information about AEKR’s legal representative, contact aekr@aekr.io."),
-      make("p", "Para solicitar información sobre el representante legal de AEKR, contacta a aekr@aekr.io."),
+      make("p", t("To request information about AEKR’s legal representative, contact aekr@aekr.io.", "Para solicitar información sobre el representante legal de AEKR, contacta a aekr@aekr.io.")),
       make("p", t("Hosted on GitHub Pages: GitHub may process connection/usage information under its own policy. This control does not delete provider logs. External reference links navigate only when you choose them. No new Terms acceptance, marketing permission or legal certification is implied.", "Alojado en GitHub Pages: GitHub puede tratar información de conexión/uso según su política. Este control no elimina registros del proveedor. Los enlaces externos se abren cuando los eliges. No implica nuevos Términos, permiso de marketing ni certificación legal.")),
       make("a", t("GitHub privacy statement", "Declaración de privacidad de GitHub"), { href: "https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement", target: "_blank", rel: "noopener noreferrer" }),
-      make("p", t("Notice version: ", "Versión del aviso: ") + notice + " · " + config.product));
+      make("p", config.product));
     dialog.append(close, title, intro, signalText, status, actions, settings, withdraw, researchTitle, researchIntro, form, researchDownload, dataTitle, dataIntro, retentionLabel, retentionSave, dataActions, limits, institutional);
     const entryMount = config.entryMount ? document.querySelector(config.entryMount) : null;
     if (entryMount) { entry.classList.add("aekr-privacy-inline"); entryMount.append(entry); }
@@ -199,7 +199,8 @@
     function open() {
       focusBefore = document.activeElement;
       loadChoice(); checkRetention(); cleanOptional(); render();
-      dialog.showModal(); close.focus();
+      if (policies) policies.show(dialog); else dialog.showModal();
+      close.focus();
     }
     entry.addEventListener("click", open);
     close.addEventListener("click", () => dialog.close());
@@ -240,8 +241,8 @@
     function snapshot() {
       loadChoice(); checkRetention(); cleanOptional();
       return {
-        manifest: { schema: "aekr-local-export/v1", product: config.product, productId: config.id, notice, preparedAt: new Date().toISOString(), scope: "current browser / current origin or file copy / no account or tenant", included: ["productData fields listed below", "privacyChoice", "retention", "usage", "research"], exclusions: ["other products/browsers/devices/file copies", "hosting-provider connection records", "previously downloaded copies", "no central collector or commercial recipient configured"], transport: "local browser Blob download; no remote upload", limitations: "Browser user controls this storage. Local data is not a verified identity or a complete provider-data response." },
-        productData: config.snapshot(), privacyChoice: choice, retention: retention(), usage: usage(), research: research()
+        manifest: { schema: "aekr-local-export/v1", product: config.product, productId: config.id, notice, preparedAt: new Date().toISOString(), scope: "current browser / current origin or file copy / no account or tenant", included: ["productData fields listed below", "privacyChoice", "retention", "usage", "research", "policyAcknowledgements"], exclusions: ["other products/browsers/devices/file copies", "hosting-provider connection records", "previously downloaded copies", "no central collector or commercial recipient configured"], transport: "local browser Blob download; no remote upload", limitations: "Browser user controls this storage. Local data is not a verified identity or a complete provider-data response." },
+        productData: config.snapshot(), privacyChoice: choice, retention: retention(), usage: usage(), research: research(), policyAcknowledgements: policies.snapshot()
       };
     }
     function deliver(value, suffix) {
@@ -269,8 +270,9 @@
     window.addEventListener("focus", sweep);
     document.addEventListener("visibilitychange", () => { if (!document.hidden) sweep(); });
     setInterval(sweep, 60000);
+    policies = window.createAEKRLocalPolicy({ id: config.id, product: config.product, lang: config.lang, privacyEntry: entry, privacyDialog: dialog, openPrivacy: open, chooseCookies: enabled => choose(enabled, enabled ? "accept" : "reject") });
     render();
-    if (!choice) open();
+    if (!policies.openRequested(new URLSearchParams(location.search).get("policy")) && !choice) open();
     return {
       productChanged, snapshot,
       event(feature) {

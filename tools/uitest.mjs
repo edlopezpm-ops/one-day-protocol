@@ -187,6 +187,8 @@ async function run() {
     await clickSel("#privacy-reject");
     await clickSel("#privacy-close");
   }
+  await evaluate("window.AEKR_POLICY.ensure()");
+  await clickSel("#policy-terms-check");await clickSel("#policy-privacy-check");await clickSel("#policy-continue");
 
   const model = await evaluate("__ODP__.model.root.children.length");
 

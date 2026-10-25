@@ -89,3 +89,7 @@ email: aekr@aekr.io
 [![Built with AEKR](docs/img/aekr.png)](https://aekr.io)
 
 **[aekr.io](https://aekr.io)** · **[@__aerk on Instagram](https://www.instagram.com/__aerk/)**
+
+## Web policies
+
+The existing AEKR footer groups ToS, Privacy and Cookies. Interactive use requests a separate explicit, browser-local policy declaration; Privacy exports and optional choices remain accessible before accepting new Terms. [Scope and verification](docs/WEB_POLICIES_2026-10-25.md).

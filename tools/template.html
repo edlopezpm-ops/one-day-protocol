@@ -157,8 +157,9 @@ main{flex:1;min-height:0;position:relative}
   border-radius:999px;padding:6px 14px;box-shadow:var(--shadow);
 }
 .built a{color:var(--fg-faint);text-decoration:none;display:flex;align-items:center;min-height:24px}
-.built a:last-child{min-width:24px;justify-content:center}
+.built a[aria-label="AEKR on Instagram"]{min-width:24px;justify-content:center}
 .built a:hover{color:var(--accent)}
+.built{flex-wrap:wrap;max-width:calc(100vw - 20px)}
 .built b{color:var(--fg-dim);font-weight:700;letter-spacing:.13em}
 .built a:hover b{color:var(--accent)}
 @media (max-width:640px){
@@ -406,6 +407,7 @@ if(storeOK){
 var saveTimer = null;
 var privacy = null;
 function save(){
+  if(!window.AEKR_POLICY?.ensure()) return;
   if(!storeOK) return;
   clearTimeout(saveTimer);
   saveTimer = setTimeout(function(){
@@ -844,6 +846,7 @@ function fieldFor(n){
   ta.value = answers[n.id] || "";
   ta.classList.toggle("filled", !!ta.value.trim());
   ta.addEventListener("input", function(){
+    if(!window.AEKR_POLICY?.ensure()){ ta.value = answers[n.id] || ""; return; }
     answers[n.id] = ta.value;
     ta.classList.toggle("filled", !!ta.value.trim());
     save(); refreshProgress(); refreshBoard();
@@ -1424,7 +1427,7 @@ layout();
 resetView();
 if(HASHES[location.hash]) selectTab(HASHES[location.hash]);
 privacy = window.createAEKRLocalPrivacy({
-  id: "one-day-protocol", product: "The One-Day Protocol", lang: "en", defaultRetention: 0, entryMount: ".tools",
+  id: "one-day-protocol", product: "The One-Day Protocol", lang: "en", defaultRetention: 0, entryMount: ".built",
   features: ["map", "work", "board"],
   dataDescription: "Your requested workbook answers stay here until you erase them by default. Choose a shorter inactivity period if needed. The JSON download includes current in-memory answers (including changes not yet saved), display preferences and the exact local privacy records in its manifest. Existing Markdown, print and calendar exports remain available. Reflection answers are never included in optional usage or research.",
   snapshot: function(){ return { answers: Object.assign({},answers), preferences: Object.assign({},P), storageAvailable: storeOK, answerLimit: "20,000 characters per known model field" }; },
@@ -1452,7 +1455,7 @@ window.__ODP__ = {
   toggle: toggle, setAll: setAll, answers: function(){ return answers; }
 };
 
-if(location.hash === "#selftest"){
+function displaySelfTest(){
   var r = selfTest();
   var pre = document.createElement("pre");
   pre.id = "selftest";
@@ -1460,6 +1463,10 @@ if(location.hash === "#selftest"){
   pre.textContent = r.report;
   document.body.appendChild(pre);
   document.title = r.report.split("\n")[0];
+}
+if(location.hash === "#selftest"){
+  if(window.AEKR_POLICY.current()) displaySelfTest();
+  else { window.addEventListener("aekr:policyacknowledged", displaySelfTest, { once:true }); window.AEKR_POLICY.ensure(); }
 }
 })();
 </script>
